@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Enterprise Analyzer v3.0</title>
+    <title>PMO Enterprise Suite v4.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -27,277 +27,341 @@
     </script>
 
     <style>
-        body { background-color: #f8fafc; color: #1e293b; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; }
+        body { background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
         .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
         .hide { display: none !important; }
+        .inp-field { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.875rem; transition: all 0.2s; outline: none; background: #fff; }
+        .inp-field:focus { border-color: #3b82f6; ring: 2px; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .label-text { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.3rem; display: block; }
+        
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
     </style>
 </head>
-<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50">
+<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-100">
 
-    <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-10">
+    <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
         <div class="p-6">
-            <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Enterprise</span></h1>
-            <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">Analyst Suite v3.0</p>
+            <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Suite</span></h1>
+            <p class="text-[10px] text-gray-400 mt-1 font-semibold tracking-wider">ENTERPRISE v4.0</p>
         </div>
-        <nav class="flex-1 overflow-y-auto py-2">
-            <a onclick="nav('dashboard')" id="link-dashboard" class="nav-item active flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50"><i class="fas fa-th-large w-6"></i> Dashboard</a>
-            <a onclick="nav('analyze')" id="link-analyze" class="nav-item flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50"><i class="fas fa-search w-6"></i> New Analysis</a>
-            <a onclick="nav('import')" id="link-import" class="nav-item flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50"><i class="fas fa-file-import w-6"></i> Smart Import</a>
+        <nav class="flex-1 overflow-y-auto py-2 space-y-1">
+            <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                <i class="fas fa-chart-line w-6"></i> Dashboard
+            </a>
+            <a onclick="nav('analyze')" id="nav-analyze" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                <i class="fas fa-search-plus w-6"></i> Research & Edit
+            </a>
+            <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                <i class="fas fa-chart-pie w-6"></i> Analytics
+            </a>
         </nav>
         <div class="p-6 border-t border-gray-100 bg-gray-50">
-             <button onclick="backupData()" class="w-full text-xs bg-white border border-gray-300 text-gray-700 py-2 rounded shadow-sm hover:bg-gray-100">Backup JSON</button>
+             <button onclick="backupData()" class="w-full text-xs bg-white border border-gray-300 text-gray-700 py-2.5 rounded shadow-sm hover:bg-gray-100 font-semibold flex justify-center items-center gap-2">
+                <i class="fas fa-download"></i> Backup DB
+             </button>
         </div>
     </aside>
 
+    <header class="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 z-30 shrink-0 shadow-sm">
+        <div class="font-bold text-lg text-corp-900">PMO<span class="text-brand-600">Suite</span></div>
+        <div class="flex gap-4">
+            <button onclick="nav('dashboard')" class="text-gray-600"><i class="fas fa-home text-xl"></i></button>
+            <button onclick="nav('analyze')" class="text-brand-600"><i class="fas fa-plus-circle text-xl"></i></button>
+        </div>
+    </header>
+
     <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
         
-        <header class="md:hidden h-14 bg-white border-b flex items-center justify-between px-4">
-            <div class="font-bold text-corp-900">PMO<span class="text-brand-600">Ent</span></div>
-            <div class="flex gap-4 text-gray-600">
-                <i class="fas fa-th-large" onclick="nav('dashboard')"></i>
-                <i class="fas fa-plus-circle" onclick="nav('analyze')"></i>
+        <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0">
+            <h2 id="page-title" class="text-lg font-semibold text-gray-800">Mission Control</h2>
+            <div class="flex items-center space-x-3 text-sm text-gray-500">
+                <span id="db-count" class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold">0 Records</span>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-4 md:p-8" id="main-scroll">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 mobile-scroll" id="main-scroll">
             
-            <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-800">Corporate Registry</h2>
-                    <span class="text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full" id="db-status">Loading...</span>
+            <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto fade-in">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                        <div class="text-xs text-gray-500 font-bold uppercase tracking-wider">Total Analyzed</div>
+                        <div class="text-3xl font-bold text-corp-900 mt-2" id="kpi-count">0</div>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition">
+                        <div class="text-xs text-gray-500 font-bold uppercase tracking-wider">Market Cap Tracked</div>
+                        <div class="text-3xl font-bold text-green-600 mt-2" id="kpi-val">$0</div>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <table class="w-full text-sm text-left whitespace-nowrap">
-                        <thead class="bg-gray-50 text-gray-500 border-b">
-                            <tr>
-                                <th class="px-6 py-3">Company</th>
-                                <th class="px-6 py-3">Industry</th>
-                                <th class="px-6 py-3">Revenue/Val</th>
-                                <th class="px-6 py-3 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="view-import" class="hide max-w-4xl mx-auto">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-bold text-gray-800 mb-2 flex items-center"><i class="fas fa-magic text-purple-600 mr-2"></i> Smart Document Parser</h3>
-                    <p class="text-sm text-gray-500 mb-4">Paste the full text from your Word/PDF document here. The system will attempt to extract structured data.</p>
-                    <textarea id="import-text" rows="10" class="w-full p-4 border border-gray-300 rounded-lg text-xs font-mono bg-slate-50 focus:bg-white" placeholder="Paste document content here..."></textarea>
-                    <div class="mt-4 flex justify-end">
-                        <button onclick="parseDocument()" class="bg-purple-600 text-white px-6 py-2 rounded shadow hover:bg-purple-700 font-medium">Parse & Create Record</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-analyze" class="hide max-w-5xl mx-auto pb-20">
-                <form id="main-form" class="space-y-6">
-                    <input type="hidden" id="entry-id">
-                    
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">1. Corporate Overview</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <div class="md:col-span-1">
-                                <label class="lbl">Company Name</label>
-                                <input type="text" id="inp-name" required class="inp">
-                            </div>
-                            <div>
-                                <label class="lbl">Industry / Sector</label>
-                                <input type="text" id="inp-industry" class="inp">
-                            </div>
-                             <div>
-                                <label class="lbl">Website</label>
-                                <input type="text" id="inp-web" class="inp">
-                            </div>
-                            <div>
-                                <label class="lbl">Headquarters</label>
-                                <input type="text" id="inp-hq" class="inp">
-                            </div>
-                            <div>
-                                <label class="lbl">Revenue / Valuation</label>
-                                <input type="text" id="inp-rev" class="inp" placeholder="$500M">
-                            </div>
-                            <div>
-                                <label class="lbl">CEO / Leadership</label>
-                                <input type="text" id="inp-ceo" class="inp">
-                            </div>
-                            <div class="md:col-span-3">
-                                <label class="lbl">Company Description (About)</label>
-                                <textarea id="inp-desc" rows="3" class="inp"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">2. Products & Technology</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="lbl">Product Portfolio (List)</label>
-                                <textarea id="inp-products" rows="4" class="inp" placeholder="- Product A&#10;- Product B"></textarea>
-                            </div>
-                            <div>
-                                <label class="lbl">Technology Stack</label>
-                                <textarea id="inp-tech" rows="4" class="inp" placeholder="AI Platforms, Cloud Infrastructure, etc."></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">3. Business Ecosystem</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="lbl">Key Acquisitions</label>
-                                <textarea id="inp-acq" rows="3" class="inp" placeholder="Company X (2020), Company Y (2021)"></textarea>
-                            </div>
-                            <div>
-                                <label class="lbl">Strategic Partnerships</label>
-                                <textarea id="inp-partners" rows="3" class="inp" placeholder="T-Mobile, Samsung, Google"></textarea>
-                            </div>
-                            <div>
-                                <label class="lbl">Direct Competitors</label>
-                                <textarea id="inp-comp-direct" rows="3" class="inp" placeholder="AppLovin, ironSource"></textarea>
-                            </div>
-                             <div>
-                                <label class="lbl">Indirect Competitors</label>
-                                <textarea id="inp-comp-indirect" rows="3" class="inp" placeholder="Google Play, Apple App Store"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">4. History & Operations</h4>
-                        <div class="grid grid-cols-1 gap-5">
-                            <div>
-                                <label class="lbl">Key Milestones / History (Year - Event)</label>
-                                <textarea id="inp-history" rows="5" class="inp font-mono text-xs" placeholder="1998 - Founded&#10;2014 - Rebranded"></textarea>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div>
-                                    <label class="lbl">Job Openings / Hiring Focus</label>
-                                    <textarea id="inp-jobs" rows="3" class="inp"></textarea>
-                                </div>
-                                <div>
-                                    <label class="lbl">Upcoming Events / Earnings</label>
-                                    <textarea id="inp-events" rows="3" class="inp"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-3 sticky bottom-4 bg-white p-4 rounded-xl shadow-xl border border-gray-100 z-20">
-                        <button type="button" onclick="nav('dashboard')" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
-                        <button type="submit" class="bg-corp-900 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 flex items-center">
-                            <i class="fas fa-save mr-2"></i> Save Full Record
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                        <h3 class="font-bold text-gray-800">Recent Reports</h3>
+                        <button onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded hover:bg-brand-700 font-medium shadow-sm transition">
+                            <i class="fas fa-plus mr-1"></i> Add Company
                         </button>
                     </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-500 border-b">
+                                <tr>
+                                    <th class="px-6 py-3 font-semibold">Company</th>
+                                    <th class="px-6 py-3 font-semibold">Industry</th>
+                                    <th class="px-6 py-3 font-semibold">Revenue/Val</th>
+                                    <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-analyze" class="hide max-w-5xl mx-auto pb-24 fade-in">
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <div class="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-4">
+                        <h3 class="font-bold text-gray-800 flex items-center text-lg">
+                            <span class="bg-brand-100 text-brand-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                            Discovery & Import
+                        </h3>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                            <input type="text" id="search-input" placeholder="Enter Company Name (e.g. Digital Turbine)" 
+                                   class="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition">
+                        </div>
+                        <button onclick="runDiscovery()" class="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition shadow-sm whitespace-nowrap">
+                            Initialize Research
+                        </button>
+                    </div>
+
+                    <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100 animate-fade">
+                        <div class="flex items-center gap-4 mb-4">
+                            <img id="logo-preview" src="" class="w-12 h-12 rounded bg-white border p-1 object-contain shadow-sm hidden">
+                            <p class="text-xs text-gray-500"><strong>Deep Search Enabled:</strong> Click below to open verified sources.</p>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6" id="link-container"></div>
+                        
+                        <div class="bg-slate-50 border border-dashed border-slate-300 rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-bold text-slate-700 uppercase"><i class="fas fa-file-alt mr-1"></i> Paste Document Text (Auto-Fill)</label>
+                                <button onclick="parseDocument()" class="text-xs bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700">Run Parser</button>
+                            </div>
+                            <textarea id="import-text" rows="3" class="w-full text-xs p-3 border rounded bg-white focus:ring-2 focus:ring-purple-200 outline-none" placeholder="Paste the full content of a Word/PDF document here (e.g. 'Company Overview... History...'). The AI parser will fill the form below."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="main-form" class="space-y-6">
+                    <input type="hidden" id="entry-id">
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
+                        <h4 class="font-bold text-gray-800 mb-5 ml-2">Corporate Profile</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div><label class="label-text">Company Name</label><input type="text" id="inp-name" required class="inp-field"></div>
+                            <div><label class="label-text">Website</label><input type="text" id="inp-web" class="inp-field"></div>
+                            <div><label class="label-text">Industry / Sector</label><input type="text" id="inp-industry" class="inp-field"></div>
+                            <div><label class="label-text">Headquarters</label><input type="text" id="inp-hq" class="inp-field"></div>
+                            <div><label class="label-text">CEO</label><input type="text" id="inp-ceo" class="inp-field"></div>
+                            <div><label class="label-text">Revenue / Valuation</label><input type="text" id="inp-rev" placeholder="e.g. $500M" class="inp-field font-mono text-green-700 font-bold"></div>
+                            <div class="md:col-span-2"><label class="label-text">Company Description</label><textarea id="inp-desc" rows="3" class="inp-field"></textarea></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">Technology & Products</h4>
+                            <div class="space-y-4">
+                                <div><label class="label-text">Product Portfolio</label><textarea id="inp-products" rows="4" class="inp-field" placeholder="List key products..."></textarea></div>
+                                <div><label class="label-text">Tech Stack / AI</label><textarea id="inp-tech" rows="3" class="inp-field" placeholder="Platforms, AI models..."></textarea></div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">Business Ecosystem</h4>
+                            <div class="space-y-4">
+                                <div><label class="label-text">Acquisitions (M&A)</label><textarea id="inp-acq" rows="3" class="inp-field" placeholder="List acquired companies..."></textarea></div>
+                                <div><label class="label-text">Strategic Partnerships</label><textarea id="inp-partners" rows="3" class="inp-field"></textarea></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">Strategic Intelligence</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div><label class="label-text text-red-500">Competitors (Direct)</label><textarea id="inp-comp-direct" rows="2" class="inp-field bg-red-50 border-red-100"></textarea></div>
+                            <div><label class="label-text text-orange-500">Competitors (Indirect)</label><textarea id="inp-comp-indirect" rows="2" class="inp-field bg-orange-50 border-orange-100"></textarea></div>
+                            <div><label class="label-text text-blue-600">Key Milestones (History)</label><textarea id="inp-history" rows="4" class="inp-field font-mono text-xs" placeholder="YYYY - Event Description"></textarea></div>
+                            <div><label class="label-text text-purple-600">Job Openings / Hiring</label><textarea id="inp-jobs" rows="4" class="inp-field" placeholder="Recent roles hiring for..."></textarea></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
+                        <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">Clear</button>
+                            <button type="submit" class="bg-corp-900 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg hover:bg-gray-800 flex items-center transform active:scale-95 transition">
+                                <i class="fas fa-save mr-2"></i> Save Analysis
+                            </button>
+                        </div>
+                    </div>
                 </form>
+            </div>
+
+            <div id="view-visualize" class="hide max-w-6xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <h3 class="font-bold text-gray-800 mb-6">Valuation Landscape</h3>
+                    <div class="h-96 w-full">
+                        <canvas id="chart-valuation"></canvas>
+                    </div>
+                </div>
             </div>
 
         </div>
     </main>
 
-    <style>
-        .lbl { display: block; font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.25rem; text-transform: uppercase; }
-        .inp { width: 100%; padding: 0.5rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.375rem; font-size: 0.875rem; outline: none; transition: all 0.2s; }
-        .inp:focus { background-color: #ffffff; border-color: #3b82f6; ring: 2px; }
-    </style>
-
     <script>
-        // --- DATA LAYER ---
-        let db = JSON.parse(localStorage.getItem('pmo_ent_db')) || [];
+        // --- STATE ---
+        let db = JSON.parse(localStorage.getItem('pmo_v4_db')) || [];
 
         // --- INIT ---
         window.onload = () => {
             renderTable();
-            document.getElementById('db-status').innerText = `${db.length} Records`;
+            updateKPIs();
         };
 
-        // --- NAVIGATION ---
+        // --- NAV SYSTEM ---
         function nav(viewId) {
-            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hide'));
-            document.getElementById(`view-${viewId}`).classList.remove('hide');
+            document.querySelectorAll('[id^="view-"]').forEach(el => {
+                el.classList.add('hide');
+                el.classList.remove('animate-fade');
+            });
+            const activeView = document.getElementById(`view-${viewId}`);
+            activeView.classList.remove('hide');
+            // Simple fade in effect
+            setTimeout(() => activeView.classList.add('animate-fade'), 10);
             
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            const link = document.getElementById(`link-${viewId}`);
+            const link = document.getElementById(`nav-${viewId}`);
             if(link) link.classList.add('active');
+
+            if(viewId === 'visualize') renderChart();
         }
 
-        // --- PARSER ENGINE (The Logic for your Document) ---
+        // --- DISCOVERY & IMPORT ENGINE ---
+        function runDiscovery() {
+            const name = document.getElementById('search-input').value.trim();
+            if(!name) return alert("Please enter a company name.");
+
+            // 1. Auto-fill name
+            document.getElementById('inp-name').value = name;
+            
+            // 2. Fetch Logo
+            const domainGuess = name.toLowerCase().replace(/\s+/g, '') + ".com";
+            const img = document.getElementById('logo-preview');
+            img.src = `https://logo.clearbit.com/${domainGuess}`;
+            img.onload = () => img.classList.remove('hidden');
+            img.onerror = () => img.classList.add('hidden');
+            document.getElementById('inp-web').value = domainGuess;
+
+            // 3. Generate Buttons
+            const panel = document.getElementById('discovery-panel');
+            const container = document.getElementById('link-container');
+            panel.classList.remove('hidden');
+            container.innerHTML = '';
+
+            const searches = [
+                { l: "LinkedIn", i: "fab fa-linkedin", c: "text-blue-700", q: `site:linkedin.com/company "${name}"` },
+                { l: "ZoomInfo", i: "fas fa-address-card", c: "text-blue-500", q: `ZoomInfo "${name}" profile` },
+                { l: "Revenue", i: "fas fa-money-bill-wave", c: "text-green-600", q: `"${name}" revenue valuation 2025` },
+                { l: "Acquisitions", i: "fas fa-shopping-cart", c: "text-purple-600", q: `"${name}" acquisitions list` },
+                { l: "Tech Stack", i: "fas fa-microchip", c: "text-gray-600", q: `"${name}" technology stack partners` },
+                { l: "Competitors", i: "fas fa-chess", c: "text-red-500", q: `top competitors of "${name}"` }
+            ];
+
+            searches.forEach(s => {
+                const a = document.createElement('a');
+                a.href = `https://www.google.com/search?q=${encodeURIComponent(s.q)}`;
+                a.target = "_blank";
+                a.className = "flex flex-col items-center justify-center p-3 bg-gray-50 border border-gray-200 rounded hover:bg-white hover:shadow-md transition cursor-pointer group";
+                a.innerHTML = `<i class="${s.i} ${s.c} text-lg mb-1 group-hover:scale-110 transition"></i><span class="text-[10px] font-bold text-gray-500 uppercase">${s.l}</span>`;
+                container.appendChild(a);
+            });
+        }
+
         function parseDocument() {
             const text = document.getElementById('import-text').value;
             if(!text) return alert("Paste text first!");
-
-            // Regex Patterns based on your document structure
-            const extract = (pattern) => {
-                const match = text.match(pattern);
-                return match ? match[1].trim() : "";
+            
+            // Helper to find text between two phrases
+            const getBetween = (start, end) => {
+                const regex = new RegExp(`${start}[\\s\\S]*?${end}`, "i");
+                const match = text.match(regex);
+                if(match) return match[0].replace(new RegExp(start, "i"), "").replace(new RegExp(end, "i"), "").trim();
+                return "";
             };
 
-            // Basic extraction logic
-            const name = extract(/Company Name:\s*(.+)/i) || "New Company";
-            const industry = extract(/Industry Served:\s*(.+)/i);
-            const web = extract(/Website:\s*(.+)/i);
-            const revenue = extract(/Revenue:\s*(.+)/i);
-            const hq = extract(/Headquarters[\s\S]*?Address:\s*(.+)/i);
-            const ceo = extract(/CEO:\s*(.+)/i) || extract(/Bill Stone/i) ? "Bill Stone" : ""; // Specific fallbacks
-            
-            // Block extraction (About, Products, etc)
-            const getBlock = (startKey, endKey) => {
-                const s = text.indexOf(startKey);
-                if(s === -1) return "";
-                const e = endKey ? text.indexOf(endKey, s) : text.length;
-                return text.substring(s + startKey.length, e).trim();
+            // Simple regex extractors
+            const extract = (regex) => (text.match(regex) || ["", ""])[1].trim();
+
+            // Auto-Fill Logic
+            const fields = {
+                'inp-name': /Company Name:\s*(.+)/i,
+                'inp-web': /Website:\s*(.+)/i,
+                'inp-industry': /Industry Served:\s*(.+)/i,
+                'inp-rev': /Revenue:\s*(.+)/i,
+                'inp-hq': /Address:\s*(.+)/i,
+                'inp-ceo': /CEO:\s*(.+)/i
+            };
+
+            for(let id in fields) {
+                const val = extract(fields[id]);
+                if(val) document.getElementById(id).value = val;
             }
 
-            // Populate Form
-            document.getElementById('inp-name').value = name;
-            document.getElementById('inp-industry').value = industry;
-            document.getElementById('inp-web').value = web;
-            document.getElementById('inp-rev').value = revenue;
-            document.getElementById('inp-hq').value = hq;
-            document.getElementById('inp-ceo').value = ceo;
-            document.getElementById('inp-desc').value = getBlock("About Digital Turbine", "Founding & Corporate Background");
-            document.getElementById('inp-products').value = getBlock("Product Portfolio", "Company History");
-            document.getElementById('inp-acq').value = getBlock("Acquired Companies", "Market Position");
-            document.getElementById('inp-partners').value = getBlock("Key Partnerships", "Technology Stack");
-            document.getElementById('inp-history').value = getBlock("Company History & Key Milestones", "Partnerships");
+            // Block Extraction (Heuristic based on Digital Turbine doc structure)
+            document.getElementById('inp-desc').value = getBetween("About Digital Turbine", "Founding");
+            document.getElementById('inp-history').value = getBetween("Key Milestones", "Partnerships");
+            document.getElementById('inp-acq').value = getBetween("Acquired Companies", "Market Position");
+            document.getElementById('inp-products').value = getBetween("Product Portfolio", "Company History");
+            document.getElementById('inp-partners').value = getBetween("Key Partnerships", "Technology Stack");
+            document.getElementById('inp-tech').value = getBetween("Technology Stack Highlights", "Competitive Landscape");
+            document.getElementById('inp-jobs').value = getBetween("Recent Job Openings", "Leadership Team");
             
-            // Switch to form
-            nav('analyze');
-            alert("Parsing Complete. Please review and fill missing fields.");
+            // Fallback for competitors
+            const compSection = getBetween("Competitive Landscape", "Event Calendar");
+            document.getElementById('inp-comp-direct').value = compSection;
+
+            alert("Smart Parse Complete! Review the form.");
         }
 
-        // --- CRUD ---
+        // --- CRUD & STORAGE ---
         document.getElementById('main-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const getVal = (id) => document.getElementById(id).value;
+            const get = (id) => document.getElementById(id).value;
             
             const record = {
                 id: document.getElementById('entry-id').value || Date.now().toString(),
-                name: getVal('inp-name'),
-                industry: getVal('inp-industry'),
-                website: getVal('inp-web'),
-                hq: getVal('inp-hq'),
-                revenue: getVal('inp-rev'),
-                ceo: getVal('inp-ceo'),
-                desc: getVal('inp-desc'),
-                products: getVal('inp-products'),
-                tech: getVal('inp-tech'),
-                acq: getVal('inp-acq'),
-                partners: getVal('inp-partners'),
-                compDirect: getVal('inp-comp-direct'),
-                compIndirect: getVal('inp-comp-indirect'),
-                history: getVal('inp-history'),
-                jobs: getVal('inp-jobs'),
-                events: getVal('inp-events'),
+                name: get('inp-name'),
+                web: get('inp-web'),
+                industry: get('inp-industry'),
+                hq: get('inp-hq'),
+                ceo: get('inp-ceo'),
+                rev: get('inp-rev'),
+                desc: get('inp-desc'),
+                products: get('inp-products'),
+                tech: get('inp-tech'),
+                acq: get('inp-acq'),
+                partners: get('inp-partners'),
+                compDirect: get('inp-comp-direct'),
+                compIndirect: get('inp-comp-indirect'),
+                history: get('inp-history'),
+                jobs: get('inp-jobs'),
                 updated: new Date().toLocaleDateString()
             };
 
@@ -305,119 +369,167 @@
             if(idx > -1) db[idx] = record;
             else db.push(record);
 
-            localStorage.setItem('pmo_ent_db', JSON.stringify(db));
-            document.getElementById('main-form').reset();
+            localStorage.setItem('pmo_v4_db', JSON.stringify(db));
+            resetForm();
             nav('dashboard');
             renderTable();
+            updateKPIs();
         });
 
         function renderTable() {
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-            db.forEach(c => {
+            if(db.length === 0) tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">No records found. Start Research.</td></tr>`;
+            
+            db.forEach(r => {
                 const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50";
+                tr.className = "border-b hover:bg-gray-50 transition";
                 tr.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-corp-900">${c.name}</td>
-                    <td class="px-6 py-4 text-gray-500">${c.industry}</td>
-                    <td class="px-6 py-4 text-green-600 font-mono">${c.revenue}</td>
+                    <td class="px-6 py-4 font-bold text-corp-900">${r.name}</td>
+                    <td class="px-6 py-4 text-gray-500">${r.industry || '-'}</td>
+                    <td class="px-6 py-4 text-green-700 font-mono text-xs">${r.rev || '-'}</td>
                     <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="loadRec('${c.id}')" class="text-blue-600 hover:underline">Edit</button>
-                        <button onclick="exportPPT('${c.id}')" class="text-orange-600 hover:underline">PPT</button>
-                        <button onclick="deleteRec('${c.id}')" class="text-red-400 hover:underline">Del</button>
+                        <button onclick="edit('${r.id}')" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
+                        <button onclick="exportPPT('${r.id}')" class="text-orange-600 hover:text-orange-800"><i class="fas fa-file-powerpoint"></i></button>
+                        <button onclick="del('${r.id}')" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function loadRec(id) {
+        function edit(id) {
             const r = db.find(x => x.id === id);
             if(!r) return;
             document.getElementById('entry-id').value = r.id;
-            // Loop through keys and set values by matching inp-{key} (simplified for brevity)
+            
             const map = {
-                'inp-name': r.name, 'inp-industry': r.industry, 'inp-web': r.website,
-                'inp-hq': r.hq, 'inp-rev': r.revenue, 'inp-ceo': r.ceo, 'inp-desc': r.desc,
-                'inp-products': r.products, 'inp-tech': r.tech, 'inp-acq': r.acq,
-                'inp-partners': r.partners, 'inp-comp-direct': r.compDirect,
-                'inp-comp-indirect': r.compIndirect, 'inp-history': r.history,
-                'inp-jobs': r.jobs, 'inp-events': r.events
+                'inp-name': r.name, 'inp-web': r.web, 'inp-industry': r.industry,
+                'inp-hq': r.hq, 'inp-ceo': r.ceo, 'inp-rev': r.rev,
+                'inp-desc': r.desc, 'inp-products': r.products, 'inp-tech': r.tech,
+                'inp-acq': r.acq, 'inp-partners': r.partners,
+                'inp-comp-direct': r.compDirect, 'inp-comp-indirect': r.compIndirect,
+                'inp-history': r.history, 'inp-jobs': r.jobs
             };
+            
             for(let k in map) { if(document.getElementById(k)) document.getElementById(k).value = map[k] || ''; }
             nav('analyze');
         }
 
-        function deleteRec(id) {
-            if(confirm("Delete record?")) {
+        function del(id) {
+            if(confirm("Delete this company?")) {
                 db = db.filter(x => x.id !== id);
-                localStorage.setItem('pmo_ent_db', JSON.stringify(db));
+                localStorage.setItem('pmo_v4_db', JSON.stringify(db));
                 renderTable();
+                updateKPIs();
             }
+        }
+
+        function resetForm() {
+            document.getElementById('main-form').reset();
+            document.getElementById('entry-id').value = '';
+            document.getElementById('discovery-panel').classList.add('hidden');
+        }
+
+        function updateKPIs() {
+            document.getElementById('kpi-count').innerText = db.length;
+            document.getElementById('db-count').innerText = db.length + " Records";
+            
+            // Simple valuation sum
+            let total = 0;
+            db.forEach(r => {
+                if(r.rev && r.rev.includes('M')) total += parseFloat(r.rev) || 0;
+                if(r.rev && r.rev.includes('B')) total += (parseFloat(r.rev) || 0) * 1000;
+            });
+            document.getElementById('kpi-val').innerText = total > 1000 ? `$${(total/1000).toFixed(1)}B` : `$${total}M`;
         }
 
         function backupData() {
             const blob = new Blob([JSON.stringify(db, null, 2)], {type: "application/json"});
-            saveAs(blob, "PMO_Enterprise_Backup.json");
+            saveAs(blob, "PMO_DB_Backup.json");
         }
 
-        // --- EXPORT: ENTERPRISE PPT ---
+        // --- EXPORT: 5-SLIDE PPTX ---
         function exportPPT(id) {
             const r = db.find(x => x.id === id);
             let pptx = new PptxGenJS();
             pptx.layout = 'LAYOUT_16x9';
 
-            // Master Design
-            pptx.defineSlideMaster({
-                title: 'MASTER',
-                background: { color: 'F1F5F9' },
-                objects: [
-                    { rect: { x: 0, y: 0, w: '100%', h: 0.6, fill: '0F172A' } },
-                    { text: { text: r.name + " | Corporate Analysis", options: { x: 0.5, y: 0.1, color: 'FFFFFF', bold: true } } },
-                    { text: { text: "CONFIDENTIAL", options: { x: 11, y: 0.1, color: 'CBD5E1', fontSize: 10 } } }
-                ]
+            const masterOpts = { title: 'MASTER', background: { color: 'F8FAFC' }, objects: [
+                { rect: { x: 0, y: 0, w: '100%', h: 0.8, fill: '1E293B' } },
+                { text: { text: 'PMO INTELLIGENCE REPORT', options: { x: 0.5, y: 0.2, color: 'FFFFFF', bold: true } } },
+                { text: { text: r.updated, options: { x: 11, y: 0.2, color: '94A3B8', fontSize: 10, align: 'right' } } }
+            ]};
+            pptx.defineSlideMaster(masterOpts);
+
+            // 1. Title Slide
+            let s1 = pptx.addSlide({ masterName: 'MASTER' });
+            s1.addText(r.name, { x: 1, y: 2.5, fontSize: 44, bold: true, color: '1E293B' });
+            s1.addText(`Industry: ${r.industry} | HQ: ${r.hq}`, { x: 1, y: 3.5, fontSize: 18, color: '64748B' });
+            s1.addText(`CEO: ${r.ceo}`, { x: 1, y: 4, fontSize: 16, color: '64748B' });
+
+            // 2. Executive Summary
+            let s2 = pptx.addSlide({ masterName: 'MASTER' });
+            s2.addText('Executive Summary', { x: 0.5, y: 1.2, fontSize: 22, bold: true, color: '1E293B' });
+            s2.addText(r.desc, { x: 0.5, y: 1.8, w: 12, fontSize: 12, color: '333333' });
+            
+            s2.addText('Financial Snapshot', { x: 0.5, y: 4.5, fontSize: 14, bold: true });
+            s2.addText(r.rev, { x: 0.5, y: 4.8, fontSize: 24, bold: true, color: '16A34A' });
+
+            // 3. Products & Tech
+            let s3 = pptx.addSlide({ masterName: 'MASTER' });
+            s3.addText('Products & Technology', { x: 0.5, y: 1.2, fontSize: 22, bold: true, color: '1E293B' });
+            
+            s3.addText('Product Portfolio', { x: 0.5, y: 2, fontSize: 14, bold: true, color: '2563EB' });
+            s3.addText(r.products, { x: 0.5, y: 2.4, w: 5.5, h: 4, fontSize: 11, color: '333333', fill: 'F1F5F9' });
+
+            s3.addText('Tech Stack', { x: 6.5, y: 2, fontSize: 14, bold: true, color: '2563EB' });
+            s3.addText(r.tech, { x: 6.5, y: 2.4, w: 5.5, h: 4, fontSize: 11, color: '333333', fill: 'F1F5F9' });
+
+            // 4. Ecosystem & M&A
+            let s4 = pptx.addSlide({ masterName: 'MASTER' });
+            s4.addText('Ecosystem & Growth', { x: 0.5, y: 1.2, fontSize: 22, bold: true, color: '1E293B' });
+            
+            s4.addText('Strategic Acquisitions', { x: 0.5, y: 2, fontSize: 14, bold: true, color: '9333EA' });
+            s4.addText(r.acq, { x: 0.5, y: 2.4, w: 5.5, fontSize: 11 });
+
+            s4.addText('Job Market (Growth Indicators)', { x: 6.5, y: 2, fontSize: 14, bold: true, color: '9333EA' });
+            s4.addText(r.jobs, { x: 6.5, y: 2.4, w: 5.5, fontSize: 11 });
+
+            // 5. History & Competition
+            let s5 = pptx.addSlide({ masterName: 'MASTER' });
+            s5.addText('History & Competition', { x: 0.5, y: 1.2, fontSize: 22, bold: true, color: '1E293B' });
+            s5.addText(r.history, { x: 0.5, y: 2, w: 12, h: 2.5, fontSize: 10, fontFace: 'Courier New', fill: 'F8FAFC' });
+            
+            s5.addText('Direct Competitors', { x: 0.5, y: 5, fontSize: 14, bold: true, color: 'DC2626' });
+            s5.addText(r.compDirect, { x: 0.5, y: 5.3, w: 12, fontSize: 12 });
+
+            pptx.writeFile({ fileName: `${r.name}_Analysis.pptx` });
+        }
+
+        // --- CHARTS ---
+        function renderChart() {
+            const ctx = document.getElementById('chart-valuation').getContext('2d');
+            const names = db.map(x => x.name);
+            const vals = db.map(x => {
+                let v = 0;
+                if(x.rev) {
+                    const n = parseFloat(x.rev.replace(/[^0-9.]/g, ''));
+                    if(x.rev.includes('B')) v = n * 1000;
+                    else if(x.rev.includes('M')) v = n;
+                }
+                return v;
             });
 
-            // Slide 1: Title
-            let s1 = pptx.addSlide({ masterName: 'MASTER' });
-            s1.addText(r.name, { x: 1, y: 2.5, fontSize: 40, bold: true, color: '1E293B' });
-            s1.addText(r.industry + " | " + r.revenue, { x: 1, y: 3.5, fontSize: 18, color: '64748B' });
-            s1.addText("Headquarters: " + r.hq, { x: 1, y: 4, fontSize: 14, color: '64748B' });
-
-            // Slide 2: Overview & Tech
-            let s2 = pptx.addSlide({ masterName: 'MASTER' });
-            s2.addText("Overview & Technology", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: '1E293B' });
-            s2.addText("Description:", { x: 0.5, y: 1.5, fontSize: 12, bold: true });
-            s2.addText(r.desc, { x: 0.5, y: 1.8, w: 5, fontSize: 11, color: '333333' });
-            
-            s2.addText("Technology Stack:", { x: 6, y: 1.5, fontSize: 12, bold: true });
-            s2.addText(r.tech, { x: 6, y: 1.8, w: 6, fontSize: 11, color: '333333', fill: 'E2E8F0' });
-
-            // Slide 3: Ecosystem (Partners & Acquisitions)
-            let s3 = pptx.addSlide({ masterName: 'MASTER' });
-            s3.addText("Business Ecosystem", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: '1E293B' });
-            
-            s3.addText("Key Acquisitions", { x: 0.5, y: 1.5, fontSize: 14, color: '2563EB', bold: true });
-            s3.addText(r.acq, { x: 0.5, y: 2, w: 5, fontSize: 11 });
-
-            s3.addText("Strategic Partnerships", { x: 6.5, y: 1.5, fontSize: 14, color: '2563EB', bold: true });
-            s3.addText(r.partners, { x: 6.5, y: 2, w: 5, fontSize: 11 });
-
-            // Slide 4: Competition
-            let s4 = pptx.addSlide({ masterName: 'MASTER' });
-            s4.addText("Competitive Landscape", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: '1E293B' });
-            
-            s4.addTable([
-                [{ text: "Direct Competitors", options: { fill: 'EF4444', color: 'FFFFFF', bold: true } }, { text: "Indirect Competitors", options: { fill: 'F59E0B', color: 'FFFFFF', bold: true } }],
-                [r.compDirect, r.compIndirect]
-            ], { x: 1, y: 2, w: 11, rowH: 2, border: { pt: 1, color: 'E2E8F0' } });
-
-            // Slide 5: Milestones
-            let s5 = pptx.addSlide({ masterName: 'MASTER' });
-            s5.addText("Key Milestones & History", { x: 0.5, y: 0.8, fontSize: 20, bold: true, color: '1E293B' });
-            s5.addText(r.history, { x: 0.5, y: 1.5, w: 12, fontSize: 10, fontFace: 'Courier New', color: '333333' });
-
-            pptx.writeFile({ fileName: `${r.name}_Analysis_v3.pptx` });
+            if(window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: names,
+                    datasets: [{ label: 'Valuation ($M)', data: vals, backgroundColor: '#3b82f6', borderRadius: 4 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         }
     </script>
 </body>
