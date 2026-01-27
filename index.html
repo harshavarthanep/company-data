@@ -2,18 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMO Corporate Analyzer | H24 Creationz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PMO Corporate Analyzer v2.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -21,8 +19,8 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        corp: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' },
-                        accent: { 500: '#3b82f6', 600: '#2563eb' }
+                        corp: { 50: '#f8fafc', 800: '#1e293b', 900: '#0f172a' },
+                        brand: { 500: '#3b82f6', 600: '#2563eb' }
                     }
                 }
             }
@@ -30,502 +28,620 @@
     </script>
 
     <style>
-        body { background-color: #f8fafc; color: #1e293b; }
-        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; }
-        .sidebar-link { transition: all 0.2s; }
-        .sidebar-link:hover, .sidebar-link.active { background-color: #f1f5f9; color: #2563eb; border-right: 3px solid #2563eb; }
-        input, textarea, select { transition: border 0.2s; }
-        input:focus, textarea:focus, select:focus { outline: none; border-color: #3b82f6; ring: 2px; }
-        .hide { display: none; }
+        body { background-color: #f8fafc; color: #1e293b; -webkit-tap-highlight-color: transparent; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; }
+        .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
+        .hide { display: none !important; }
         
-        /* Print/Export Styles */
-        @media print {
-            .no-print { display: none; }
-            .print-only { display: block; }
-        }
+        /* Mobile Scroll Fixes */
+        .mobile-scroll { -webkit-overflow-scrolling: touch; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50">
 
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col justify-between z-10 shadow-sm">
-        <div>
-            <div class="p-6">
-                <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-accent-600">Analyzer</span></h1>
-                <p class="text-xs text-gray-400 mt-1">Corporate Intelligence Suite</p>
-            </div>
-            <nav class="mt-6">
-                <a onclick="showTab('dashboard')" id="nav-dashboard" class="sidebar-link active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600">
-                    <span class="mr-3">📊</span> Dashboard
-                </a>
-                <a onclick="showTab('analyze')" id="nav-analyze" class="sidebar-link flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600">
-                    <span class="mr-3">🔍</span> New Analysis
-                </a>
-                <a onclick="showTab('visualize')" id="nav-visualize" class="sidebar-link flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600">
-                    <span class="mr-3">📈</span> Visuals & Stats
-                </a>
-            </nav>
+    <header class="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 z-20 shrink-0">
+        <div class="font-bold text-lg text-corp-900">PMO<span class="text-brand-600">Suite</span></div>
+        <button onclick="toggleMobileMenu()" class="text-gray-600 p-2"><i class="fas fa-bars text-xl"></i></button>
+    </header>
+
+    <aside id="sidebar" class="fixed inset-0 z-30 bg-white transform -translate-x-full md:relative md:translate-x-0 md:w-64 md:flex md:flex-col border-r border-gray-200 transition-transform duration-200 ease-in-out flex flex-col h-full shadow-xl md:shadow-none">
+        <div class="p-6 hidden md:block">
+            <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Suite</span></h1>
+            <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">Intelligence v2.0</p>
         </div>
-        <div class="p-6 border-t border-gray-100">
-            <button onclick="exportAllData()" class="w-full text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 py-2 rounded mb-2">Backup Data (JSON)</button>
-            <p class="text-[10px] text-gray-400 text-center">v1.0.0 Production Ready</p>
+
+        <div class="md:hidden p-4 flex justify-end">
+            <button onclick="toggleMobileMenu()" class="text-gray-500"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-2">
+            <a onclick="nav('dashboard')" id="link-dashboard" class="nav-item active flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50">
+                <i class="fas fa-th-large w-6"></i> Dashboard
+            </a>
+            <a onclick="nav('analyze')" id="link-analyze" class="nav-item flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50">
+                <i class="fas fa-search w-6"></i> Research & Add
+            </a>
+            <a onclick="nav('visualize')" id="link-visualize" class="nav-item flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50">
+                <i class="fas fa-chart-pie w-6"></i> Charts
+            </a>
+            <a onclick="nav('settings')" id="link-settings" class="nav-item flex items-center px-6 py-3.5 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50">
+                <i class="fas fa-cog w-6"></i> Settings
+            </a>
+        </nav>
+
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="text-xs font-semibold text-gray-500 mb-2">STORAGE STATUS</div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+                <div class="bg-green-500 h-1.5 rounded-full" style="width: 100%" id="storage-indicator"></div>
+            </div>
+            <p class="text-[10px] text-gray-400">Data saved locally in browser</p>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <div id="overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden glass"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
         
-        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+        <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0">
             <h2 id="page-title" class="text-lg font-semibold text-gray-800">Dashboard</h2>
-            <div class="flex items-center space-x-4">
-                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">● Local Storage Active</span>
+            <div class="flex items-center space-x-3">
+                <button onclick="backupData()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded border border-gray-300 transition">
+                    <i class="fas fa-download mr-1"></i> Backup JSON
+                </button>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-8" id="content-area">
-
-            <div id="tab-dashboard" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-panel p-6 rounded-xl shadow-sm">
-                        <h3 class="text-sm font-medium text-gray-500">Companies Analyzed</h3>
-                        <p class="text-3xl font-bold text-gray-900 mt-2" id="stat-count">0</p>
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 mobile-scroll" id="main-scroll">
+            
+            <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 font-bold uppercase">Analyzed</div>
+                        <div class="text-2xl font-bold text-corp-900 mt-1" id="dash-count">0</div>
                     </div>
-                    <div class="glass-panel p-6 rounded-xl shadow-sm">
-                        <h3 class="text-sm font-medium text-gray-500">Total Valuation Tracked</h3>
-                        <p class="text-3xl font-bold text-accent-600 mt-2" id="stat-valuation">$0</p>
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="text-xs text-gray-500 font-bold uppercase">Valuation Total</div>
+                        <div class="text-2xl font-bold text-green-600 mt-1" id="dash-val">$0</div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 class="font-semibold text-gray-800">Recent Reports</h3>
-                        <button onclick="showTab('analyze')" class="text-xs bg-corp-900 text-white px-3 py-1.5 rounded hover:bg-gray-800">Add New</button>
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                        <h3 class="font-semibold text-gray-800">Company Reports</h3>
+                        <button onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-3 py-2 rounded hover:bg-brand-500 shadow-sm">
+                            <i class="fas fa-plus mr-1"></i> New Analysis
+                        </button>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-gray-50 text-gray-500">
+                        <table class="w-full text-sm text-left whitespace-nowrap">
+                            <thead class="bg-gray-50 text-gray-500 border-b">
                                 <tr>
-                                    <th class="px-6 py-3 font-medium">Company</th>
-                                    <th class="px-6 py-3 font-medium">CEO</th>
-                                    <th class="px-6 py-3 font-medium">Valuation</th>
-                                    <th class="px-6 py-3 font-medium">Status</th>
-                                    <th class="px-6 py-3 font-medium text-right">Actions</th>
+                                    <th class="px-6 py-3">Company</th>
+                                    <th class="px-6 py-3">CEO</th>
+                                    <th class="px-6 py-3">Updated</th>
+                                    <th class="px-6 py-3 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="company-list-body">
-                                <tr><td colspan="5" class="text-center py-8 text-gray-400">No data found. Start a new analysis.</td></tr>
-                            </tbody>
+                            <tbody id="table-body">
+                                </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <div id="tab-analyze" class="hide max-w-5xl mx-auto space-y-8">
+            <div id="view-analyze" class="hide max-w-4xl mx-auto pb-20">
                 
-                <div class="glass-panel p-6 rounded-xl border-l-4 border-accent-600">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">🧠 PMO Research Assistant</h3>
-                    <p class="text-sm text-gray-500 mb-4">Enter a company name to generate deep-search triggers. Use these to find data quickly.</p>
-                    <div class="flex gap-2">
-                        <input type="text" id="research-input" placeholder="e.g. Google, Zoho, Tesla..." class="flex-1 p-3 border border-gray-300 rounded-lg text-sm">
-                        <button onclick="triggerResearch()" class="bg-accent-600 text-white px-6 py-2 rounded-lg hover:bg-accent-500 transition font-medium">Initialize Research</button>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                    <h3 class="font-bold text-gray-800 flex items-center mb-4">
+                        <i class="fas fa-radar text-brand-600 mr-2"></i> Step 1: Data Discovery
+                    </h3>
+                    <div class="flex flex-col md:flex-row gap-3">
+                        <input type="text" id="search-input" placeholder="Enter Company Name (e.g. Stripe)" 
+                               class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition">
+                        <button onclick="runDiscovery()" class="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-500 transition shadow-md">
+                            <i class="fas fa-magic mr-1"></i> Initialize
+                        </button>
                     </div>
-                    <div id="research-links" class="mt-4 flex flex-wrap gap-2 hidden">
+                    
+                    <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100">
+                        <div class="flex items-center gap-4 mb-3">
+                            <img id="logo-preview" src="" class="w-10 h-10 rounded bg-gray-100 object-contain hidden">
+                            <p class="text-xs text-gray-500">Auto-generated deep search links. Click to open sources in new tabs.</p>
                         </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="link-container"></div>
+                        
+                        <div class="mt-6 bg-slate-50 p-4 rounded-lg border border-dashed border-slate-300">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-bold text-slate-600">Smart Paste (Paste text from website to extract data)</label>
+                                <button onclick="parseText()" class="text-xs text-brand-600 hover:underline">Extract Info</button>
+                            </div>
+                            <textarea id="smart-paste" rows="3" class="w-full text-xs p-2 border rounded bg-white" placeholder="Paste 'About Us' or LinkedIn text here..."></textarea>
+                        </div>
+                    </div>
                 </div>
 
-                <form id="analysis-form" class="space-y-8">
-                    <input type="hidden" id="edit-id">
+                <form id="main-form" class="space-y-6">
+                    <input type="hidden" id="entry-id">
                     
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <h4 class="text-sm uppercase tracking-wide text-gray-500 font-bold mb-6 border-b pb-2">01. Company Profile</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-brand-500 rounded-l-xl"></div>
+                        <h4 class="font-bold text-gray-800 mb-4 ml-2">🏢 Corporate Profile</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Company Name</label>
-                                <input type="text" id="inp-name" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white" required>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Company Name</label>
+                                <input type="text" id="inp-name" required class="w-full p-2 border border-gray-200 rounded-lg focus:border-brand-500 outline-none">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">CEO / Leadership</label>
-                                <input type="text" id="inp-ceo" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Website</label>
+                                <input type="text" id="inp-web" class="w-full p-2 border border-gray-200 rounded-lg focus:border-brand-500 outline-none">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Founders</label>
-                                <input type="text" id="inp-founders" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">CEO</label>
+                                <input type="text" id="inp-ceo" class="w-full p-2 border border-gray-200 rounded-lg focus:border-brand-500 outline-none">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Current Valuation (Approx)</label>
-                                <input type="text" id="inp-valuation" placeholder="e.g. $2B or 500Cr" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Valuation / Revenue</label>
+                                <input type="text" id="inp-val" placeholder="e.g. $2B" class="w-full p-2 border border-gray-200 rounded-lg focus:border-brand-500 outline-none">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Founders</label>
+                                <input type="text" id="inp-founders" class="w-full p-2 border border-gray-200 rounded-lg focus:border-brand-500 outline-none">
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <h4 class="text-sm uppercase tracking-wide text-gray-500 font-bold mb-6 border-b pb-2">02. Strategic Analysis</h4>
-                        <div class="grid grid-cols-1 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">🎯 Strategic Analysis</h4>
+                        <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Why this company? (Strategic Relevance)</label>
-                                <textarea id="inp-why" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Why This Company? (Relevance)</label>
+                                <textarea id="inp-why" rows="2" class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white transition outline-none"></textarea>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="grid md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Key Products/Services</label>
-                                    <textarea id="inp-products" rows="4" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Products / Services</label>
+                                    <textarea id="inp-products" rows="4" class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white transition outline-none"></textarea>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-gray-700 mb-1">Target Customers / Market</label>
-                                    <textarea id="inp-customers" rows="4" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-1">Target Customers</label>
+                                    <textarea id="inp-customers" rows="4" class="w-full p-3 border border-gray-200 rounded-lg bg-gray-50 focus:bg-white transition outline-none"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <h4 class="text-sm uppercase tracking-wide text-gray-500 font-bold mb-6 border-b pb-2">03. Market Intelligence</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">⚡ Market Intelligence</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Their Current Problems/Challenges</label>
-                                <textarea id="inp-problems" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                <label class="block text-xs font-semibold text-red-500 uppercase mb-1">Current Problems / Pain Points</label>
+                                <textarea id="inp-probs" rows="3" class="w-full p-3 border border-red-100 rounded-lg bg-red-50 focus:bg-white transition outline-none"></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Profit Making Areas (Cash Cows)</label>
-                                <textarea id="inp-profit" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                <label class="block text-xs font-semibold text-green-600 uppercase mb-1">Profit Areas (Cash Cows)</label>
+                                <textarea id="inp-profit" rows="3" class="w-full p-3 border border-green-100 rounded-lg bg-green-50 focus:bg-white transition outline-none"></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Upcoming Programs / Future Plans</label>
-                                <textarea id="inp-upcoming" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                <label class="block text-xs font-semibold text-blue-600 uppercase mb-1">New Opportunities</label>
+                                <textarea id="inp-opps" rows="3" class="w-full p-3 border border-blue-100 rounded-lg bg-blue-50 focus:bg-white transition outline-none"></textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">New Opportunities (Gap Analysis)</label>
-                                <textarea id="inp-opps" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded focus:bg-white"></textarea>
+                                <label class="block text-xs font-semibold text-purple-600 uppercase mb-1">Upcoming Programs / Future</label>
+                                <textarea id="inp-future" rows="3" class="w-full p-3 border border-purple-100 rounded-lg bg-purple-50 focus:bg-white transition outline-none"></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-end gap-4 pb-10">
-                        <button type="button" onclick="resetForm()" class="px-6 py-3 text-sm text-gray-600 hover:text-gray-800">Clear</button>
-                        <button type="submit" class="bg-corp-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 shadow-lg transform active:scale-95 transition">Save Analysis</button>
+                    <div class="flex items-center justify-end gap-3 sticky bottom-4 bg-white p-4 rounded-xl shadow-xl border border-gray-100 z-10">
+                        <button type="button" onclick="resetForm()" class="px-5 py-2 text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+                        <button type="submit" class="bg-corp-900 text-white px-8 py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transform active:scale-95 transition flex items-center">
+                            <i class="fas fa-save mr-2"></i> Save Analysis
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <div id="tab-visualize" class="hide space-y-6">
+            <div id="view-settings" class="hide max-w-2xl mx-auto">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="font-bold text-gray-800 mb-4">Comparative Analysis</h3>
-                    <div class="h-80 w-full">
-                        <canvas id="valuationChart"></canvas>
+                    <h3 class="font-bold text-lg mb-4">Application Settings</h3>
+                    <p class="text-sm text-gray-500 mb-6">Customize how your reports look.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">"Prepared By" Name</label>
+                            <input type="text" id="set-author" class="w-full p-2 border rounded" placeholder="Your Name or Team Name">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Organization Name</label>
+                            <input type="text" id="set-org" class="w-full p-2 border rounded" placeholder="e.g. Iopex PMO">
+                        </div>
+                        <button onclick="saveSettings()" class="bg-brand-600 text-white px-4 py-2 rounded text-sm mt-2">Save Settings</button>
+                    </div>
+
+                    <div class="mt-8 border-t pt-6">
+                        <h4 class="font-bold text-red-600 mb-2">Danger Zone</h4>
+                        <button onclick="clearAllData()" class="text-xs text-red-500 border border-red-200 px-3 py-2 rounded hover:bg-red-50">Clear All Database</button>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <h3 class="font-bold text-gray-800 mb-4">Opportunity Matrix</h3>
-                        <p class="text-sm text-gray-500 mb-4">Generated based on 'New Opportunities' fields.</p>
-                        <ul id="opportunity-list" class="list-disc pl-5 text-sm text-gray-700 space-y-2"></ul>
+            </div>
+
+            <div id="view-visualize" class="hide max-w-5xl mx-auto">
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
+                    <h3 class="font-bold text-gray-800 mb-4">Market Valuation Comparison</h3>
+                    <div class="relative h-64 md:h-96 w-full">
+                        <canvas id="chart-valuation"></canvas>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <footer class="bg-white border-t border-gray-200 py-3 px-8 text-center">
-            <p class="text-[11px] text-gray-400">
-                Created for Corporate PMO Use • Made with love ❤️ Harsha Varthan E P
-            </p>
+        <footer class="bg-white border-t py-2 px-6 text-center text-[10px] text-gray-400 shrink-0">
+            Made with <span class="text-red-400">❤️</span> by Harsha Varthan E P for PMO | No Server Required
         </footer>
-
     </main>
 
     <script>
-        // State Management
-        let companies = JSON.parse(localStorage.getItem('pmo_companies')) || [];
-        let currentChart = null;
+        // --- DATA STORE ---
+        let db = JSON.parse(localStorage.getItem('pmo_db')) || [];
+        let settings = JSON.parse(localStorage.getItem('pmo_settings')) || { author: 'Harsha Varthan E P', org: 'Corporate PMO' };
 
-        // Navigation
-        function showTab(tabId) {
-            document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hide'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hide');
-            
-            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active', 'bg-gray-50', 'text-accent-600', 'border-r-4', 'border-accent-600'));
-            const navLink = document.getElementById(`nav-${tabId}`);
-            navLink.classList.add('active');
+        // --- INIT ---
+        window.onload = () => {
+            renderTable();
+            updateStats();
+            document.getElementById('set-author').value = settings.author;
+            document.getElementById('set-org').value = settings.org;
+        };
 
-            // Header Update
-            const titles = { 'dashboard': 'Command Center', 'analyze': 'Deep Analysis & Documentation', 'visualize': 'Data Visualization' };
-            document.getElementById('page-title').innerText = titles[tabId];
-
-            if(tabId === 'dashboard') renderDashboard();
-            if(tabId === 'visualize') renderCharts();
-        }
-
-        // Research Logic
-        function triggerResearch() {
-            const query = document.getElementById('research-input').value;
-            if(!query) return alert("Please enter a company name.");
-            
-            const container = document.getElementById('research-links');
-            container.innerHTML = '';
-            container.classList.remove('hidden');
-
-            const searches = [
-                { label: '💰 Valuation', q: `current valuation market cap` },
-                { label: '👤 CEO/Founders', q: `CEO founders` },
-                { label: '⚠️ Problems', q: `challenges business problems complaints` },
-                { label: '🚀 Future Plans', q: `roadmap future plans upcoming projects` },
-                { label: '👔 LinkedIn', url: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(query)}` },
-                { label: '📰 News', q: `latest news business` }
-            ];
-
-            searches.forEach(s => {
-                const btn = document.createElement('a');
-                btn.className = "text-xs bg-gray-100 hover:bg-accent-100 hover:text-accent-700 text-gray-600 px-3 py-2 rounded border border-gray-200 transition flex items-center gap-1";
-                
-                let url = s.url ? s.url : `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + s.q)}`;
-                
-                btn.href = url;
-                btn.target = "_blank";
-                btn.innerHTML = `${s.label} ↗`;
-                container.appendChild(btn);
+        // --- NAVIGATION ---
+        function nav(viewId) {
+            // Hide all views
+            ['dashboard', 'analyze', 'visualize', 'settings'].forEach(id => {
+                document.getElementById(`view-${id}`).classList.add('hide');
+                document.getElementById(`link-${id}`).classList.remove('active');
             });
             
-            // Auto-fill name if empty
-            if(!document.getElementById('inp-name').value) document.getElementById('inp-name').value = query;
+            // Show selected
+            document.getElementById(`view-${viewId}`).classList.remove('hide');
+            
+            // Sidebar active state (Desktop)
+            document.getElementById(`link-${viewId}`).classList.add('active');
+            
+            // Mobile menu close
+            if(window.innerWidth < 768) toggleMobileMenu(false);
+
+            if(viewId === 'visualize') renderCharts();
         }
 
-        // Form Handling
-        document.getElementById('analysis-form').addEventListener('submit', (e) => {
+        function toggleMobileMenu(forceState) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            
+            if (forceState === false || isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        // --- INTELLIGENCE ENGINE ---
+        function runDiscovery() {
+            const name = document.getElementById('search-input').value.trim();
+            if(!name) return alert("Please enter a company name");
+
+            // 1. Auto-fill Name
+            document.getElementById('inp-name').value = name;
+            
+            // 2. Fetch Logo (Clearbit Trick)
+            const domainGuess = name.toLowerCase().replace(/\s+/g, '') + ".com";
+            const logoImg = document.getElementById('logo-preview');
+            logoImg.src = `https://logo.clearbit.com/${domainGuess}`;
+            logoImg.onload = () => logoImg.classList.remove('hidden');
+            logoImg.onerror = () => logoImg.classList.add('hidden');
+            document.getElementById('inp-web').value = domainGuess;
+
+            // 3. Generate Deep Links
+            const container = document.getElementById('link-container');
+            container.innerHTML = '';
+            document.getElementById('discovery-panel').classList.remove('hidden');
+
+            const sources = [
+                { name: "LinkedIn People", icon: "fab fa-linkedin", color: "text-blue-700", q: `site:linkedin.com/company "${name}"` },
+                { name: "ZoomInfo", icon: "fas fa-address-card", color: "text-blue-500", q: `ZoomInfo "${name}" company profile` },
+                { name: "Revenue/Valuation", icon: "fas fa-money-bill-wave", color: "text-green-600", q: `"${name}" annual revenue valuation 2024 2025` },
+                { name: "Competitors", icon: "fas fa-chess", color: "text-purple-600", q: `"${name}" top competitors alternative` },
+                { name: "Recent News", icon: "far fa-newspaper", color: "text-gray-600", q: `"${name}" latest business news problems` },
+                { name: "Crunchbase", icon: "fas fa-database", color: "text-blue-400", q: `Crunchbase "${name}"` }
+            ];
+
+            sources.forEach(src => {
+                const btn = document.createElement('a');
+                btn.href = `https://www.google.com/search?q=${encodeURIComponent(src.q)}`;
+                btn.target = "_blank";
+                btn.className = "flex flex-col items-center justify-center p-3 border rounded hover:bg-gray-50 transition text-center";
+                btn.innerHTML = `
+                    <i class="${src.icon} ${src.color} text-xl mb-1"></i>
+                    <span class="text-[10px] font-bold text-gray-600">${src.name}</span>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        // --- SMART TEXT PARSER ---
+        function parseText() {
+            const text = document.getElementById('smart-paste').value;
+            if(!text) return;
+
+            // Simple Regex Heuristics
+            const moneyRegex = /(\$\d+(\.\d+)?[BMK]|\d+(\.\d+)?\s?(billion|million|crore))/i;
+            const emailRegex = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/;
+            
+            const moneyMatch = text.match(moneyRegex);
+            const emailMatch = text.match(emailRegex);
+
+            if(moneyMatch && !document.getElementById('inp-val').value) {
+                document.getElementById('inp-val').value = moneyMatch[0];
+                alert("Found potential valuation: " + moneyMatch[0]);
+            }
+            
+            // Try to find CEO (Look for 'CEO' keyword and grab surrounding words - naive but helpful)
+            if(text.includes('CEO')) {
+                const idx = text.indexOf('CEO');
+                const snippet = text.substring(Math.max(0, idx - 20), Math.min(text.length, idx + 30));
+                // Just log it for user to see, difficult to extract name perfectly without NLP
+                console.log("CEO Snippet found: " + snippet);
+            }
+        }
+
+        // --- CRUD OPERATIONS ---
+        document.getElementById('main-form').addEventListener('submit', (e) => {
             e.preventDefault();
             
             const data = {
-                id: document.getElementById('edit-id').value || Date.now().toString(),
+                id: document.getElementById('entry-id').value || Date.now().toString(),
                 name: document.getElementById('inp-name').value,
+                website: document.getElementById('inp-web').value,
                 ceo: document.getElementById('inp-ceo').value,
                 founders: document.getElementById('inp-founders').value,
-                valuation: document.getElementById('inp-valuation').value,
+                valuation: document.getElementById('inp-val').value,
                 why: document.getElementById('inp-why').value,
                 products: document.getElementById('inp-products').value,
                 customers: document.getElementById('inp-customers').value,
-                problems: document.getElementById('inp-problems').value,
+                problems: document.getElementById('inp-probs').value,
                 profit: document.getElementById('inp-profit').value,
-                upcoming: document.getElementById('inp-upcoming').value,
                 opps: document.getElementById('inp-opps').value,
+                future: document.getElementById('inp-future').value,
                 updated: new Date().toLocaleDateString()
             };
 
-            const existingIndex = companies.findIndex(c => c.id === data.id);
-            if (existingIndex > -1) {
-                companies[existingIndex] = data;
-            } else {
-                companies.push(data);
-            }
+            const idx = db.findIndex(x => x.id === data.id);
+            if(idx > -1) db[idx] = data;
+            else db.push(data);
 
-            saveData();
+            saveDb();
             resetForm();
-            alert('Analysis Saved Successfully!');
-            showTab('dashboard');
+            nav('dashboard');
         });
 
-        function saveData() {
-            localStorage.setItem('pmo_companies', JSON.stringify(companies));
-            renderDashboard();
+        function saveDb() {
+            localStorage.setItem('pmo_db', JSON.stringify(db));
+            renderTable();
+            updateStats();
         }
 
-        function resetForm() {
-            document.getElementById('analysis-form').reset();
-            document.getElementById('edit-id').value = '';
-            document.getElementById('research-links').classList.add('hidden');
-        }
-
-        // Dashboard Rendering
-        function renderDashboard() {
-            const tbody = document.getElementById('company-list-body');
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
-
-            // Stats
-            document.getElementById('stat-count').innerText = companies.length;
             
-            if (companies.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-400">No analyses yet. Head to "New Analysis" to start.</td></tr>`;
+            if(db.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-400">No data. Start an analysis.</td></tr>`;
                 return;
             }
 
-            companies.forEach(c => {
+            db.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-50 hover:bg-gray-50 transition";
+                tr.className = "border-b hover:bg-gray-50 transition";
                 tr.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-gray-900">${c.name}</td>
-                    <td class="px-6 py-4 text-gray-500">${c.ceo}</td>
-                    <td class="px-6 py-4 text-gray-500">${c.valuation}</td>
-                    <td class="px-6 py-4"><span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded">Active</span></td>
+                    <td class="px-6 py-4 font-medium text-corp-900">${item.name}</td>
+                    <td class="px-6 py-4 text-gray-500">${item.ceo || '-'}</td>
+                    <td class="px-6 py-4 text-xs text-gray-400">${item.updated}</td>
                     <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="editCompany('${c.id}')" class="text-blue-600 hover:underline text-xs">Edit</button>
-                        <button onclick="generatePPT('${c.id}')" class="text-orange-600 hover:underline text-xs">PPT</button>
-                        <button onclick="generateWord('${c.id}')" class="text-blue-800 hover:underline text-xs">Word</button>
-                        <button onclick="deleteCompany('${c.id}')" class="text-red-400 hover:text-red-600 text-xs">×</button>
+                        <button onclick="edit('${item.id}')" class="text-brand-600 hover:bg-blue-50 p-1 rounded"><i class="fas fa-edit"></i></button>
+                        <button onclick="genPPT('${item.id}')" class="text-orange-600 hover:bg-orange-50 p-1 rounded"><i class="fas fa-file-powerpoint"></i></button>
+                        <button onclick="genWord('${item.id}')" class="text-blue-800 hover:bg-blue-50 p-1 rounded"><i class="fas fa-file-word"></i></button>
+                        <button onclick="del('${item.id}')" class="text-red-400 hover:bg-red-50 p-1 rounded"><i class="fas fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function deleteCompany(id) {
-            if(confirm('Are you sure?')) {
-                companies = companies.filter(c => c.id !== id);
-                saveData();
+        function edit(id) {
+            const item = db.find(x => x.id === id);
+            if(!item) return;
+            
+            document.getElementById('entry-id').value = item.id;
+            document.getElementById('inp-name').value = item.name;
+            document.getElementById('inp-web').value = item.website || '';
+            document.getElementById('inp-ceo').value = item.ceo || '';
+            document.getElementById('inp-founders').value = item.founders || '';
+            document.getElementById('inp-val').value = item.valuation || '';
+            document.getElementById('inp-why').value = item.why || '';
+            document.getElementById('inp-products').value = item.products || '';
+            document.getElementById('inp-customers').value = item.customers || '';
+            document.getElementById('inp-probs').value = item.problems || '';
+            document.getElementById('inp-profit').value = item.profit || '';
+            document.getElementById('inp-opps').value = item.opps || '';
+            document.getElementById('inp-future').value = item.future || '';
+            
+            nav('analyze');
+        }
+
+        function del(id) {
+            if(confirm("Delete this report?")) {
+                db = db.filter(x => x.id !== id);
+                saveDb();
             }
         }
 
-        function editCompany(id) {
-            const c = companies.find(c => c.id === id);
-            if(!c) return;
-
-            showTab('analyze');
-            document.getElementById('edit-id').value = c.id;
-            document.getElementById('inp-name').value = c.name;
-            document.getElementById('inp-ceo').value = c.ceo;
-            document.getElementById('inp-founders').value = c.founders;
-            document.getElementById('inp-valuation').value = c.valuation;
-            document.getElementById('inp-why').value = c.why;
-            document.getElementById('inp-products').value = c.products;
-            document.getElementById('inp-customers').value = c.customers;
-            document.getElementById('inp-problems').value = c.problems;
-            document.getElementById('inp-profit').value = c.profit;
-            document.getElementById('inp-upcoming').value = c.upcoming;
-            document.getElementById('inp-opps').value = c.opps;
-            document.getElementById('research-input').value = c.name;
+        function resetForm() {
+            document.getElementById('main-form').reset();
+            document.getElementById('entry-id').value = '';
+            document.getElementById('discovery-panel').classList.add('hidden');
         }
 
-        // Charts
-        function renderCharts() {
-            const ctx = document.getElementById('valuationChart').getContext('2d');
-            const labels = companies.map(c => c.name);
-            // Simple parse for chart demo (removes non-digits) - in production needs better parsing
-            const data = companies.map(c => {
-                const num = parseFloat(c.valuation.replace(/[^0-9.]/g, ''));
-                return isNaN(num) ? 0 : num;
+        function updateStats() {
+            document.getElementById('dash-count').innerText = db.length;
+            // Very naive valuation sum (just counting entries with $)
+            const valCount = db.filter(x => x.valuation && x.valuation.includes('$')).length;
+            document.getElementById('dash-val').innerText = valCount + " tracked";
+        }
+
+        // --- EXPORT ENGINES ---
+        function genPPT(id) {
+            const item = db.find(x => x.id === id);
+            let pptx = new PptxGenJS();
+            pptx.layout = 'LAYOUT_16x9';
+
+            // Master Slide Style
+            pptx.defineSlideMaster({
+                title: 'PMO_MASTER',
+                background: { color: 'FFFFFF' },
+                objects: [
+                    { rect: { x: 0, y: 0, w: '100%', h: 0.8, fill: '1E293B' } }, // Header Bar
+                    { text: { text: settings.org, options: { x: 0.5, y: 0.2, fontSize: 14, color: 'FFFFFF', bold: true } } },
+                    { text: { text: item.updated, options: { x: 11, y: 0.2, fontSize: 10, color: 'CBD5E1', align:'right' } } },
+                    { text: { text: `Prepared by ${settings.author}`, options: { x: 0.5, y: 7.2, w: '90%', fontSize: 9, color: '94A3B8', align: 'center' } } }
+                ]
             });
 
-            if (currentChart) currentChart.destroy();
+            // Slide 1: Title
+            let slide1 = pptx.addSlide({ masterName: 'PMO_MASTER' });
+            slide1.addText(item.name, { x: 1, y: 2.5, w: '80%', fontSize: 44, bold: true, color: '1E293B' });
+            slide1.addText('Strategic Analysis & Opportunities', { x: 1, y: 3.5, fontSize: 18, color: '64748B' });
 
-            currentChart = new Chart(ctx, {
+            // Slide 2: Overview
+            let slide2 = pptx.addSlide({ masterName: 'PMO_MASTER' });
+            slide2.addText('Executive Overview', { x: 0.5, y: 1.2, fontSize: 24, bold: true, color: '1E293B' });
+            slide2.addTable([
+                ['Metric', 'Detail'],
+                ['CEO', item.ceo],
+                ['Valuation', item.valuation],
+                ['Website', item.website]
+            ], { x: 0.5, y: 2, w: 9, fill: 'F8FAFC', color: '333333', border: {pt: 1, color: 'E2E8F0'} });
+
+            // Slide 3: Opportunities
+            let slide3 = pptx.addSlide({ masterName: 'PMO_MASTER' });
+            slide3.addText('Strategic Gaps & Opportunities', { x: 0.5, y: 1.2, fontSize: 24, bold: true, color: '1E293B' });
+            
+            // Problem Box
+            slide3.addText('Current Challenges', { x: 0.5, y: 2, fontSize: 14, bold: true, color: 'EF4444' });
+            slide3.addShape(pptx.ShapeType.rect, { x: 0.5, y: 2.4, w: 4.5, h: 4, fill: 'FEF2F2', line: 'EF4444' });
+            slide3.addText(item.problems, { x: 0.6, y: 2.5, w: 4.3, h: 3.8, fontSize: 11, color: '7F1D1D' });
+
+            // Opps Box
+            slide3.addText('New Opportunities', { x: 5.5, y: 2, fontSize: 14, bold: true, color: '22C55E' });
+            slide3.addShape(pptx.ShapeType.rect, { x: 5.5, y: 2.4, w: 4.5, h: 4, fill: 'F0FDF4', line: '22C55E' });
+            slide3.addText(item.opps, { x: 5.6, y: 2.5, w: 4.3, h: 3.8, fontSize: 11, color: '14532D' });
+
+            pptx.writeFile({ fileName: `${item.name}_PMO_Analysis.pptx` });
+        }
+
+        // --- SETTINGS & BACKUP ---
+        function saveSettings() {
+            settings.author = document.getElementById('set-author').value;
+            settings.org = document.getElementById('set-org').value;
+            localStorage.setItem('pmo_settings', JSON.stringify(settings));
+            alert('Settings Saved');
+        }
+
+        function backupData() {
+            const blob = new Blob([JSON.stringify({db, settings}, null, 2)], {type: "application/json"});
+            saveAs(blob, "PMO_Backup.json");
+        }
+        
+        function clearAllData() {
+            if(confirm("DANGER: This will wipe all data. Continue?")) {
+                localStorage.removeItem('pmo_db');
+                location.reload();
+            }
+        }
+
+        function genWord(id) {
+            const c = db.find(x => x.id === id);
+            const content = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>${c.name}</title></head>
+                <body style="font-family: 'Calibri', sans-serif; padding: 20px;">
+                    <h1 style="color:#2E4053;">${c.name}</h1>
+                    <p style="color:#888;">Prepared by ${settings.author} | ${settings.org}</p>
+                    <hr>
+                    <table style="width:100%; border-collapse: collapse; margin-top:20px;">
+                        <tr style="background:#f2f2f2;"><td style="padding:10px; border:1px solid #ddd;"><strong>CEO</strong></td><td style="padding:10px; border:1px solid #ddd;">${c.ceo}</td></tr>
+                        <tr><td style="padding:10px; border:1px solid #ddd;"><strong>Valuation</strong></td><td style="padding:10px; border:1px solid #ddd;">${c.valuation}</td></tr>
+                    </table>
+                    <h3>Strategic Analysis</h3>
+                    <p>${c.why}</p>
+                    <h3>Market Gaps</h3>
+                    <p>${c.opps}</p>
+                </body></html>`;
+            saveAs(new Blob([content], {type: 'application/msword'}), `${c.name}.doc`);
+        }
+        
+        // --- CHARTS ---
+        function renderCharts() {
+            const ctx = document.getElementById('chart-valuation').getContext('2d');
+            
+            // Extract numbers from strings like "$2B", "500M"
+            const labels = [];
+            const dataPoints = [];
+            
+            db.forEach(c => {
+                let val = 0;
+                if(c.valuation) {
+                    const clean = c.valuation.toUpperCase();
+                    const num = parseFloat(clean.replace(/[^0-9.]/g, ''));
+                    if(!isNaN(num)) {
+                        if(clean.includes('B')) val = num * 1000;
+                        else if(clean.includes('M')) val = num;
+                        else val = num;
+                    }
+                }
+                if(val > 0) {
+                    labels.push(c.name);
+                    dataPoints.push(val);
+                }
+            });
+
+            if(window.myChart) window.myChart.destroy();
+            
+            window.myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Valuation Estimate (Numeric Value extracted)',
-                        data: data,
-                        backgroundColor: '#1e293b',
-                        borderRadius: 4
+                        label: 'Estimated Value (Scaled to Millions)',
+                        data: dataPoints,
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-
-            // Opportunity List
-            const list = document.getElementById('opportunity-list');
-            list.innerHTML = '';
-            companies.forEach(c => {
-                if(c.opps) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${c.name}:</strong> ${c.opps.substring(0, 100)}...`;
-                    list.appendChild(li);
+                    plugins: { legend: { position: 'bottom' } }
                 }
             });
         }
-
-        // EXPORT LOGIC: PPT
-        function generatePPT(id) {
-            const c = companies.find(c => c.id === id);
-            let pptx = new PptxGenJS();
-            
-            // Slide 1: Title
-            let slide1 = pptx.addSlide();
-            slide1.background = { color: "1e293b" };
-            slide1.addText("Corporate Analysis Report", { x: 0.5, y: 2, w: '90%', fontSize: 18, color: "cbd5e1" });
-            slide1.addText(c.name, { x: 0.5, y: 3, w: '90%', fontSize: 48, bold: true, color: "ffffff" });
-            slide1.addText(`Prepared by PMO | Date: ${c.updated}`, { x: 0.5, y: 5, fontSize: 12, color: "94a3b8" });
-
-            // Slide 2: Overview
-            let slide2 = pptx.addSlide();
-            slide2.addText(`Executive Summary: ${c.name}`, { x: 0.5, y: 0.5, fontSize: 24, bold: true, color: "1e293b" });
-            
-            const dataTable = [
-                [{ text: "Category", options: { bold: true, fill: "f1f5f9" } }, { text: "Details", options: { bold: true, fill: "f1f5f9" } }],
-                ["CEO", c.ceo],
-                ["Founders", c.founders],
-                ["Valuation", c.valuation],
-                ["Strategic Relevance", c.why]
-            ];
-            slide2.addTable(dataTable, { x: 0.5, y: 1.5, w: 9, color: "333333", border: { pt: 1, color: "e2e8f0" } });
-
-            // Slide 3: Deep Dive
-            let slide3 = pptx.addSlide();
-            slide3.addText("Market Intelligence", { x: 0.5, y: 0.5, fontSize: 24, bold: true, color: "1e293b" });
-            
-            slide3.addText("Key Problems:", { x: 0.5, y: 1.5, fontSize: 14, bold: true, color: "ef4444" });
-            slide3.addText(c.problems, { x: 0.5, y: 1.8, w: 9, h: 1.5, fontSize: 12, color: "333333", shape: pptx.ShapeType.rect, fill: "fef2f2" });
-
-            slide3.addText("New Opportunities:", { x: 0.5, y: 3.5, fontSize: 14, bold: true, color: "22c55e" });
-            slide3.addText(c.opps, { x: 0.5, y: 3.8, w: 9, h: 1.5, fontSize: 12, color: "333333", shape: pptx.ShapeType.rect, fill: "f0fdf4" });
-
-            pptx.writeFile({ fileName: `${c.name}_Analysis.pptx` });
-        }
-
-        // EXPORT LOGIC: WORD
-        function generateWord(id) {
-            const c = companies.find(c => c.id === id);
-            
-            const content = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>Report</title></head>
-                <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                    <h1 style="color: #1e293b; border-bottom: 2px solid #3b82f6; padding-bottom: 10px;">${c.name} - Corporate Analysis</h1>
-                    <p><strong>Date:</strong> ${c.updated}</p>
-                    <p><strong>Analyst:</strong> Harsha Varthan E P</p>
-                    
-                    <h2 style="background: #f1f5f9; padding: 10px;">Executive Summary</h2>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                        <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;"><strong>CEO</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${c.ceo}</td></tr>
-                        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Founders</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${c.founders}</td></tr>
-                        <tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Valuation</strong></td><td style="padding: 8px; border: 1px solid #ddd;">${c.valuation}</td></tr>
-                    </table>
-
-                    <h3>Strategic Relevance</h3>
-                    <p>${c.why}</p>
-
-                    <h3>Market Analysis</h3>
-                    <ul>
-                        <li><strong>Products:</strong> ${c.products}</li>
-                        <li><strong>Customers:</strong> ${c.customers}</li>
-                        <li><strong>Profit Areas:</strong> ${c.profit}</li>
-                    </ul>
-
-                    <h3 style="color: #b91c1c;">Challenges</h3>
-                    <p>${c.problems}</p>
-
-                    <h3 style="color: #15803d;">Opportunities</h3>
-                    <p>${c.opps}</p>
-                    
-                    <hr>
-                    <p style="text-align: center; font-size: 10px; color: #888;">Generated by PMO Analyzer</p>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff', content], {
-                type: 'application/msword'
-            });
-            saveAs(blob, `${c.name}_Report.doc`);
-        }
-        
-        // Backup
-        function exportAllData() {
-            const blob = new Blob([JSON.stringify(companies, null, 2)], {type: "application/json"});
-            saveAs(blob, "pmo_backup.json");
-        }
-
-        // Init
-        showTab('dashboard');
     </script>
 </body>
 </html>
