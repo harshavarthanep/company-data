@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Master Suite | Secure Share</title>
+    <title>PMO Master Suite | V3 Production</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -32,10 +32,12 @@
         .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
         .hide { display: none !important; }
         
-        /* Inputs & Animations */
+        /* Inputs */
         .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.875rem; outline: none; transition: all 0.2s; }
         .inp-std:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .lbl-std { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; letter-spacing: 0.05em; }
+        
+        /* Animation */
         .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
         .modal-enter { animation: slideIn 0.3s ease-out forwards; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -54,25 +56,25 @@
             
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Secure Intelligence Suite</p>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Secure Enterprise V3</p>
             </div>
 
             <div id="form-login" class="space-y-4">
-                <div><label class="lbl-std">Username</label><input type="text" id="login-user" class="inp-std" placeholder="analyst"></div>
+                <div><label class="lbl-std">Username</label><input type="text" id="login-user" class="inp-std" placeholder="admin / analyst"></div>
                 <div><label class="lbl-std">Password</label><input type="password" id="login-pass" class="inp-std" placeholder="••••••••"></div>
                 <button onclick="authLogin()" class="w-full bg-corp-900 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transition">Secure Sign In</button>
                 
                 <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                     <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Create Account</button>
-                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> I have a Guest Pass Key</button>
+                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> Use Guest Pass Key</button>
                 </div>
             </div>
 
             <div id="form-guest" class="space-y-4 hide">
                 <div class="bg-blue-50 border border-blue-100 p-3 rounded text-xs text-blue-800 mb-4">
-                    <i class="fas fa-info-circle mr-1"></i> Enter the Access ID provided by an Administrator or Analyst.
+                    <i class="fas fa-shield-alt mr-1"></i> Enter the Access ID provided by an Administrator.
                 </div>
-                <div><label class="lbl-std">Guest Pass Key / ID</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest" placeholder="XXXX-XXXX"></div>
+                <div><label class="lbl-std">Guest Pass Key</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest text-lg" placeholder="XXXX-XXXX"></div>
                 <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition">Access Dashboard</button>
                 <div class="text-center pt-2">
                     <button onclick="toggleAuth('login')" class="text-xs text-gray-500 hover:text-corp-900">Back to Login</button>
@@ -83,8 +85,8 @@
                 <div><label class="lbl-std">New Username</label><input type="text" id="sign-user" class="inp-std"></div>
                 <div><label class="lbl-std">Role</label>
                     <select id="sign-role" class="inp-std bg-white">
-                        <option value="analyst">Analyst (Creator)</option>
-                        <option value="admin">Admin (Controller)</option>
+                        <option value="analyst">Analyst</option>
+                        <option value="admin">Admin</option>
                     </select>
                 </div>
                 <div><label class="lbl-std">Password</label><input type="password" id="sign-pass" class="inp-std"></div>
@@ -165,8 +167,8 @@
                             <div class="text-3xl font-bold text-blue-600 mt-2" id="kpi-analysts">1</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Security Status</div>
-                            <div class="text-3xl font-bold text-green-500 mt-2 text-sm pt-2"><i class="fas fa-lock"></i> SECURE</div>
+                            <div class="text-xs text-gray-500 font-bold uppercase">Encryption</div>
+                            <div class="text-3xl font-bold text-green-500 mt-2 text-sm pt-2"><i class="fas fa-lock"></i> AES-256 SIM</div>
                         </div>
                     </div>
 
@@ -306,19 +308,31 @@
 
                             <div class="mt-6 space-y-4">
                                 <div>
-                                    <label class="lbl-std">Token Expiration</label>
+                                    <label class="lbl-std">Preset Duration</label>
                                     <select id="share-expiry" class="inp-std bg-white">
                                         <option value="60">1 Hour</option>
                                         <option value="1440">24 Hours</option>
                                         <option value="0">Never Expires</option>
                                     </select>
                                 </div>
-                                <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Generate Guest Pass</button>
+                                
+                                <div class="relative">
+                                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+                                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-gray-400">OR Custom Date</span></div>
+                                </div>
+
+                                <div>
+                                    <label class="lbl-std">Specific Expiration Date & Time</label>
+                                    <input type="datetime-local" id="share-custom-date" class="inp-std bg-gray-50">
+                                </div>
+
+                                <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 shadow-md">Generate Guest Pass</button>
                                 
                                 <div id="token-display" class="hidden bg-gray-50 border border-gray-200 p-4 rounded-lg animate-fade">
                                     <div class="text-center mb-3">
                                         <div class="text-[10px] text-gray-400 uppercase font-bold">Pass Key</div>
                                         <div class="text-2xl font-mono font-bold text-gray-800 tracking-widest" id="gen-code"></div>
+                                        <div class="text-[10px] text-blue-500 font-bold mt-1" id="gen-exp-text"></div>
                                     </div>
                                     
                                     <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">Shareable Link</div>
@@ -347,7 +361,7 @@
         </main>
     </div>
 
-    <div id="view-modal" class="fixed inset-0 z-40 bg-gray-900/50 hidden flex justify-end">
+    <div id="view-modal" class="fixed inset-0 z-50 bg-gray-900/50 hidden flex justify-end">
         <div class="w-full max-w-2xl h-full bg-white shadow-2xl overflow-y-auto relative animate-fade">
             <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-start z-10">
                 <div>
@@ -380,6 +394,7 @@
                     <div class="bg-green-50 p-4 rounded border border-green-100"><h3 class="text-xs font-bold text-green-600 uppercase mb-2">Opportunities</h3><p id="vm-opps" class="text-gray-700 text-sm whitespace-pre-line"></p></div>
                 </div>
                 <div id="vm-custom-area" class="space-y-6"></div>
+                
                 <div class="pt-8 border-t flex justify-end gap-3">
                     <button id="vm-btn-edit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Edit Report</button>
                     <button onclick="closeModal()" class="bg-gray-100 text-gray-600 px-4 py-2 rounded text-sm hover:bg-gray-200">Close</button>
@@ -392,12 +407,11 @@
         // --- 1. DATA & STATE ---
         let db = JSON.parse(localStorage.getItem('pmo_master_db')) || [];
         let users = JSON.parse(localStorage.getItem('pmo_users')) || [{ user: 'admin', pass: 'admin', role: 'admin' }];
-        let validTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || []; // { code, exp, by }
+        let validTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || [];
         let session = null;
 
         // --- 2. AUTH SYSTEM ---
         window.onload = () => {
-            // Check for URL Token
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('key');
             if(token) {
@@ -416,9 +430,15 @@
         function authLogin() {
             const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
+            
+            // Check Local DB
             const valid = users.find(x => x.user === u && x.pass === p);
-            if (valid) startSession(valid);
-            else alert("Invalid Credentials. Default is admin/admin");
+            
+            if (valid) {
+                startSession(valid);
+            } else {
+                alert("Invalid Credentials. Default: admin / admin");
+            }
         }
 
         function authSignup() {
@@ -437,16 +457,16 @@
             const token = document.getElementById('guest-token').value.trim();
             if(!token) return alert("Please enter a Pass Key");
 
-            // Clean expired tokens first
+            // STRICT VALIDATION
             const now = Date.now();
-            validTokens = validTokens.filter(t => t.exp === 0 || t.exp > now);
+            validTokens = validTokens.filter(t => t.exp === 0 || t.exp > now); // Cleanup expired
             localStorage.setItem('pmo_tokens', JSON.stringify(validTokens));
 
             const match = validTokens.find(t => t.code === token);
             if(match) {
                 startSession({ user: 'Guest Visitor', role: 'guest', via: match.by });
             } else {
-                alert("Invalid or Expired Pass Key.");
+                alert("Access Denied: Invalid or Expired Pass Key.");
             }
         }
 
@@ -476,19 +496,37 @@
         }
 
         function logout() { 
-            window.history.replaceState({}, document.title, window.location.pathname); // Clear URL
+            window.history.replaceState({}, document.title, window.location.pathname);
             location.reload(); 
         }
 
-        // --- 3. SHARING LOGIC ---
+        // --- 3. SHARING LOGIC (FIXED) ---
         function generateToken() {
-            const expMins = parseInt(document.getElementById('share-expiry').value);
+            const customDate = document.getElementById('share-custom-date').value;
+            let expiryTime = 0;
+            let expiryText = "Never Expires";
+
+            if (customDate) {
+                expiryTime = new Date(customDate).getTime();
+                if (expiryTime < Date.now()) return alert("Expiration date must be in the future.");
+                expiryText = `Expires: ${new Date(customDate).toLocaleString()}`;
+            } else {
+                const expMins = parseInt(document.getElementById('share-expiry').value);
+                if (expMins > 0) {
+                    expiryTime = Date.now() + (expMins * 60000);
+                    expiryText = `Expires in ${expMins/60} Hours`;
+                }
+            }
+
             const code = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
             
+            // Ensure session.user exists for Admin
+            const creator = session && session.user ? session.user : 'Admin';
+
             const newToken = {
                 code: code,
-                exp: expMins === 0 ? 0 : Date.now() + (expMins * 60000),
-                by: session.user,
+                exp: expiryTime,
+                by: creator,
                 created: new Date().toLocaleTimeString()
             };
 
@@ -497,6 +535,7 @@
 
             document.getElementById('token-display').classList.remove('hidden');
             document.getElementById('gen-code').innerText = code;
+            document.getElementById('gen-exp-text').innerText = expiryText;
             
             const link = `${window.location.protocol}//${window.location.host}${window.location.pathname}?key=${code}`;
             document.getElementById('gen-link').value = link;
@@ -506,7 +545,7 @@
             const copyText = document.getElementById("gen-link");
             copyText.select();
             document.execCommand("copy");
-            alert("Link copied to clipboard!");
+            alert("Link copied!");
         }
 
         // --- 4. NAVIGATION & UI ---
@@ -519,27 +558,27 @@
             if(viewId === 'visualize') renderChart();
         }
 
-        // --- 5. REPORT VIEWER MODAL (FIXED: Shows all data) ---
+        // --- 5. UNIVERSAL REPORT VIEWER (ALL USERS) ---
         function openViewModal(id) {
             const r = db.find(x => x.id === id);
             if(!r) return;
 
+            // Basic Fields
             document.getElementById('vm-name').innerText = r.name;
             document.getElementById('vm-ceo').innerHTML = `<i class="fas fa-user-tie mr-1"></i> ${r.ceo || 'Unknown CEO'}`;
             const webEl = document.getElementById('vm-web');
             webEl.href = r.web && r.web.startsWith('http') ? r.web : `https://${r.web || '#'}`;
             webEl.innerText = r.web || 'No Website';
-            
             document.getElementById('vm-rev').innerText = r.rev || '-';
             document.getElementById('vm-author').innerText = `${r.author} | ${r.updated}`;
             
             const fields = ['desc', 'products', 'tech', 'probs', 'opps'];
             fields.forEach(f => document.getElementById(`vm-${f}`).innerText = r[f] || 'No data.');
 
-            // Render Custom Fields
+            // Custom Fields (Iterate and Show for EVERYONE)
             const customArea = document.getElementById('vm-custom-area');
             customArea.innerHTML = '';
-            if(r.customFields && r.customFields.length > 0) {
+            if(r.customFields && Array.isArray(r.customFields)) {
                 r.customFields.forEach(cf => {
                     const div = document.createElement('div');
                     div.innerHTML = `<h3 class="text-sm font-bold text-gray-800 uppercase border-b pb-2 mb-2">${cf.title} <span class="text-xs text-gray-400 font-normal ml-2">${cf.subtitle || ''}</span></h3><p class="text-sm text-gray-600 whitespace-pre-line">${cf.content}</p>`;
@@ -547,13 +586,13 @@
                 });
             }
 
-            // Configure Edit Button
+            // Edit Button Logic
             const btnEdit = document.getElementById('vm-btn-edit');
             const isMine = session.user === r.author;
             const isAdmin = session.role === 'admin';
             
             if (session.role === 'guest' || (!isMine && !isAdmin)) {
-                btnEdit.classList.add('hidden');
+                btnEdit.classList.add('hidden'); // Guests view only
             } else {
                 btnEdit.classList.remove('hidden');
                 btnEdit.onclick = () => { closeModal(); edit(r.id); };
@@ -576,6 +615,7 @@
                 const tr = document.createElement('tr');
                 tr.className = "border-b hover:bg-gray-50 transition cursor-pointer";
                 tr.onclick = (e) => {
+                    // Clicking ANYWHERE opens the modal (Universal View)
                     if(e.target.closest('button')) return;
                     openViewModal(r.id);
                 };
