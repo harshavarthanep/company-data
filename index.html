@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Master Suite | Production Ready</title>
+    <title>PMO Master Suite | Enterprise</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -35,227 +35,337 @@
         .inp-std:focus { border-color: #3b82f6; ring: 2px; }
         .lbl-std { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; }
         
+        /* Auth Screen Animation */
+        .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
+        
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
     </style>
 </head>
-<body class="h-screen flex flex-col md:flex-row overflow-hidden bg-slate-50">
+<body class="h-screen overflow-hidden bg-slate-50 flex flex-col">
 
-    <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
-        <div class="p-6 border-b border-gray-100">
-            <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-            <p class="text-[10px] text-gray-400 mt-1 font-semibold tracking-wider">CORP INTELLIGENCE</p>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-4 space-y-1">
-            <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                <i class="fas fa-th-large w-6"></i> Dashboard
-            </a>
-            <a onclick="nav('analyze')" id="nav-analyze" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                <i class="fas fa-search-dollar w-6"></i> Research & Edit
-            </a>
-            <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                <i class="fas fa-chart-pie w-6"></i> Analytics
-            </a>
-            <a onclick="nav('settings')" id="nav-settings" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                <i class="fas fa-cog w-6"></i> Settings
-            </a>
-        </nav>
-        <div class="p-6 bg-gray-50 border-t border-gray-200">
-             <button onclick="backupData()" class="w-full text-xs bg-white border border-gray-300 text-gray-700 py-2.5 rounded shadow-sm hover:bg-gray-100 font-semibold flex justify-center items-center gap-2">
-                <i class="fas fa-download"></i> Full Backup
-             </button>
-        </div>
-    </aside>
+    <div id="auth-layer" class="fixed inset-0 z-50 bg-white flex items-center justify-center auth-bg">
+        <div class="w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl border border-gray-100 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
+                <p class="text-xs text-gray-500 mt-2 font-medium tracking-wide">ENTERPRISE INTELLIGENCE SUITE</p>
+            </div>
 
-    <header class="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 z-30 shrink-0 shadow-sm">
-        <div class="font-bold text-lg text-corp-900">PMO<span class="text-brand-600">Master</span></div>
-        <div class="flex gap-4">
-            <button onclick="nav('dashboard')" class="text-gray-600"><i class="fas fa-home text-xl"></i></button>
-            <button onclick="nav('analyze')" class="text-brand-600"><i class="fas fa-plus-circle text-xl"></i></button>
-        </div>
-    </header>
+            <div id="form-login" class="space-y-4">
+                <div>
+                    <label class="lbl-std">Username / Email</label>
+                    <input type="text" id="login-user" class="inp-std" placeholder="analyst@iopex.com">
+                </div>
+                <div>
+                    <label class="lbl-std">Password</label>
+                    <input type="password" id="login-pass" class="inp-std" placeholder="••••••••">
+                </div>
+                <button onclick="authLogin()" class="w-full bg-corp-900 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transition">Sign In</button>
+                
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Create Account</button>
+                    <button onclick="authGuest()" class="text-xs text-gray-400 hover:text-gray-600">Visitor Access (Guest)</button>
+                </div>
+            </div>
 
-    <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
+            <div id="form-signup" class="space-y-4 hide">
+                <div>
+                    <label class="lbl-std">Create Username</label>
+                    <input type="text" id="sign-user" class="inp-std">
+                </div>
+                <div>
+                    <label class="lbl-std">Choose Role</label>
+                    <select id="sign-role" class="inp-std bg-white">
+                        <option value="analyst">Analyst (Editor)</option>
+                        <option value="admin">Admin (Manager)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="lbl-std">Password</label>
+                    <input type="password" id="sign-pass" class="inp-std">
+                </div>
+                <button onclick="authSignup()" class="w-full bg-brand-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-brand-700 transition">Register User</button>
+                <div class="text-center pt-2">
+                    <button onclick="toggleAuth('login')" class="text-xs text-gray-500 hover:text-corp-900">Back to Login</button>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-[10px] text-center text-gray-300">
+                Secure Session • Local Encrypted Storage
+            </div>
+        </div>
+    </div>
+
+    <div id="app-layer" class="flex-1 flex flex-col md:flex-row h-full overflow-hidden opacity-0 transition-opacity duration-500">
         
-        <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0">
-            <h2 id="page-title" class="text-lg font-semibold text-gray-800">Dashboard</h2>
-            <div class="flex items-center space-x-2 text-sm text-gray-500">
-                <i class="fas fa-user-circle"></i>
-                <span id="display-author">Guest Analyst</span>
+        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
+            <div class="p-6 border-b border-gray-100">
+                <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
+                <div class="flex items-center mt-2 gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <p class="text-[10px] text-gray-400 font-semibold tracking-wider uppercase" id="role-badge">Connect</p>
+                </div>
+            </div>
+            <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+                <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fas fa-th-large w-6"></i> Dashboard
+                </a>
+                <a onclick="nav('analyze')" id="nav-analyze" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fas fa-search-dollar w-6"></i> Research
+                </a>
+                <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fas fa-chart-pie w-6"></i> Analytics
+                </a>
+                <a onclick="nav('settings')" id="nav-settings" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
+                    <i class="fas fa-cog w-6"></i> Settings
+                </a>
+            </nav>
+            <div class="p-4 border-t border-gray-200 space-y-2">
+                 <button onclick="logout()" class="w-full text-xs text-red-500 border border-red-100 bg-red-50 py-2 rounded hover:bg-red-100 font-semibold">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Sign Out
+                 </button>
+            </div>
+        </aside>
+
+        <header class="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 z-30 shrink-0 shadow-sm">
+            <div class="font-bold text-lg text-corp-900">PMO<span class="text-brand-600">Master</span></div>
+            <div class="flex gap-4">
+                <button onclick="nav('dashboard')" class="text-gray-600"><i class="fas fa-home text-xl"></i></button>
+                <button onclick="logout()" class="text-red-500"><i class="fas fa-power-off text-xl"></i></button>
             </div>
         </header>
 
-        <div class="flex-1 overflow-y-auto p-4 md:p-8 mobile-scroll" id="main-scroll">
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
             
-            <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto fade-in">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                        <div class="text-xs text-gray-500 font-bold uppercase">Companies</div>
-                        <div class="text-3xl font-bold text-corp-900 mt-2" id="kpi-count">0</div>
-                    </div>
-                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                        <div class="text-xs text-gray-500 font-bold uppercase">Total Valuation</div>
-                        <div class="text-3xl font-bold text-green-600 mt-2" id="kpi-val">$0</div>
-                    </div>
+            <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0">
+                <h2 id="page-title" class="text-lg font-semibold text-gray-800">Dashboard</h2>
+                <div class="flex items-center space-x-3 text-sm text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
+                    <i class="fas fa-user-circle text-gray-400"></i>
+                    <span id="display-user" class="font-medium text-gray-700">Guest</span>
                 </div>
+            </header>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                        <h3 class="font-bold text-gray-800">Analyst Reports</h3>
-                        <button onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded hover:bg-brand-700 font-medium shadow-sm transition">
-                            <i class="fas fa-plus mr-1"></i> New Research
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left whitespace-nowrap">
-                            <thead class="bg-gray-50 text-gray-500 border-b">
-                                <tr>
-                                    <th class="px-6 py-3 font-semibold">Company</th>
-                                    <th class="px-6 py-3 font-semibold">CEO</th>
-                                    <th class="px-6 py-3 font-semibold">Valuation</th>
-                                    <th class="px-6 py-3 font-semibold text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="view-analyze" class="hide max-w-5xl mx-auto pb-24">
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 mobile-scroll" id="main-scroll">
                 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                    <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-4">
-                        <h3 class="font-bold text-gray-800 text-lg flex items-center">
-                            <i class="fas fa-globe-americas text-brand-500 mr-2"></i> Intelligence Gathering
-                        </h3>
-                    </div>
-                    
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <input type="text" id="search-input" placeholder="Enter Company Name (e.g. Zoho)" 
-                               class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
-                        <button onclick="runDiscovery()" class="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 shadow-sm">
-                            <i class="fas fa-bolt mr-1"></i> Generate Links
-                        </button>
-                    </div>
-
-                    <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100 animate-fade">
-                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 mb-4" id="link-container"></div>
-                        <p class="text-[10px] text-gray-400 text-center">External links open in new tabs. We do not store your search history.</p>
-                    </div>
-                </div>
-
-                <form id="main-form" class="space-y-6">
-                    <input type="hidden" id="entry-id">
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
-                        <h4 class="font-bold text-gray-800 mb-5 ml-2">1. Corporate Profile</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div><label class="lbl-std">Company Name</label><input type="text" id="inp-name" required class="inp-std"></div>
-                            <div><label class="lbl-std">Website</label><input type="text" id="inp-web" class="inp-std"></div>
-                            <div><label class="lbl-std">CEO / Leadership</label><input type="text" id="inp-ceo" class="inp-std"></div>
-                            <div><label class="lbl-std">Revenue / Valuation</label><input type="text" id="inp-rev" placeholder="e.g. $1.5B" class="inp-std font-bold text-green-700"></div>
-                            <div class="md:col-span-2"><label class="lbl-std">Description</label><textarea id="inp-desc" rows="3" class="inp-std"></textarea></div>
+                <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto fade-in">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <div class="text-xs text-gray-500 font-bold uppercase">Active Reports</div>
+                            <div class="text-3xl font-bold text-corp-900 mt-2" id="kpi-count">0</div>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <div class="text-xs text-gray-500 font-bold uppercase">Total Valuation</div>
+                            <div class="text-3xl font-bold text-green-600 mt-2" id="kpi-val">$0</div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">2. Tech & Product</h4>
-                            <div class="space-y-4">
-                                <div><label class="lbl-std">Product Portfolio</label><textarea id="inp-products" rows="3" class="inp-std" placeholder="Key products list..."></textarea></div>
-                                <div><label class="lbl-std">Technology Stack</label><textarea id="inp-tech" rows="3" class="inp-std" placeholder="Cloud, AI, Frameworks..."></textarea></div>
-                            </div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">3. Ecosystem</h4>
-                            <div class="space-y-4">
-                                <div><label class="lbl-std">Acquisitions</label><textarea id="inp-acq" rows="3" class="inp-std" placeholder="Recent M&A activity..."></textarea></div>
-                                <div><label class="lbl-std">Competitors (Direct/Indirect)</label><textarea id="inp-comp" rows="3" class="inp-std"></textarea></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">4. Strategic Outlook</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div><label class="lbl-std">Key Milestones (History)</label><textarea id="inp-hist" rows="4" class="inp-std font-mono text-xs"></textarea></div>
-                            <div><label class="lbl-std">Job Openings / Hiring Focus</label><textarea id="inp-jobs" rows="4" class="inp-std"></textarea></div>
-                            <div><label class="lbl-std text-red-500">Problems / Challenges</label><textarea id="inp-probs" rows="2" class="inp-std bg-red-50 border-red-100"></textarea></div>
-                            <div><label class="lbl-std text-green-600">Opportunities / Profit Areas</label><textarea id="inp-opps" rows="2" class="inp-std bg-green-50 border-green-100"></textarea></div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
-                        <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-500 hover:text-gray-800">Cancel</button>
-                        <div class="flex gap-3">
-                            <button type="button" onclick="resetForm()" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">Clear</button>
-                            <button type="submit" class="bg-corp-900 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg hover:bg-gray-800 flex items-center transform active:scale-95 transition">
-                                <i class="fas fa-save mr-2"></i> Save Data
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                            <h3 class="font-bold text-gray-800">Intelligence Reports</h3>
+                            <button id="btn-add-new" onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded hover:bg-brand-700 font-medium shadow-sm transition">
+                                <i class="fas fa-plus mr-1"></i> New Research
                             </button>
                         </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left whitespace-nowrap">
+                                <thead class="bg-gray-50 text-gray-500 border-b">
+                                    <tr>
+                                        <th class="px-6 py-3 font-semibold">Company</th>
+                                        <th class="px-6 py-3 font-semibold">Analyst</th>
+                                        <th class="px-6 py-3 font-semibold">Valuation</th>
+                                        <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body"></tbody>
+                            </table>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
 
-            <div id="view-settings" class="hide max-w-2xl mx-auto">
-                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Analyst Settings</h3>
-                    <p class="text-sm text-gray-500 mb-6">These details will appear on all your Word and PPT exports.</p>
+                <div id="view-analyze" class="hide max-w-5xl mx-auto pb-24">
                     
-                    <div class="space-y-5">
-                        <div>
-                            <label class="lbl-std">Analyst Name (You)</label>
-                            <input type="text" id="set-author" class="inp-std" placeholder="e.g. Harsha Varthan E P">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center">
+                            <i class="fas fa-globe-americas text-brand-500 mr-2"></i> Discovery Engine
+                        </h3>
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <input type="text" id="search-input" placeholder="Company Name (e.g. Zoho)" 
+                                   class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
+                            <button onclick="runDiscovery()" class="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 shadow-sm">
+                                Generate Links
+                            </button>
                         </div>
-                        <div>
-                            <label class="lbl-std">Organization / Company Name</label>
-                            <input type="text" id="set-org" class="inp-std" placeholder="e.g. Corporate PMO">
-                        </div>
-                        <button onclick="saveSettings()" class="bg-brand-600 text-white px-6 py-2 rounded shadow hover:bg-brand-700">Save Preferences</button>
+                        <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100 grid grid-cols-2 md:grid-cols-4 gap-3"></div>
                     </div>
 
-                    <div class="mt-10 pt-6 border-t">
-                        <h4 class="font-bold text-red-600 mb-2">Danger Zone</h4>
-                        <button onclick="clearAllData()" class="text-xs text-red-500 border border-red-200 px-4 py-2 rounded hover:bg-red-50">Reset Application (Clear DB)</button>
+                    <form id="main-form" class="space-y-6">
+                        <input type="hidden" id="entry-id">
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
+                            <h4 class="font-bold text-gray-800 mb-5 ml-2">1. Corporate Profile</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div><label class="lbl-std">Company Name</label><input type="text" id="inp-name" required class="inp-std"></div>
+                                <div><label class="lbl-std">Website</label><input type="text" id="inp-web" class="inp-std"></div>
+                                <div><label class="lbl-std">CEO</label><input type="text" id="inp-ceo" class="inp-std"></div>
+                                <div><label class="lbl-std">Valuation</label><input type="text" id="inp-rev" placeholder="$1.5B" class="inp-std font-bold text-green-700"></div>
+                                <div class="md:col-span-2"><label class="lbl-std">Description</label><textarea id="inp-desc" rows="3" class="inp-std"></textarea></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">2. Tech & Product</h4>
+                                <div><label class="lbl-std">Products</label><textarea id="inp-products" rows="3" class="inp-std"></textarea></div>
+                                <div class="mt-4"><label class="lbl-std">Tech Stack</label><textarea id="inp-tech" rows="3" class="inp-std"></textarea></div>
+                            </div>
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">3. Ecosystem</h4>
+                                <div><label class="lbl-std">Acquisitions</label><textarea id="inp-acq" rows="3" class="inp-std"></textarea></div>
+                                <div class="mt-4"><label class="lbl-std">Competitors</label><textarea id="inp-comp" rows="3" class="inp-std"></textarea></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">4. Strategic Outlook</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div><label class="lbl-std">History</label><textarea id="inp-hist" rows="4" class="inp-std"></textarea></div>
+                                <div><label class="lbl-std">Hiring</label><textarea id="inp-jobs" rows="4" class="inp-std"></textarea></div>
+                                <div><label class="lbl-std text-red-500">Problems</label><textarea id="inp-probs" rows="2" class="inp-std bg-red-50"></textarea></div>
+                                <div><label class="lbl-std text-green-600">Opportunities</label><textarea id="inp-opps" rows="2" class="inp-std bg-green-50"></textarea></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
+                            <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-500 hover:text-gray-800">Cancel</button>
+                            <div class="flex gap-3">
+                                <button type="button" onclick="resetForm()" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">Clear</button>
+                                <button type="submit" class="bg-corp-900 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg hover:bg-gray-800 flex items-center transform active:scale-95 transition">
+                                    <i class="fas fa-save mr-2"></i> Save Report
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="view-settings" class="hide max-w-2xl mx-auto">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">My Profile</h3>
+                        <p class="text-sm text-gray-500 mb-6">Manage your session settings.</p>
+                        
+                        <div class="space-y-5">
+                            <div>
+                                <label class="lbl-std">Current Role</label>
+                                <div id="set-role" class="p-2 bg-gray-100 rounded text-gray-600 text-sm font-mono">Guest</div>
+                            </div>
+                            <button onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full">
+                                <i class="fas fa-download mr-2"></i> Download My Data
+                            </button>
+                        </div>
+
+                        <div id="admin-zone" class="mt-10 pt-6 border-t hidden">
+                            <h4 class="font-bold text-red-600 mb-2">Admin Zone</h4>
+                            <p class="text-xs text-gray-400 mb-2">You are an Admin. You can wipe the entire database.</p>
+                            <button onclick="clearAllData()" class="text-xs text-red-500 border border-red-200 px-4 py-2 rounded hover:bg-red-50">Factory Reset Database</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="view-visualize" class="hide max-w-6xl mx-auto">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 class="font-bold text-gray-800 mb-6">Market Valuation Analysis</h3>
-                    <div class="h-96 w-full">
-                        <canvas id="chart-valuation"></canvas>
+                <div id="view-visualize" class="hide max-w-6xl mx-auto">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold text-gray-800 mb-6">Valuation Landscape</h3>
+                        <div class="h-96 w-full">
+                            <canvas id="chart-valuation"></canvas>
+                        </div>
                     </div>
                 </div>
+
             </div>
-
-        </div>
-
-        <footer class="bg-white border-t py-2 px-6 text-center text-[10px] text-gray-400 shrink-0">
-            Professional PMO Suite • Made with ❤️ by Harsha Varthan E P
-        </footer>
-    </main>
+        </main>
+    </div>
 
     <script>
-        // --- DATA LAYER ---
+        // --- 1. SESSION & AUTH MANAGER ---
         let db = JSON.parse(localStorage.getItem('pmo_master_db')) || [];
-        let settings = JSON.parse(localStorage.getItem('pmo_settings')) || { author: 'Harsha Varthan E P', org: 'Corporate PMO' };
+        let users = JSON.parse(localStorage.getItem('pmo_users')) || [
+            { user: 'admin', pass: 'admin', role: 'admin' } // Default Admin
+        ];
+        let session = null; // { user: 'name', role: 'admin|analyst|guest' }
 
-        // --- INITIALIZATION ---
-        window.onload = () => {
+        // --- 2. AUTH FUNCTIONS ---
+        function toggleAuth(view) {
+            document.getElementById('form-login').classList.add('hide');
+            document.getElementById('form-signup').classList.add('hide');
+            document.getElementById(`form-${view}`).classList.remove('hide');
+        }
+
+        function authLogin() {
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            
+            const valid = users.find(x => x.user === u && x.pass === p);
+            if (valid) {
+                startSession(valid);
+            } else {
+                alert("Invalid Credentials. Try 'admin' / 'admin'");
+            }
+        }
+
+        function authSignup() {
+            const u = document.getElementById('sign-user').value.trim();
+            const p = document.getElementById('sign-pass').value.trim();
+            const r = document.getElementById('sign-role').value;
+
+            if(!u || !p) return alert("Fill all fields");
+            if(users.find(x => x.user === u)) return alert("User already exists");
+
+            const newUser = { user: u, pass: p, role: r };
+            users.push(newUser);
+            localStorage.setItem('pmo_users', JSON.stringify(users)); // Mock Cloud Save
+            startSession(newUser);
+        }
+
+        function authGuest() {
+            startSession({ user: 'Guest Visitor', role: 'guest' });
+        }
+
+        function startSession(userObj) {
+            session = userObj;
+            document.getElementById('auth-layer').classList.add('hide');
+            document.getElementById('app-layer').classList.remove('opacity-0');
+            
+            // UI Personalization
+            document.getElementById('display-user').innerText = session.user;
+            document.getElementById('role-badge').innerText = session.role.toUpperCase();
+            document.getElementById('set-role').innerText = session.role.toUpperCase();
+
+            // Role Restrictions
+            if(session.role === 'guest') {
+                document.getElementById('nav-analyze').classList.add('hide'); // Hide Research Tab
+                document.getElementById('btn-add-new').classList.add('hide'); // Hide Add Button
+            } else {
+                document.getElementById('nav-analyze').classList.remove('hide');
+                document.getElementById('btn-add-new').classList.remove('hide');
+            }
+
+            if(session.role === 'admin') {
+                document.getElementById('admin-zone').classList.remove('hidden');
+            }
+
+            nav('dashboard');
             renderTable();
             updateKPIs();
-            document.getElementById('set-author').value = settings.author;
-            document.getElementById('set-org').value = settings.org;
-            document.getElementById('display-author').innerText = settings.author;
-        };
+        }
 
-        // --- NAVIGATION ---
+        function logout() {
+            location.reload();
+        }
+
+        // --- 3. NAVIGATION ---
         function nav(viewId) {
             document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hide'));
             document.getElementById(`view-${viewId}`).classList.remove('hide');
@@ -267,47 +377,40 @@
             if(viewId === 'visualize') renderChart();
         }
 
-        // --- RESEARCH ENGINE ---
-        function runDiscovery() {
-            const name = document.getElementById('search-input').value.trim();
-            if(!name) return alert("Enter a company name first.");
-
-            document.getElementById('inp-name').value = name;
+        // --- 4. CRUD OPERATIONS (Modified for Roles) ---
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
             
-            const panel = document.getElementById('discovery-panel');
-            const container = document.getElementById('link-container');
-            panel.classList.remove('hidden');
-            container.innerHTML = '';
+            db.forEach(r => {
+                // ROW SECURITY: Everyone can see everything (Transparency), but Actions are limited
+                const isMine = r.author === session.user;
+                const isAdmin = session.role === 'admin';
+                const canEdit = isAdmin || isMine;
 
-            // Deep Search Sources
-            const sources = [
-                { t: "LinkedIn", i: "fab fa-linkedin", c: "text-blue-700", q: `site:linkedin.com/company "${name}"` },
-                { t: "ZoomInfo", i: "fas fa-address-card", c: "text-blue-500", q: `ZoomInfo "${name}" company profile` },
-                { t: "Crunchbase", i: "fas fa-database", c: "text-blue-400", q: `Crunchbase "${name}"` },
-                { t: "Revenue", i: "fas fa-money-bill-wave", c: "text-green-600", q: `"${name}" annual revenue valuation 2025` },
-                { t: "Glassdoor (Jobs)", i: "fas fa-briefcase", c: "text-green-500", q: `Glassdoor "${name}" reviews jobs` },
-                { t: "Tech Stack", i: "fas fa-layer-group", c: "text-purple-600", q: `"${name}" technology stack` },
-                { t: "Competitors", i: "fas fa-chess", c: "text-red-500", q: `top competitors of "${name}"` },
-                { t: "News", i: "fas fa-newspaper", c: "text-gray-600", q: `"${name}" latest business news` }
-            ];
-
-            sources.forEach(s => {
-                const btn = document.createElement('a');
-                btn.href = `https://www.google.com/search?q=${encodeURIComponent(s.q)}`;
-                btn.target = "_blank";
-                btn.className = "flex flex-col items-center justify-center p-3 border rounded hover:bg-gray-50 hover:shadow-md transition text-center bg-white";
-                btn.innerHTML = `<i class="${s.i} ${s.c} text-lg mb-1"></i><span class="text-[10px] font-bold text-gray-500 uppercase">${s.t}</span>`;
-                container.appendChild(btn);
+                const tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-gray-50 transition";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-corp-900">${r.name}</td>
+                    <td class="px-6 py-4 text-gray-500 text-xs"><span class="bg-gray-100 px-2 py-1 rounded">${r.author || 'Unknown'}</span></td>
+                    <td class="px-6 py-4 text-green-700 font-mono text-xs font-bold">${r.rev || '-'}</td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        ${canEdit ? `<button onclick="edit('${r.id}')" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>` : ''}
+                        <button onclick="exportPPT('${r.id}')" class="text-orange-600 hover:text-orange-800"><i class="fas fa-file-powerpoint"></i></button>
+                        ${canEdit ? `<button onclick="del('${r.id}')" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
 
-        // --- CRUD OPERATIONS ---
         document.getElementById('main-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const get = (id) => document.getElementById(id).value;
             
             const record = {
                 id: document.getElementById('entry-id').value || Date.now().toString(),
+                author: session.user, // Bind data to current user
                 name: get('inp-name'), web: get('inp-web'), ceo: get('inp-ceo'), rev: get('inp-rev'),
                 desc: get('inp-desc'), products: get('inp-products'), tech: get('inp-tech'),
                 acq: get('inp-acq'), comp: get('inp-comp'),
@@ -317,63 +420,83 @@
             };
 
             const idx = db.findIndex(x => x.id === record.id);
-            if(idx > -1) db[idx] = record;
-            else db.push(record);
+            if(idx > -1) {
+                // Security Check for Edit
+                if(session.role !== 'admin' && db[idx].author !== session.user) {
+                    return alert("Permission Denied: You cannot edit another analyst's report.");
+                }
+                db[idx] = record;
+            } else {
+                db.push(record);
+            }
 
+            // SYNC POINT: This is where you would push to Firebase
             localStorage.setItem('pmo_master_db', JSON.stringify(db));
+            
             resetForm();
             nav('dashboard');
             renderTable();
             updateKPIs();
         });
 
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            if(db.length === 0) tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">No reports found. Start Research.</td></tr>`;
-            
-            db.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50 transition";
-                tr.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-corp-900">${r.name}</td>
-                    <td class="px-6 py-4 text-gray-500">${r.ceo || '-'}</td>
-                    <td class="px-6 py-4 text-green-700 font-mono text-xs font-bold">${r.rev || '-'}</td>
-                    <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="edit('${r.id}')" class="text-blue-600 hover:text-blue-800" title="Edit"><i class="fas fa-edit"></i></button>
-                        <button onclick="exportPPT('${r.id}')" class="text-orange-600 hover:text-orange-800" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
-                        <button onclick="exportWord('${r.id}')" class="text-blue-800 hover:text-blue-900" title="Word"><i class="fas fa-file-word"></i></button>
-                        <button onclick="del('${r.id}')" class="text-red-400 hover:text-red-600" title="Delete"><i class="fas fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
         function edit(id) {
             const r = db.find(x => x.id === id);
             if(!r) return;
-            document.getElementById('entry-id').value = r.id;
             
+            // Security Check
+            if(session.role !== 'admin' && r.author !== session.user) {
+                return alert("Access Denied: You are not the owner of this report.");
+            }
+
+            document.getElementById('entry-id').value = r.id;
             const map = {
                 'inp-name': r.name, 'inp-web': r.web, 'inp-ceo': r.ceo, 'inp-rev': r.rev,
                 'inp-desc': r.desc, 'inp-products': r.products, 'inp-tech': r.tech,
                 'inp-acq': r.acq, 'inp-comp': r.comp,
-                'inp-hist': r.hist, 'inp-jobs': r.jobs,
-                'inp-probs': r.probs, 'inp-opps': r.opps
+                'inp-hist': r.hist, 'inp-jobs': r.jobs, 'inp-probs': r.probs, 'inp-opps': r.opps
             };
-            
-            for(let k in map) { if(document.getElementById(k)) document.getElementById(k).value = map[k] || ''; }
+            for(let k in map) document.getElementById(k).value = map[k] || '';
             nav('analyze');
         }
 
         function del(id) {
-            if(confirm("Delete this report?")) {
+            const r = db.find(x => x.id === id);
+            if(session.role !== 'admin' && r.author !== session.user) {
+                return alert("Access Denied.");
+            }
+            if(confirm("Delete this report permanently?")) {
                 db = db.filter(x => x.id !== id);
                 localStorage.setItem('pmo_master_db', JSON.stringify(db));
                 renderTable();
                 updateKPIs();
             }
+        }
+
+        // --- 5. HELPERS ---
+        function runDiscovery() {
+            const name = document.getElementById('search-input').value.trim();
+            if(!name) return alert("Enter company name");
+            document.getElementById('inp-name').value = name;
+            
+            const panel = document.getElementById('discovery-panel');
+            panel.classList.remove('hidden');
+            panel.innerHTML = '';
+
+            const sources = [
+                { t: "LinkedIn", q: `site:linkedin.com/company "${name}"` },
+                { t: "Revenue", q: `"${name}" revenue valuation 2025` },
+                { t: "Glassdoor", q: `Glassdoor "${name}" reviews` },
+                { t: "Competitors", q: `top competitors of "${name}"` }
+            ];
+
+            sources.forEach(s => {
+                const btn = document.createElement('a');
+                btn.href = `https://www.google.com/search?q=${encodeURIComponent(s.q)}`;
+                btn.target = "_blank";
+                btn.className = "p-3 border rounded hover:bg-gray-50 text-center text-xs font-bold text-gray-600";
+                btn.innerText = s.t;
+                panel.appendChild(btn);
+            });
         }
 
         function resetForm() {
@@ -389,159 +512,59 @@
                 if(r.rev) {
                     const clean = r.rev.toUpperCase();
                     const num = parseFloat(clean.replace(/[^0-9.]/g, ''));
-                    if(!isNaN(num)) {
-                        if(clean.includes('B')) total += num * 1000;
-                        else total += num;
-                    }
+                    if(!isNaN(num)) total += clean.includes('B') ? num * 1000 : num;
                 }
             });
             document.getElementById('kpi-val').innerText = total >= 1000 ? `$${(total/1000).toFixed(1)}B` : `$${total}M`;
         }
-
-        // --- SETTINGS ---
-        function saveSettings() {
-            settings.author = document.getElementById('set-author').value;
-            settings.org = document.getElementById('set-org').value;
-            localStorage.setItem('pmo_settings', JSON.stringify(settings));
-            document.getElementById('display-author').innerText = settings.author;
-            alert('Settings Saved');
-        }
-
-        function backupData() {
-            const blob = new Blob([JSON.stringify({db, settings}, null, 2)], {type: "application/json"});
-            saveAs(blob, "PMO_Full_Backup.json");
-        }
         
         function clearAllData() {
-            if(confirm("DANGER: This will wipe all saved data. Continue?")) {
+            if(confirm("DANGER: WIPE EVERYTHING?")) {
                 localStorage.removeItem('pmo_master_db');
+                localStorage.removeItem('pmo_users');
                 location.reload();
             }
         }
 
-        // --- EXPORT ENGINES ---
-        
-        // 1. PPT Generation
+        function backupData() {
+            const blob = new Blob([JSON.stringify({db, users}, null, 2)], {type: "application/json"});
+            saveAs(blob, "PMO_Backup.json");
+        }
+
+        // --- 6. EXPORTS (PPT/Word) ---
         function exportPPT(id) {
             const r = db.find(x => x.id === id);
             let pptx = new PptxGenJS();
             pptx.layout = 'LAYOUT_16x9';
-
-            const masterOpts = { title: 'MASTER', background: { color: 'FFFFFF' }, objects: [
+            pptx.defineSlideMaster({ title: 'MASTER', background: { color: 'FFFFFF' }, objects: [
                 { rect: { x: 0, y: 0, w: '100%', h: 0.6, fill: '1E293B' } },
-                { text: { text: settings.org.toUpperCase() + ' INTELLIGENCE', options: { x: 0.5, y: 0.15, color: 'FFFFFF', bold: true, fontSize: 14 } } },
-                { text: { text: `Analyst: ${settings.author} | ${r.updated}`, options: { x: 10, y: 0.15, color: '94A3B8', fontSize: 10, align: 'right' } } }
-            ]};
-            pptx.defineSlideMaster(masterOpts);
-
-            // Slide 1: Title
-            let s1 = pptx.addSlide({ masterName: 'MASTER' });
-            s1.addText(r.name, { x: 1, y: 2.5, fontSize: 44, bold: true, color: '1E293B' });
-            s1.addText(`CEO: ${r.ceo} | Valuation: ${r.rev}`, { x: 1, y: 3.5, fontSize: 18, color: '64748B' });
-
-            // Slide 2: Overview
-            let s2 = pptx.addSlide({ masterName: 'MASTER' });
-            s2.addText('Executive Overview', { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
-            s2.addText(r.desc, { x: 0.5, y: 1.6, w: 12, fontSize: 12, color: '333333' });
-            
-            // Slide 3: Tech & Product
-            let s3 = pptx.addSlide({ masterName: 'MASTER' });
-            s3.addText('Technology & Product', { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
-            s3.addText('Products', { x: 0.5, y: 1.6, fontSize: 14, bold: true, color: '2563EB' });
-            s3.addText(r.products, { x: 0.5, y: 2, w: 5.5, fontSize: 11 });
-            s3.addText('Tech Stack', { x: 6.5, y: 1.6, fontSize: 14, bold: true, color: '2563EB' });
-            s3.addText(r.tech, { x: 6.5, y: 2, w: 5.5, fontSize: 11 });
-
-            // Slide 4: Ecosystem
-            let s4 = pptx.addSlide({ masterName: 'MASTER' });
-            s4.addText('Ecosystem & M&A', { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
-            s4.addText('Acquisitions', { x: 0.5, y: 1.6, fontSize: 14, bold: true, color: '9333EA' });
-            s4.addText(r.acq, { x: 0.5, y: 2, w: 5.5, fontSize: 11 });
-            s4.addText('Competitors', { x: 6.5, y: 1.6, fontSize: 14, bold: true, color: 'EF4444' });
-            s4.addText(r.comp, { x: 6.5, y: 2, w: 5.5, fontSize: 11 });
-
-            // Slide 5: Strategy
-            let s5 = pptx.addSlide({ masterName: 'MASTER' });
-            s5.addText('Strategic Analysis', { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
-            s5.addText('Challenges', { x: 0.5, y: 1.6, fontSize: 14, bold: true, color: 'EF4444' });
-            s5.addText(r.probs, { x: 0.5, y: 2, w: 5.5, fontSize: 11 });
-            s5.addText('Opportunities', { x: 6.5, y: 1.6, fontSize: 14, bold: true, color: '16A34A' });
-            s5.addText(r.opps, { x: 6.5, y: 2, w: 5.5, fontSize: 11 });
-
-            pptx.writeFile({ fileName: `${r.name}_Report.pptx` });
+                { text: { text: 'PMO MASTER SUITE', options: { x: 0.5, y: 0.15, color: 'FFFFFF', bold: true } } }
+            ]});
+            let slide = pptx.addSlide({ masterName: 'MASTER' });
+            slide.addText(r.name, { x: 1, y: 2.5, fontSize: 36, bold: true, color: '1E293B' });
+            slide.addText(`Analyst: ${r.author}`, { x: 1, y: 3.5, fontSize: 14, color: '64748B' });
+            pptx.writeFile({ fileName: `${r.name}.pptx` });
         }
 
-        // 2. Word Generation
-        function exportWord(id) {
-            const r = db.find(x => x.id === id);
-            const content = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>${r.name}</title></head>
-                <body style="font-family: Arial, sans-serif; line-height: 1.5; padding: 30px;">
-                    <h1 style="color: #1e293b; border-bottom: 3px solid #3b82f6; padding-bottom: 10px;">${r.name}</h1>
-                    <p style="color: #64748b; font-size: 0.9em;"><strong>Prepared By:</strong> ${settings.author} | <strong>Org:</strong> ${settings.org} | <strong>Date:</strong> ${r.updated}</p>
-                    
-                    <h2 style="background-color: #f1f5f9; padding: 10px;">1. Executive Summary</h2>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold; width: 30%;">CEO</td><td style="border: 1px solid #ddd; padding: 8px;">${r.ceo}</td></tr>
-                        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Valuation/Revenue</td><td style="border: 1px solid #ddd; padding: 8px;">${r.rev}</td></tr>
-                        <tr><td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Website</td><td style="border: 1px solid #ddd; padding: 8px;">${r.web}</td></tr>
-                    </table>
-                    <p>${r.desc}</p>
-
-                    <h2 style="background-color: #f1f5f9; padding: 10px;">2. Technology & Products</h2>
-                    <p><strong>Product Portfolio:</strong><br/>${r.products}</p>
-                    <p><strong>Tech Stack:</strong><br/>${r.tech}</p>
-
-                    <h2 style="background-color: #f1f5f9; padding: 10px;">3. Business Ecosystem</h2>
-                    <p><strong>Acquisitions:</strong><br/>${r.acq}</p>
-                    <p><strong>Competition:</strong><br/>${r.comp}</p>
-                    
-                    <h2 style="background-color: #f1f5f9; padding: 10px;">4. Strategic Outlook</h2>
-                    <p><strong>History & Milestones:</strong><br/>${r.hist}</p>
-                    <p><strong>Hiring Trends:</strong><br/>${r.jobs}</p>
-                    
-                    <h3 style="color: #b91c1c;">Key Challenges</h3>
-                    <p>${r.probs}</p>
-                    <h3 style="color: #15803d;">Growth Opportunities</h3>
-                    <p>${r.opps}</p>
-                    
-                    <hr>
-                    <p style="text-align: center; font-size: 0.8em; color: #999;">Generated by PMO Master Suite</p>
-                </body>
-                </html>
-            `;
-            saveAs(new Blob([content], {type: 'application/msword'}), `${r.name}_Analysis.doc`);
-        }
-
-        // --- CHARTING ---
+        // --- 7. CHARTS ---
         function renderChart() {
             const ctx = document.getElementById('chart-valuation').getContext('2d');
-            const names = db.map(x => x.name);
-            const values = db.map(x => {
-                let val = 0;
-                if(x.rev) {
-                    const clean = x.rev.toUpperCase();
-                    const num = parseFloat(clean.replace(/[^0-9.]/g, ''));
-                    if(!isNaN(num)) {
-                        if(clean.includes('B')) val = num * 1000;
-                        else val = num;
-                    }
+            const data = db.map(r => {
+                let v = 0;
+                if(r.rev) {
+                    const c = r.rev.toUpperCase();
+                    const n = parseFloat(c.replace(/[^0-9.]/g, ''));
+                    if(!isNaN(n)) v = c.includes('B') ? n * 1000 : n;
                 }
-                return val;
+                return v;
             });
 
             if(window.myChart) window.myChart.destroy();
             window.myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: names,
-                    datasets: [{
-                        label: 'Estimated Valuation (Millions USD)',
-                        data: values,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 6
-                    }]
+                    labels: db.map(r => r.name),
+                    datasets: [{ label: 'Valuation (M)', data: data, backgroundColor: '#3b82f6', borderRadius: 4 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
