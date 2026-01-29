@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Master Suite | V3 Production</title>
+    <title>PMO Master Suite | Enterprise V4</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,78 +28,51 @@
 
     <style>
         body { background-color: #f8fafc; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); }
         .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
         .hide { display: none !important; }
-        
-        /* Inputs */
-        .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.875rem; outline: none; transition: all 0.2s; }
+        .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.825rem; outline: none; transition: all 0.2s; background: white; }
         .inp-std:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-        .lbl-std { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; letter-spacing: 0.05em; }
-        
-        /* Animation */
+        .lbl-std { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; letter-spacing: 0.05em; }
+        .card-header { border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #334155; }
         .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
-        .modal-enter { animation: slideIn 0.3s ease-out forwards; }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="h-screen overflow-hidden bg-slate-50 flex flex-col">
 
     <div id="auth-layer" class="fixed inset-0 z-50 bg-white flex items-center justify-center auth-bg">
-        <div class="w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl border border-gray-100 relative overflow-hidden modal-enter">
+        <div class="w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl border border-gray-100 relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
-            
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Secure Enterprise V3</p>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Intelligenze V4 Production</p>
             </div>
-
             <div id="form-login" class="space-y-4">
                 <div><label class="lbl-std">Username</label><input type="text" id="login-user" class="inp-std" placeholder="admin / analyst"></div>
                 <div><label class="lbl-std">Password</label><input type="password" id="login-pass" class="inp-std" placeholder="••••••••"></div>
                 <button onclick="authLogin()" class="w-full bg-corp-900 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transition">Secure Sign In</button>
-                
                 <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Create Account</button>
-                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> Use Guest Pass Key</button>
+                    <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Register</button>
+                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> Use Guest Pass</button>
                 </div>
             </div>
-
             <div id="form-guest" class="space-y-4 hide">
-                <div class="bg-blue-50 border border-blue-100 p-3 rounded text-xs text-blue-800 mb-4">
-                    <i class="fas fa-shield-alt mr-1"></i> Enter the Access ID provided by an Administrator.
-                </div>
-                <div><label class="lbl-std">Guest Pass Key</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest text-lg" placeholder="XXXX-XXXX"></div>
-                <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition">Access Dashboard</button>
-                <div class="text-center pt-2">
-                    <button onclick="toggleAuth('login')" class="text-xs text-gray-500 hover:text-corp-900">Back to Login</button>
-                </div>
+                <div><label class="lbl-std">Guest Pass Key</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest" placeholder="XXXX-XXXX"></div>
+                <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">Access Dashboard</button>
+                <div class="text-center pt-2"><button onclick="toggleAuth('login')" class="text-xs text-gray-500">Back to Login</button></div>
             </div>
-
             <div id="form-signup" class="space-y-4 hide">
-                <div><label class="lbl-std">New Username</label><input type="text" id="sign-user" class="inp-std"></div>
-                <div><label class="lbl-std">Role</label>
-                    <select id="sign-role" class="inp-std bg-white">
-                        <option value="analyst">Analyst</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
+                <div><label class="lbl-std">Username</label><input type="text" id="sign-user" class="inp-std"></div>
+                <div><label class="lbl-std">Role</label><select id="sign-role" class="inp-std bg-white"><option value="analyst">Analyst</option><option value="admin">Admin</option></select></div>
                 <div><label class="lbl-std">Password</label><input type="password" id="sign-pass" class="inp-std"></div>
-                <button onclick="authSignup()" class="w-full bg-brand-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-brand-700 transition">Register User</button>
-                <div class="text-center pt-2">
-                    <button onclick="toggleAuth('login')" class="text-xs text-gray-500 hover:text-corp-900">Back to Login</button>
-                </div>
+                <button onclick="authSignup()" class="w-full bg-brand-600 text-white py-3 rounded-lg font-bold">Register User</button>
+                <div class="text-center pt-2"><button onclick="toggleAuth('login')" class="text-xs text-gray-500">Back</button></div>
             </div>
         </div>
     </div>
 
     <div id="app-layer" class="flex-1 flex flex-col md:flex-row h-full overflow-hidden opacity-0 transition-opacity duration-500">
-        
         <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
             <div class="p-6 border-b border-gray-100">
                 <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
@@ -109,84 +82,64 @@
                 </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 space-y-1">
-                <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                    <i class="fas fa-th-large w-6"></i> Dashboard
-                </a>
-                <a onclick="nav('analyze')" id="nav-analyze" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                    <i class="fas fa-search-dollar w-6"></i> Research & Edit
-                </a>
-                <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                    <i class="fas fa-chart-pie w-6"></i> Analytics
-                </a>
-                <a onclick="nav('settings')" id="nav-settings" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition">
-                    <i class="fas fa-cog w-6"></i> Settings
-                </a>
+                <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-th-large w-6"></i> Dashboard</a>
+                <a onclick="nav('analyze')" id="nav-analyze" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-search-dollar w-6"></i> Research & Edit</a>
+                <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-chart-pie w-6"></i> Analytics</a>
+                <a onclick="nav('settings')" id="nav-settings" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-cog w-6"></i> Settings</a>
             </nav>
             <div class="p-4 border-t border-gray-200">
-                 <button onclick="logout()" class="w-full text-xs text-red-500 border border-red-100 bg-red-50 py-2.5 rounded hover:bg-red-100 font-semibold flex items-center justify-center gap-2">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
-                 </button>
+                 <button onclick="logout()" class="w-full text-xs text-red-500 border border-red-100 bg-red-50 py-2.5 rounded hover:bg-red-100 font-semibold flex items-center justify-center gap-2"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
             </div>
         </aside>
 
-        <header class="md:hidden h-16 bg-white border-b flex items-center justify-between px-4 z-30 shrink-0 shadow-sm">
-            <div class="font-bold text-lg text-corp-900">PMO<span class="text-brand-600">Master</span></div>
-            <div class="flex gap-4">
-                <button onclick="nav('dashboard')" class="text-gray-600"><i class="fas fa-home text-xl"></i></button>
-                <button onclick="logout()" class="text-red-500"><i class="fas fa-power-off text-xl"></i></button>
-            </div>
-        </header>
-
         <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full bg-slate-50">
-            
             <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0 shadow-sm z-10">
                 <h2 id="page-title" class="text-lg font-bold text-gray-800">Dashboard</h2>
-                <div class="flex items-center space-x-3 text-sm text-gray-500">
+                <div class="flex items-center space-x-3 text-sm">
                     <div class="text-right leading-tight">
                         <div class="font-semibold text-gray-800" id="display-user">Guest</div>
-                        <div class="text-[10px] text-gray-400" id="display-org">Logged In</div>
+                        <div class="text-[10px] text-gray-400">Authenticated</div>
                     </div>
                     <i class="fas fa-user-circle text-3xl text-gray-300"></i>
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto p-4 md:p-8 mobile-scroll" id="main-scroll">
+            <div class="flex-1 overflow-y-auto p-4 md:p-8" id="main-scroll">
                 
-                <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto fade-in">
+                <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Target Companies</div>
-                            <div class="text-3xl font-bold text-corp-900 mt-2" id="kpi-count">0</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Total Companies</div>
+                            <div class="text-3xl font-bold text-corp-900 mt-1" id="kpi-count">0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Total Valuation</div>
-                            <div class="text-3xl font-bold text-green-600 mt-2" id="kpi-val">$0</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Total Valuation</div>
+                            <div class="text-3xl font-bold text-green-600 mt-1" id="kpi-val">$0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Contributors</div>
-                            <div class="text-3xl font-bold text-blue-600 mt-2" id="kpi-analysts">1</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Data Points</div>
+                            <div class="text-3xl font-bold text-blue-600 mt-1" id="kpi-points">0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Encryption</div>
-                            <div class="text-3xl font-bold text-green-500 mt-2 text-sm pt-2"><i class="fas fa-lock"></i> AES-256 SIM</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">System</div>
+                            <div class="text-3xl font-bold text-emerald-500 mt-1 text-sm pt-1"><i class="fas fa-shield-check mr-1"></i> ACTIVE</div>
                         </div>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                             <h3 class="font-bold text-gray-800">Intelligence Directory</h3>
-                            <button id="btn-add-new" onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded hover:bg-brand-700 font-medium shadow-sm transition">
-                                <i class="fas fa-plus mr-1"></i> New Research
-                            </button>
+                            <button id="btn-add-new" onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded font-bold shadow-sm hover:bg-brand-700 transition"><i class="fas fa-plus mr-1"></i> New Entry</button>
                         </div>
                         <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left whitespace-nowrap">
+                            <table class="w-full text-sm text-left">
                                 <thead class="bg-gray-50 text-gray-500 border-b">
                                     <tr>
-                                        <th class="px-6 py-3 font-semibold w-1/4">Company Profile</th>
-                                        <th class="px-6 py-3 font-semibold">Leadership</th>
+                                        <th class="px-6 py-3 font-semibold">Company Name & Web</th>
+                                        <th class="px-6 py-3 font-semibold">CEO / Leadership</th>
+                                        <th class="px-6 py-3 font-semibold">HQ / Parent</th>
                                         <th class="px-6 py-3 font-semibold">Valuation</th>
-                                        <th class="px-6 py-3 font-semibold border-l border-gray-200 bg-gray-100 text-gray-600">Analyst Data</th>
+                                        <th class="px-6 py-3 font-semibold">Analyst</th>
                                         <th class="px-6 py-3 font-semibold text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -196,164 +149,117 @@
                     </div>
                 </div>
 
-                <div id="view-analyze" class="hide max-w-5xl mx-auto pb-24">
+                <div id="view-analyze" class="hide max-w-6xl mx-auto pb-24">
                     
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                        <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center">
-                            <i class="fas fa-globe-americas text-brand-500 mr-2"></i> OSINT Discovery Engine
-                        </h3>
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <input type="text" id="search-input" placeholder="Enter Company Name (e.g. Zoho)" 
-                                   class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none">
-                            <button onclick="runDiscovery()" class="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 shadow-sm whitespace-nowrap">
-                                <i class="fas fa-bolt mr-2"></i>Generate Intel Links
-                            </button>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
+                            <div class="card-header"><i class="fas fa-bolt text-yellow-500"></i> Smart Intelligence Extract</div>
+                            <textarea id="paste-area" class="w-full h-32 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500" placeholder="Paste news article, LinkedIn bio, or raw text here..."></textarea>
+                            <div class="mt-3 flex gap-2">
+                                <button onclick="smartParse()" class="bg-brand-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-brand-700">Auto-Extract Data</button>
+                                <button onclick="resetForm()" class="text-gray-500 px-4 py-2 text-xs font-bold border border-gray-200 rounded">Clear Form</button>
+                            </div>
                         </div>
-                        <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100 animate-fade">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">General & Financial</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="links-general"></div>
-                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Tech & People</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="links-tech"></div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-6">
+                            <div class="card-header"><i class="fas fa-search-plus text-blue-500"></i> OSINT Discovery</div>
+                            <input type="text" id="search-input" class="inp-std mb-3" placeholder="Target Company Name">
+                            <button onclick="runDiscovery()" class="w-full bg-slate-900 text-white py-2 rounded text-xs font-bold hover:bg-slate-800">Generate Research Links</button>
+                            <div id="discovery-panel" class="mt-4 grid grid-cols-2 gap-2 hidden"></div>
                         </div>
                     </div>
 
                     <form id="main-form" class="space-y-6">
                         <input type="hidden" id="entry-id">
-
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 relative overflow-hidden">
-                            <div class="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
-                            <h4 class="font-bold text-gray-800 mb-5 ml-2">1. Corporate Profile</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 relative">
+                            <div class="card-header text-brand-600"><i class="fas fa-id-badge"></i> 1. Corporate Identity</div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div><label class="lbl-std">Company Name</label><input type="text" id="inp-name" required class="inp-std"></div>
-                                <div><label class="lbl-std">Website</label><input type="text" id="inp-web" placeholder="https://" class="inp-std text-blue-600"></div>
-                                <div><label class="lbl-std">CEO / Leadership</label><input type="text" id="inp-ceo" class="inp-std"></div>
-                                <div><label class="lbl-std">Valuation / Revenue</label><input type="text" id="inp-rev" placeholder="e.g. $1.5B" class="inp-std font-bold text-green-700"></div>
-                                <div class="md:col-span-2"><label class="lbl-std">Executive Summary</label><textarea id="inp-desc" rows="3" class="inp-std"></textarea></div>
+                                <div><label class="lbl-std">Website</label><input type="text" id="inp-web" class="inp-std"></div>
+                                <div><label class="lbl-std">Parent Company</label><input type="text" id="inp-parent" class="inp-std"></div>
+                                <div><label class="lbl-std">HQ Location</label><input type="text" id="inp-hq" class="inp-std"></div>
+                                <div><label class="lbl-std">Launch Date / Year</label><input type="text" id="inp-launch" class="inp-std"></div>
+                                <div><label class="lbl-std">Valuation / Revenue</label><input type="text" id="inp-rev" class="inp-std font-bold text-green-700"></div>
                             </div>
+                            <div class="mt-4"><label class="lbl-std">Founder & Current CEO</label><input type="text" id="inp-ceo" class="inp-std"></div>
+                            <div class="mt-4"><label class="lbl-std">About (Mission/Vision)</label><textarea id="inp-desc" rows="2" class="inp-std"></textarea></div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">2. Product & Tech</h4>
-                                <div><label class="lbl-std">Core Products</label><textarea id="inp-products" rows="3" class="inp-std"></textarea></div>
-                                <div class="mt-4"><label class="lbl-std">Tech Stack</label><textarea id="inp-tech" rows="3" class="inp-std"></textarea></div>
+                            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                                <div class="card-header text-emerald-600"><i class="fas fa-cubes"></i> 2. Portfolio & Market</div>
+                                <div class="space-y-4">
+                                    <div><label class="lbl-std">Key Products / Services</label><textarea id="inp-products" rows="3" class="inp-std"></textarea></div>
+                                    <div><label class="lbl-std">What makes it a Player? (USP)</label><textarea id="inp-usp" rows="2" class="inp-std"></textarea></div>
+                                    <div><label class="lbl-std">Market Coverage (Countries)</label><input type="text" id="inp-market" class="inp-std"></div>
+                                </div>
                             </div>
-                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">3. Market Ecosystem</h4>
-                                <div><label class="lbl-std">Acquisitions & M&A</label><textarea id="inp-acq" rows="3" class="inp-std"></textarea></div>
-                                <div class="mt-4"><label class="lbl-std">Competitors</label><textarea id="inp-comp" rows="3" class="inp-std"></textarea></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <h4 class="font-bold text-gray-800 mb-4 border-b pb-2">4. Strategic Outlook</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div><label class="lbl-std">Key Milestones</label><textarea id="inp-hist" rows="4" class="inp-std"></textarea></div>
-                                <div><label class="lbl-std">Hiring Trends</label><textarea id="inp-jobs" rows="4" class="inp-std"></textarea></div>
-                                <div><label class="lbl-std text-red-500">Challenges / Risks</label><textarea id="inp-probs" rows="2" class="inp-std bg-red-50 border-red-100"></textarea></div>
-                                <div><label class="lbl-std text-green-600">Opportunities</label><textarea id="inp-opps" rows="2" class="inp-std bg-green-50 border-green-100"></textarea></div>
+                            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                                <div class="card-header text-purple-600"><i class="fas fa-sitemap"></i> 3. Structure & Tech</div>
+                                <div class="space-y-4">
+                                    <div><label class="lbl-std">Subsidiaries / Acquisitions</label><textarea id="inp-sub" rows="3" class="inp-std"></textarea></div>
+                                    <div><label class="lbl-std">Partnerships & Tech Stack</label><textarea id="inp-tech" rows="3" class="inp-std"></textarea></div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                                <h4 class="font-bold text-gray-800">5. Custom Intelligence</h4>
-                                <button type="button" onclick="addCustomField()" class="text-xs text-brand-600 font-bold border border-brand-200 bg-brand-50 px-3 py-1 rounded hover:bg-brand-100">
-                                    <i class="fas fa-plus mr-1"></i> Add Manual Section
-                                </button>
+                        <div class="bg-white rounded-xl border border-gray-200 p-6">
+                            <div class="card-header text-orange-600"><i class="fas fa-users-cog"></i> 4. Org Chart & Strategic Contacts</div>
+                            <div class="bg-slate-50 p-2 rounded text-[10px] text-gray-500 mb-3"><i class="fas fa-info-circle"></i> Format: [Name | Designation | Persona (Decision Maker?) | Recent Activity]</div>
+                            <textarea id="inp-orgchart" rows="6" class="inp-std font-mono" placeholder="Ex: Harsha | CEO | Decision Maker | Recently launched AI initiative"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                                <div class="card-header text-red-600"><i class="fas fa-swords"></i> 5. Competitive Landscape</div>
+                                <div class="space-y-4">
+                                    <div><label class="lbl-std">Client Competitors</label><textarea id="inp-comp-client" rows="2" class="inp-std"></textarea></div>
+                                    <div><label class="lbl-std">iOPEX vs Client Advantage</label><textarea id="inp-comp-iopex" rows="2" class="inp-std"></textarea></div>
+                                </div>
                             </div>
-                            <div id="custom-fields-container" class="space-y-4"></div>
+                            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                                <div class="card-header text-blue-600"><i class="fas fa-calendar-alt"></i> 6. Events & Hiring</div>
+                                <div class="space-y-4">
+                                    <div><label class="lbl-std">Event Calendar (Conferences/PR)</label><textarea id="inp-events" rows="2" class="inp-std"></textarea></div>
+                                    <div><label class="lbl-std">Recent Openings / Talent Gaps</label><textarea id="inp-hiring" rows="2" class="inp-std"></textarea></div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
-                            <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-500 hover:text-gray-800">Cancel</button>
-                            <div class="flex gap-3">
-                                <button type="button" onclick="resetForm()" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">Clear</button>
-                                <button type="submit" class="bg-corp-900 text-white px-8 py-2.5 rounded-lg font-bold shadow-lg hover:bg-gray-800 flex items-center transform active:scale-95 transition">
-                                    <i class="fas fa-save mr-2"></i> Save & Sync
-                                </button>
-                            </div>
+                            <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-400 font-bold hover:text-gray-800">DISCARD</button>
+                            <button type="submit" class="bg-corp-900 text-white px-12 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transform transition">
+                                <i class="fas fa-cloud-upload mr-2"></i> SYNC INTELLIGENCE
+                            </button>
                         </div>
                     </form>
                 </div>
 
-                <div id="view-settings" class="hide max-w-4xl mx-auto">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 h-fit">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">My Profile</h3>
-                            <p class="text-sm text-gray-500 mb-6">Manage your local session.</p>
-                            <div class="space-y-5">
-                                <div>
-                                    <label class="lbl-std">Current Role</label>
-                                    <div id="set-role" class="p-2 bg-gray-100 rounded text-gray-600 text-sm font-mono border border-gray-200">Guest</div>
-                                </div>
-                                <button onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full font-semibold">
-                                    <i class="fas fa-download mr-2"></i> Download Backup
-                                </button>
-                                <div id="admin-zone" class="mt-6 pt-6 border-t border-red-100 hidden">
-                                    <button onclick="clearAllData()" class="w-full text-xs text-red-500 border border-red-200 px-4 py-2 rounded hover:bg-red-50 font-bold">Factory Reset Database</button>
+                <div id="view-settings" class="hide max-w-2xl mx-auto space-y-6">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Share Control</h3>
+                        <div class="space-y-4">
+                            <div><label class="lbl-std">Token Expiration</label><input type="datetime-local" id="share-custom-date" class="inp-std"></div>
+                            <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-3 rounded font-bold">Generate New Guest Pass</button>
+                            <div id="token-display" class="hidden bg-slate-50 p-4 rounded-lg border border-dashed border-slate-300 animate-fade">
+                                <div class="text-center font-mono text-xl font-bold tracking-widest mb-2" id="gen-code"></div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="gen-link" class="flex-1 text-[10px] p-2 bg-white border" readonly>
+                                    <button onclick="copyLink()" class="bg-gray-200 px-3 text-xs font-bold">Copy</button>
                                 </div>
                             </div>
                         </div>
-
-                        <div id="share-center" class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 h-fit hidden">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i class="fas fa-share-alt"></i></div>
-                                <div>
-                                    <h3 class="text-xl font-bold text-gray-800">Share Access</h3>
-                                    <p class="text-xs text-gray-500">Generate secure guest links.</p>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 space-y-4">
-                                <div>
-                                    <label class="lbl-std">Preset Duration</label>
-                                    <select id="share-expiry" class="inp-std bg-white">
-                                        <option value="60">1 Hour</option>
-                                        <option value="1440">24 Hours</option>
-                                        <option value="0">Never Expires</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="relative">
-                                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
-                                    <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-gray-400">OR Custom Date</span></div>
-                                </div>
-
-                                <div>
-                                    <label class="lbl-std">Specific Expiration Date & Time</label>
-                                    <input type="datetime-local" id="share-custom-date" class="inp-std bg-gray-50">
-                                </div>
-
-                                <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700 shadow-md">Generate Guest Pass</button>
-                                
-                                <div id="token-display" class="hidden bg-gray-50 border border-gray-200 p-4 rounded-lg animate-fade">
-                                    <div class="text-center mb-3">
-                                        <div class="text-[10px] text-gray-400 uppercase font-bold">Pass Key</div>
-                                        <div class="text-2xl font-mono font-bold text-gray-800 tracking-widest" id="gen-code"></div>
-                                        <div class="text-[10px] text-blue-500 font-bold mt-1" id="gen-exp-text"></div>
-                                    </div>
-                                    
-                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">Shareable Link</div>
-                                    <div class="flex gap-2">
-                                        <input type="text" id="gen-link" class="flex-1 text-xs p-2 border rounded bg-white text-gray-500" readonly>
-                                        <button onclick="copyLink()" class="bg-gray-200 px-3 rounded hover:bg-gray-300 text-xs font-bold">Copy</button>
-                                    </div>
-                                    <p class="text-[10px] text-orange-500 mt-2 text-center"><i class="fas fa-exclamation-triangle"></i> Anyone with this link can view the dashboard.</p>
-                                </div>
-                            </div>
-                        </div>
-
+                    </div>
+                    <div id="admin-zone" class="bg-white p-8 rounded-xl shadow-sm border border-red-100 hidden">
+                        <h4 class="font-bold text-red-600 mb-2 uppercase text-xs">Admin Force Control</h4>
+                        <button onclick="clearAllData()" class="w-full text-xs text-red-500 border border-red-200 py-3 rounded hover:bg-red-50 font-bold">WIPE ENTIRE DATABASE</button>
                     </div>
                 </div>
 
                 <div id="view-visualize" class="hide max-w-6xl mx-auto">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                        <h3 class="font-bold text-gray-800 mb-6">Valuation Landscape</h3>
-                        <div class="h-96 w-full">
-                            <canvas id="chart-valuation"></canvas>
-                        </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-6">Valuation Trends</h3>
+                        <div class="h-96 w-full"><canvas id="chart-valuation"></canvas></div>
                     </div>
                 </div>
 
@@ -361,483 +267,211 @@
         </main>
     </div>
 
-    <div id="view-modal" class="fixed inset-0 z-50 bg-gray-900/50 hidden flex justify-end">
-        <div class="w-full max-w-2xl h-full bg-white shadow-2xl overflow-y-auto relative animate-fade">
-            <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-start z-10">
+    <div id="view-modal" class="fixed inset-0 z-50 bg-slate-900/60 hidden flex justify-end">
+        <div class="w-full max-w-3xl h-full bg-white shadow-2xl overflow-y-auto relative p-0">
+            <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-center z-10 shadow-sm">
                 <div>
-                    <h2 id="vm-name" class="text-2xl font-bold text-corp-900">Company Name</h2>
-                    <div class="flex gap-3 text-xs mt-1 text-gray-500">
-                        <span id="vm-ceo"><i class="fas fa-user-tie mr-1"></i> CEO Name</span>
-                        <a id="vm-web" href="#" target="_blank" class="text-blue-600 hover:underline"><i class="fas fa-link mr-1"></i> Website</a>
+                    <h2 id="vm-name" class="text-2xl font-black text-corp-900">Company Name</h2>
+                    <div class="flex gap-4 text-[10px] mt-1 font-bold text-gray-400 uppercase tracking-widest">
+                        <span id="vm-parent">Parent</span> | <span id="vm-hq">Location</span>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 p-2"><i class="fas fa-times text-xl"></i></button>
+                <div class="flex gap-2">
+                    <button id="vm-btn-edit" class="bg-brand-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-brand-700">EDIT INTEL</button>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 px-2 text-2xl">&times;</button>
+                </div>
             </div>
-            <div class="p-8 space-y-8">
-                <div class="bg-green-50 border border-green-100 p-4 rounded-lg flex justify-between items-center">
-                    <div>
-                        <div class="text-xs font-bold text-green-800 uppercase">Valuation / Revenue</div>
-                        <div id="vm-rev" class="text-xl font-bold text-green-700">-</div>
+            
+            <div class="p-8 space-y-10">
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <div class="text-[10px] font-black text-gray-400 uppercase mb-1">CEO</div>
+                        <div id="vm-ceo" class="text-sm font-bold text-slate-800">-</div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-[10px] text-gray-400 uppercase">Analyst</div>
-                        <div id="vm-author" class="text-sm font-semibold text-gray-700">-</div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <div class="text-[10px] font-black text-green-600 uppercase mb-1">Valuation</div>
+                        <div id="vm-rev" class="text-sm font-bold text-green-700">-</div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <div class="text-[10px] font-black text-gray-400 uppercase mb-1">Launched</div>
+                        <div id="vm-launch" class="text-sm font-bold text-slate-800">-</div>
                     </div>
                 </div>
-                <div><h3 class="text-sm font-bold text-corp-900 uppercase border-b pb-2 mb-3">Executive Summary</h3><p id="vm-desc" class="text-gray-600 text-sm leading-relaxed whitespace-pre-line"></p></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div><h3 class="text-sm font-bold text-blue-600 uppercase border-b pb-2 mb-3">Products</h3><p id="vm-products" class="text-gray-600 text-sm whitespace-pre-line"></p></div>
-                    <div><h3 class="text-sm font-bold text-purple-600 uppercase border-b pb-2 mb-3">Tech Stack</h3><p id="vm-tech" class="text-gray-600 text-sm whitespace-pre-line"></p></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <section>
+                        <h4 class="text-xs font-black text-brand-600 uppercase border-b border-brand-100 pb-2 mb-4">Strategic Overview</h4>
+                        <div id="vm-desc" class="text-xs text-slate-600 leading-relaxed mb-4"></div>
+                        <div class="space-y-3">
+                            <div><span class="text-[10px] font-bold text-slate-400 block uppercase">USP</span><p id="vm-usp" class="text-xs text-slate-800 font-medium"></p></div>
+                            <div><span class="text-[10px] font-bold text-slate-400 block uppercase">Market Coverage</span><p id="vm-market" class="text-xs text-slate-800 font-medium"></p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h4 class="text-xs font-black text-emerald-600 uppercase border-b border-emerald-100 pb-2 mb-4">Portfolio & Ecosystem</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-[10px] font-bold text-emerald-500 block uppercase">Key Products</span><p id="vm-products" class="text-xs text-slate-800 whitespace-pre-line"></p></div>
+                            <div><span class="text-[10px] font-bold text-emerald-500 block uppercase">Subsidiaries</span><p id="vm-sub" class="text-xs text-slate-800 whitespace-pre-line"></p></div>
+                        </div>
+                    </section>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-red-50 p-4 rounded border border-red-100"><h3 class="text-xs font-bold text-red-600 uppercase mb-2">Challenges</h3><p id="vm-probs" class="text-gray-700 text-sm whitespace-pre-line"></p></div>
-                    <div class="bg-green-50 p-4 rounded border border-green-100"><h3 class="text-xs font-bold text-green-600 uppercase mb-2">Opportunities</h3><p id="vm-opps" class="text-gray-700 text-sm whitespace-pre-line"></p></div>
-                </div>
-                <div id="vm-custom-area" class="space-y-6"></div>
-                
-                <div class="pt-8 border-t flex justify-end gap-3">
-                    <button id="vm-btn-edit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Edit Report</button>
-                    <button onclick="closeModal()" class="bg-gray-100 text-gray-600 px-4 py-2 rounded text-sm hover:bg-gray-200">Close</button>
+
+                <section class="bg-slate-900 rounded-xl p-6 text-slate-100">
+                    <h4 class="text-xs font-black text-blue-400 uppercase mb-4 tracking-widest"><i class="fas fa-microchip mr-2"></i> Tech & Partnerships</h4>
+                    <p id="vm-tech" class="text-xs text-slate-300 whitespace-pre-line leading-relaxed"></p>
+                </section>
+
+                <section>
+                    <h4 class="text-xs font-black text-orange-600 uppercase border-b border-orange-100 pb-2 mb-4">Org Chart / Contacts</h4>
+                    <div id="vm-orgchart" class="bg-slate-50 p-4 rounded-lg font-mono text-xs text-slate-700 whitespace-pre-line"></div>
+                </section>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <section>
+                        <h4 class="text-xs font-black text-red-600 uppercase border-b border-red-100 pb-2 mb-4">Competitors</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-[10px] font-bold text-red-400 block uppercase">Client Side</span><p id="vm-comp-client" class="text-xs text-slate-800"></p></div>
+                            <div><span class="text-[10px] font-bold text-red-400 block uppercase">iOPEX Edge</span><p id="vm-comp-iopex" class="text-xs text-slate-800"></p></div>
+                        </div>
+                    </section>
+                    <section>
+                        <h4 class="text-xs font-black text-blue-600 uppercase border-b border-blue-100 pb-2 mb-4">Intel Pipeline</h4>
+                        <div class="space-y-3">
+                            <div><span class="text-[10px] font-bold text-blue-400 block uppercase">Event Calendar</span><p id="vm-events" class="text-xs text-slate-800"></p></div>
+                            <div><span class="text-[10px] font-bold text-blue-400 block uppercase">Recent Openings</span><p id="vm-hiring" class="text-xs text-slate-800"></p></div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. DATA & STATE ---
         let db = JSON.parse(localStorage.getItem('pmo_master_db')) || [];
         let users = JSON.parse(localStorage.getItem('pmo_users')) || [{ user: 'admin', pass: 'admin', role: 'admin' }];
         let validTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || [];
         let session = null;
 
-        // --- 2. AUTH SYSTEM ---
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('key');
-            if(token) {
-                document.getElementById('guest-token').value = token;
-                authGuestToken();
-            }
-        };
+        // AUTH
+        function toggleAuth(v) { document.getElementById('form-login').classList.add('hide'); document.getElementById('form-guest').classList.add('hide'); document.getElementById('form-signup').classList.add('hide'); document.getElementById(`form-${v}`).classList.remove('hide'); }
+        function authLogin() { const u = document.getElementById('login-user').value, p = document.getElementById('login-pass').value; const v = users.find(x=>x.user===u&&x.pass===p); if(v) startSession(v); else alert("Try admin/admin"); }
+        function authSignup() { const u = document.getElementById('sign-user').value, p = document.getElementById('sign-pass').value, r = document.getElementById('sign-role').value; if(users.find(x=>x.user===u)) return alert("Exists"); const n = {user:u,pass:p,role:r}; users.push(n); localStorage.setItem('pmo_users',JSON.stringify(users)); startSession(n); }
+        function authGuestToken() { const t = document.getElementById('guest-token').value; const m = validTokens.find(x=>x.code===t&&(x.exp===0||x.exp>Date.now())); if(m) startSession({user:'Guest',role:'guest'}); else alert("Invalid Token"); }
+        function startSession(u) { session = u; document.getElementById('auth-layer').classList.add('hide'); document.getElementById('app-layer').classList.remove('opacity-0'); document.getElementById('display-user').innerText = session.user; document.getElementById('role-badge').innerText = session.role.toUpperCase(); if(session.role==='admin') document.getElementById('admin-zone').classList.remove('hidden'); if(session.role==='guest') { document.getElementById('nav-analyze').classList.add('hide'); document.getElementById('btn-add-new').classList.add('hide'); } renderTable(); updateKPIs(); nav('dashboard'); }
+        function logout() { location.reload(); }
 
-        function toggleAuth(view) {
-            document.getElementById('form-login').classList.add('hide');
-            document.getElementById('form-signup').classList.add('hide');
-            document.getElementById('form-guest').classList.add('hide');
-            document.getElementById(`form-${view}`).classList.remove('hide');
-        }
-
-        function authLogin() {
-            const u = document.getElementById('login-user').value.trim();
-            const p = document.getElementById('login-pass').value.trim();
-            
-            // Check Local DB
-            const valid = users.find(x => x.user === u && x.pass === p);
-            
-            if (valid) {
-                startSession(valid);
-            } else {
-                alert("Invalid Credentials. Default: admin / admin");
-            }
-        }
-
-        function authSignup() {
-            const u = document.getElementById('sign-user').value.trim();
-            const p = document.getElementById('sign-pass').value.trim();
-            const r = document.getElementById('sign-role').value;
-            if(!u || !p) return alert("Fill all fields");
-            if(users.find(x => x.user === u)) return alert("User exists");
-            const newUser = { user: u, pass: p, role: r };
-            users.push(newUser);
-            localStorage.setItem('pmo_users', JSON.stringify(users));
-            startSession(newUser);
-        }
-
-        function authGuestToken() {
-            const token = document.getElementById('guest-token').value.trim();
-            if(!token) return alert("Please enter a Pass Key");
-
-            // STRICT VALIDATION
-            const now = Date.now();
-            validTokens = validTokens.filter(t => t.exp === 0 || t.exp > now); // Cleanup expired
-            localStorage.setItem('pmo_tokens', JSON.stringify(validTokens));
-
-            const match = validTokens.find(t => t.code === token);
-            if(match) {
-                startSession({ user: 'Guest Visitor', role: 'guest', via: match.by });
-            } else {
-                alert("Access Denied: Invalid or Expired Pass Key.");
-            }
-        }
-
-        function startSession(userObj) {
-            session = userObj;
-            document.getElementById('auth-layer').classList.add('hide');
-            document.getElementById('app-layer').classList.remove('opacity-0');
-            document.getElementById('display-user').innerText = session.user;
-            document.getElementById('role-badge').innerText = session.role.toUpperCase();
-            document.getElementById('set-role').innerText = session.role.toUpperCase();
-
-            // Role Logic
-            if(session.role === 'guest') {
-                document.getElementById('nav-analyze').classList.add('hide');
-                document.getElementById('btn-add-new').classList.add('hide');
-                document.getElementById('share-center').classList.add('hidden');
-            } else {
-                document.getElementById('nav-analyze').classList.remove('hide');
-                document.getElementById('btn-add-new').classList.remove('hide');
-                document.getElementById('share-center').classList.remove('hidden');
-            }
-            if(session.role === 'admin') document.getElementById('admin-zone').classList.remove('hidden');
-
-            nav('dashboard');
-            renderTable();
-            updateKPIs();
-        }
-
-        function logout() { 
-            window.history.replaceState({}, document.title, window.location.pathname);
-            location.reload(); 
-        }
-
-        // --- 3. SHARING LOGIC (FIXED) ---
-        function generateToken() {
-            const customDate = document.getElementById('share-custom-date').value;
-            let expiryTime = 0;
-            let expiryText = "Never Expires";
-
-            if (customDate) {
-                expiryTime = new Date(customDate).getTime();
-                if (expiryTime < Date.now()) return alert("Expiration date must be in the future.");
-                expiryText = `Expires: ${new Date(customDate).toLocaleString()}`;
-            } else {
-                const expMins = parseInt(document.getElementById('share-expiry').value);
-                if (expMins > 0) {
-                    expiryTime = Date.now() + (expMins * 60000);
-                    expiryText = `Expires in ${expMins/60} Hours`;
-                }
-            }
-
-            const code = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            
-            // Ensure session.user exists for Admin
-            const creator = session && session.user ? session.user : 'Admin';
-
-            const newToken = {
-                code: code,
-                exp: expiryTime,
-                by: creator,
-                created: new Date().toLocaleTimeString()
-            };
-
-            validTokens.push(newToken);
-            localStorage.setItem('pmo_tokens', JSON.stringify(validTokens));
-
-            document.getElementById('token-display').classList.remove('hidden');
-            document.getElementById('gen-code').innerText = code;
-            document.getElementById('gen-exp-text').innerText = expiryText;
-            
-            const link = `${window.location.protocol}//${window.location.host}${window.location.pathname}?key=${code}`;
-            document.getElementById('gen-link').value = link;
-        }
-
-        function copyLink() {
-            const copyText = document.getElementById("gen-link");
-            copyText.select();
-            document.execCommand("copy");
-            alert("Link copied!");
-        }
-
-        // --- 4. NAVIGATION & UI ---
-        function nav(viewId) {
-            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hide'));
-            document.getElementById(`view-${viewId}`).classList.remove('hide');
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            const link = document.getElementById(`nav-${viewId}`);
-            if(link) link.classList.add('active');
-            if(viewId === 'visualize') renderChart();
-        }
-
-        // --- 5. UNIVERSAL REPORT VIEWER (ALL USERS) ---
-        function openViewModal(id) {
-            const r = db.find(x => x.id === id);
-            if(!r) return;
-
-            // Basic Fields
-            document.getElementById('vm-name').innerText = r.name;
-            document.getElementById('vm-ceo').innerHTML = `<i class="fas fa-user-tie mr-1"></i> ${r.ceo || 'Unknown CEO'}`;
-            const webEl = document.getElementById('vm-web');
-            webEl.href = r.web && r.web.startsWith('http') ? r.web : `https://${r.web || '#'}`;
-            webEl.innerText = r.web || 'No Website';
-            document.getElementById('vm-rev').innerText = r.rev || '-';
-            document.getElementById('vm-author').innerText = `${r.author} | ${r.updated}`;
-            
-            const fields = ['desc', 'products', 'tech', 'probs', 'opps'];
-            fields.forEach(f => document.getElementById(`vm-${f}`).innerText = r[f] || 'No data.');
-
-            // Custom Fields (Iterate and Show for EVERYONE)
-            const customArea = document.getElementById('vm-custom-area');
-            customArea.innerHTML = '';
-            if(r.customFields && Array.isArray(r.customFields)) {
-                r.customFields.forEach(cf => {
-                    const div = document.createElement('div');
-                    div.innerHTML = `<h3 class="text-sm font-bold text-gray-800 uppercase border-b pb-2 mb-2">${cf.title} <span class="text-xs text-gray-400 font-normal ml-2">${cf.subtitle || ''}</span></h3><p class="text-sm text-gray-600 whitespace-pre-line">${cf.content}</p>`;
-                    customArea.appendChild(div);
-                });
-            }
-
-            // Edit Button Logic
-            const btnEdit = document.getElementById('vm-btn-edit');
-            const isMine = session.user === r.author;
-            const isAdmin = session.role === 'admin';
-            
-            if (session.role === 'guest' || (!isMine && !isAdmin)) {
-                btnEdit.classList.add('hidden'); // Guests view only
-            } else {
-                btnEdit.classList.remove('hidden');
-                btnEdit.onclick = () => { closeModal(); edit(r.id); };
-            }
-
-            document.getElementById('view-modal').classList.remove('hidden');
-        }
+        // NAVIGATION
+        function nav(id) { document.querySelectorAll('[id^="view-"]').forEach(e=>e.classList.add('hide')); document.getElementById(`view-${id}`).classList.remove('hide'); document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active')); const l = document.getElementById(`nav-${id}`); if(l) l.classList.add('active'); if(id==='visualize') renderChart(); }
         function closeModal() { document.getElementById('view-modal').classList.add('hidden'); }
 
-        // --- 6. DATA OPERATIONS ---
+        // DATA OPS
         function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            
+            const b = document.getElementById('table-body'); b.innerHTML = '';
             db.forEach(r => {
-                const isMine = r.author === session.user;
-                const isAdmin = session.role === 'admin';
-                const canEdit = isAdmin || isMine;
-
+                const canEdit = session.role === 'admin' || r.author === session.user;
                 const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50 transition cursor-pointer";
-                tr.onclick = (e) => {
-                    // Clicking ANYWHERE opens the modal (Universal View)
-                    if(e.target.closest('button')) return;
-                    openViewModal(r.id);
-                };
-
+                tr.className = "border-b hover:bg-slate-50 transition cursor-pointer";
+                tr.onclick = (e) => { if(!e.target.closest('button')) openViewModal(r.id); };
                 tr.innerHTML = `
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-corp-900">${r.name}</div>
-                        <div class="text-xs text-blue-500 hover:underline">${r.web || ''}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${r.ceo || '-'}</td>
-                    <td class="px-6 py-4 text-green-700 font-mono text-xs font-bold">${r.rev || '-'}</td>
-                    <td class="px-6 py-4 border-l border-gray-200 bg-gray-50">
-                        <div class="text-xs font-semibold text-gray-700"><i class="fas fa-user mr-1 text-gray-400"></i> ${r.author}</div>
-                        <div class="text-[10px] text-gray-400">${r.updated}</div>
-                    </td>
-                    <td class="px-6 py-4 text-right space-x-1">
-                        <button onclick="exportPPT('${r.id}')" class="text-orange-500 hover:bg-orange-50 p-2 rounded" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
-                        <button onclick="exportWord('${r.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded" title="DOC"><i class="fas fa-file-word"></i></button>
-                        ${canEdit ? `<button onclick="del('${r.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                    <td class="px-6 py-4"><div class="font-bold text-slate-900">${r.name}</div><div class="text-[10px] text-blue-500 font-bold">${r.web || '-'}</div></td>
+                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">${r.ceo || '-'}</td>
+                    <td class="px-6 py-4 text-[10px]"><div class="font-bold text-slate-800">${r.hq || '-'}</div><div class="text-slate-400">${r.parent || '-'}</div></td>
+                    <td class="px-6 py-4 text-xs font-bold text-emerald-600">${r.rev || '-'}</td>
+                    <td class="px-6 py-4 text-[10px] font-bold text-slate-400">${r.author}</td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex justify-end gap-1">
+                            ${canEdit ? `<button onclick="edit('${r.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded"><i class="fas fa-edit"></i></button>` : ''}
+                            <button onclick="exportPPT('${r.id}')" class="p-2 text-orange-500 hover:bg-orange-50 rounded"><i class="fas fa-file-powerpoint"></i></button>
+                            ${canEdit ? `<button onclick="del('${r.id}')" class="p-2 text-red-400 hover:bg-red-50 rounded"><i class="fas fa-trash"></i></button>` : ''}
+                        </div>
+                    </td>`;
+                b.appendChild(tr);
             });
         }
 
-        function addCustomField(data = null) {
-            const container = document.getElementById('custom-fields-container');
-            const id = Date.now();
-            const div = document.createElement('div');
-            div.className = "p-4 bg-gray-50 border border-gray-200 rounded-lg relative";
-            div.id = `cf-${id}`;
-            div.innerHTML = `
-                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-400 hover:text-red-600"><i class="fas fa-times"></i></button>
-                <div class="grid grid-cols-2 gap-2 mb-2">
-                    <input type="text" class="cf-title inp-std text-xs font-bold" placeholder="Section Heading" value="${data ? data.title : ''}">
-                    <input type="text" class="cf-sub inp-std text-xs" placeholder="Subtitle" value="${data ? data.subtitle : ''}">
-                </div>
-                <textarea class="cf-content inp-std text-sm" rows="3" placeholder="Content...">${data ? data.content : ''}</textarea>
-            `;
-            container.appendChild(div);
+        // SMART PARSE (Regex AI-Lite)
+        function smartParse() {
+            const text = document.getElementById('paste-area').value;
+            const patterns = {
+                'inp-name': [/Company:\s*(.*)/i, /Name:\s*(.*)/i],
+                'inp-ceo': [/CEO:\s*(.*)/i, /CEO is\s*(.*)/i, /founder\s*(.*)/i],
+                'inp-hq': [/Headquarters:\s*(.*)/i, /HQ:\s*(.*)/i, /located in\s*(.*)/i],
+                'inp-launch': [/launched in\s*(\d{4})/i, /founded in\s*(\d{4})/i, /Date:\s*(.*)/i],
+                'inp-rev': [/valuation of\s*(.*)/i, /Revenue:\s*(.*)/i, /worth\s*(.*)/i]
+            };
+            for (let id in patterns) {
+                for (let reg of patterns[id]) {
+                    let m = text.match(reg);
+                    if (m && m[1]) { document.getElementById(id).value = m[1].split('.')[0].trim(); break; }
+                }
+            }
         }
 
+        // DISCOVERY
+        function runDiscovery() {
+            const n = document.getElementById('search-input').value; if(!n) return;
+            const p = document.getElementById('discovery-panel'); p.classList.remove('hidden'); p.innerHTML = '';
+            const links = [
+                {t:"LinkedIn", q:`site:linkedin.com/company "${n}"`},
+                {t:"Org Chart", q:`site:theorg.com "${n}"`},
+                {t:"Tech Stack", q:`site:builtwith.com "${n}"`},
+                {t:"Financials", q:`"${n}" annual revenue 2026 valuation`},
+                {t:"Competitors", q:`top competitors for "${n}" digital marketing`},
+                {t:"Hiring", q:`site:glassdoor.com "${n}" careers`}
+            ];
+            links.forEach(l => {
+                const a = document.createElement('a'); a.href=`https://www.google.com/search?q=${encodeURIComponent(l.q)}`; a.target="_blank";
+                a.className = "p-2 bg-slate-50 border rounded text-[10px] font-bold text-center hover:bg-white transition";
+                a.innerText = l.t; p.appendChild(a);
+            });
+        }
+
+        // FORM SUBMIT
         document.getElementById('main-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const get = (id) => document.getElementById(id).value;
-            const customData = [];
-            document.querySelectorAll('#custom-fields-container > div').forEach(div => {
-                customData.push({
-                    title: div.querySelector('.cf-title').value,
-                    subtitle: div.querySelector('.cf-sub').value,
-                    content: div.querySelector('.cf-content').value
-                });
-            });
-
-            const record = {
+            const get = (i) => document.getElementById(i).value;
+            const rec = {
                 id: document.getElementById('entry-id').value || Date.now().toString(),
-                author: session.user,
-                name: get('inp-name'), web: get('inp-web'), ceo: get('inp-ceo'), rev: get('inp-rev'),
-                desc: get('inp-desc'), products: get('inp-products'), tech: get('inp-tech'),
-                acq: get('inp-acq'), comp: get('inp-comp'),
-                hist: get('inp-hist'), jobs: get('inp-jobs'),
-                probs: get('inp-probs'), opps: get('inp-opps'),
-                customFields: customData,
-                updated: new Date().toLocaleDateString()
+                author: session.user, updated: new Date().toLocaleDateString(),
+                name: get('inp-name'), web: get('inp-web'), parent: get('inp-parent'), hq: get('inp-hq'), launch: get('inp-launch'), rev: get('inp-rev'), ceo: get('inp-ceo'), desc: get('inp-desc'),
+                products: get('inp-products'), usp: get('inp-usp'), market: get('inp-market'), sub: get('inp-sub'), tech: get('inp-tech'),
+                orgchart: get('inp-orgchart'), comp_client: get('inp-comp-client'), comp_iopex: get('inp-comp-iopex'), events: get('inp-events'), hiring: get('inp-hiring')
             };
-
-            const idx = db.findIndex(x => x.id === record.id);
-            if(idx > -1) {
-                if(session.role !== 'admin' && db[idx].author !== session.user) return alert("Permission Denied.");
-                db[idx] = record;
-            } else {
-                db.push(record);
-            }
+            const idx = db.findIndex(x=>x.id===rec.id);
+            if(idx>-1) db[idx] = rec; else db.push(rec);
             localStorage.setItem('pmo_master_db', JSON.stringify(db));
-            resetForm();
-            nav('dashboard');
-            renderTable();
-            updateKPIs();
+            resetForm(); nav('dashboard'); renderTable(); updateKPIs();
         });
 
-        function edit(id) {
-            const r = db.find(x => x.id === id);
-            document.getElementById('entry-id').value = r.id;
-            const map = {
-                'inp-name': r.name, 'inp-web': r.web, 'inp-ceo': r.ceo, 'inp-rev': r.rev,
-                'inp-desc': r.desc, 'inp-products': r.products, 'inp-tech': r.tech,
-                'inp-acq': r.acq, 'inp-comp': r.comp,
-                'inp-hist': r.hist, 'inp-jobs': r.jobs, 'inp-probs': r.probs, 'inp-opps': r.opps
-            };
-            for(let k in map) document.getElementById(k).value = map[k] || '';
-            document.getElementById('custom-fields-container').innerHTML = '';
-            if(r.customFields) r.customFields.forEach(cf => addCustomField(cf));
-            nav('analyze');
+        function edit(id) { const r = db.find(x=>x.id===id); document.getElementById('entry-id').value = r.id; for(let k in r) { const el = document.getElementById(`inp-${k}`); if(el) el.value = r[k] || ''; } nav('analyze'); }
+        function del(id) { if(confirm("Delete?")) { db = db.filter(x=>x.id!==id); localStorage.setItem('pmo_master_db', JSON.stringify(db)); renderTable(); updateKPIs(); } }
+        function resetForm() { document.getElementById('main-form').reset(); document.getElementById('entry-id').value=''; }
+        function openViewModal(id) { 
+            const r = db.find(x=>x.id===id); 
+            for(let k in r) { const el = document.getElementById(`vm-${k}`); if(el) el.innerText = r[k] || '-'; } 
+            const b = document.getElementById('vm-btn-edit'); 
+            if(session.role==='admin'||r.author===session.user) { b.classList.remove('hide'); b.onclick=()=>{closeModal(); edit(r.id);}; } else b.classList.add('hide');
+            document.getElementById('view-modal').classList.remove('hidden'); 
         }
 
-        function del(id) {
-            if(confirm("Delete this report?")) {
-                db = db.filter(x => x.id !== id);
-                localStorage.setItem('pmo_master_db', JSON.stringify(db));
-                renderTable();
-                updateKPIs();
-            }
+        function updateKPIs() { 
+            document.getElementById('kpi-count').innerText = db.length; 
+            document.getElementById('kpi-points').innerText = db.length * 18; 
+            let t = 0; db.forEach(r=>{if(r.rev){ let n = parseFloat(r.rev.replace(/[^0-9.]/g,'')); if(!isNaN(n)) t+= r.rev.includes('B')?n*1000:n; }});
+            document.getElementById('kpi-val').innerText = t>=1000?`$${(t/1000).toFixed(1)}B`:`$${t}M`;
         }
 
-        function runDiscovery() {
-            const name = document.getElementById('search-input').value.trim();
-            if(!name) return alert("Enter company name");
-            document.getElementById('inp-name').value = name;
-            const panel = document.getElementById('discovery-panel');
-            panel.classList.remove('hidden');
-            const makeBtn = (s, containerId) => {
-                const btn = document.createElement('a');
-                btn.href = `https://www.google.com/search?q=${encodeURIComponent(s.q)}`;
-                btn.target = "_blank";
-                btn.className = "flex flex-col items-center justify-center p-3 border rounded hover:bg-gray-50 hover:shadow-md transition text-center bg-white";
-                btn.innerHTML = `<i class="${s.i} text-lg mb-1 ${s.c}"></i><span class="text-[10px] font-bold text-gray-500 uppercase">${s.t}</span>`;
-                document.getElementById(containerId).appendChild(btn);
-            };
-            document.getElementById('links-general').innerHTML = '';
-            document.getElementById('links-tech').innerHTML = '';
-            const general = [
-                { t: "LinkedIn", i: "fab fa-linkedin", c: "text-blue-700", q: `site:linkedin.com/company "${name}"` },
-                { t: "ZoomInfo", i: "fas fa-address-card", c: "text-blue-500", q: `ZoomInfo "${name}" profile` },
-                { t: "Valuation", i: "fas fa-money-bill-wave", c: "text-green-600", q: `"${name}" revenue valuation 2025` },
-                { t: "News", i: "fas fa-newspaper", c: "text-gray-600", q: `"${name}" latest business news` }
-            ];
-            const tech = [
-                { t: "Tech Stack", i: "fas fa-layer-group", c: "text-purple-600", q: `"${name}" technology stack` },
-                { t: "Competitors", i: "fas fa-chess", c: "text-red-500", q: `top competitors of "${name}"` },
-                { t: "Jobs", i: "fas fa-briefcase", c: "text-blue-400", q: `"${name}" careers jobs` },
-                { t: "Reviews", i: "fas fa-star", c: "text-yellow-400", q: `"${name}" reviews` }
-            ];
-            general.forEach(s => makeBtn(s, 'links-general'));
-            tech.forEach(s => makeBtn(s, 'links-tech'));
-        }
-
-        function resetForm() {
-            document.getElementById('main-form').reset();
-            document.getElementById('entry-id').value = '';
-            document.getElementById('discovery-panel').classList.add('hidden');
-            document.getElementById('custom-fields-container').innerHTML = '';
-        }
-
-        function updateKPIs() {
-            document.getElementById('kpi-count').innerText = db.length;
-            document.getElementById('kpi-analysts').innerText = [...new Set(db.map(x=>x.author))].length;
-            let total = 0;
-            db.forEach(r => {
-                if(r.rev) {
-                    const clean = r.rev.toUpperCase();
-                    const num = parseFloat(clean.replace(/[^0-9.]/g, ''));
-                    if(!isNaN(num)) total += clean.includes('B') ? num * 1000 : num;
-                }
-            });
-            document.getElementById('kpi-val').innerText = total >= 1000 ? `$${(total/1000).toFixed(1)}B` : `$${total}M`;
-        }
-
-        function exportPPT(id) {
-            const r = db.find(x => x.id === id);
-            let pptx = new PptxGenJS();
-            pptx.layout = 'LAYOUT_16x9';
-            pptx.defineSlideMaster({ title: 'MASTER', background: { color: 'FFFFFF' }, objects: [
-                { rect: { x: 0, y: 0, w: '100%', h: 0.6, fill: '1E293B' } },
-                { text: { text: 'CONFIDENTIAL REPORT', options: { x: 0.5, y: 0.15, color: 'FFFFFF', bold: true, fontSize: 14 } } }
-            ]});
-            let slide = pptx.addSlide({ masterName: 'MASTER' });
-            slide.addText(r.name, { x: 0.5, y: 2.5, fontSize: 40, bold: true, color: '1E293B' });
-            slide.addText(`CEO: ${r.ceo} | Valuation: ${r.rev}`, { x: 0.5, y: 3.5, fontSize: 18, color: '64748B' });
-            let s2 = pptx.addSlide({ masterName: 'MASTER' });
-            s2.addText("Executive Summary", { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
-            s2.addText(r.desc, { x: 0.5, y: 1.5, w: 9, fontSize: 12, color: '333333' });
-            pptx.writeFile({ fileName: `${r.name}_Report.pptx` });
-        }
-
-        function exportWord(id) {
-            const r = db.find(x => x.id === id);
-            let customHtml = '';
-            if(r.customFields && r.customFields.length > 0) {
-                r.customFields.forEach(cf => {
-                    customHtml += `<h3 style="background-color: #f1f5f9; padding: 10px;">${cf.title} <span style="font-size:0.8em; color:#666;">${cf.subtitle}</span></h3><p>${cf.content}</p>`;
-                });
-            }
-            const content = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>${r.name}</title></head>
-                <body style="font-family: Arial, sans-serif; line-height: 1.6; padding: 40px;">
-                    <h1 style="color: #1e293b; border-bottom: 4px solid #3b82f6; padding-bottom: 10px;">${r.name}</h1>
-                    <p style="color: #64748b;"><strong>Analyst:</strong> ${r.author} | <strong>Date:</strong> ${r.updated}</p>
-                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                        <tr style="background-color: #f8fafc;"><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">CEO</td><td style="padding: 10px; border: 1px solid #ddd;">${r.ceo}</td></tr>
-                        <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Valuation</td><td style="padding: 10px; border: 1px solid #ddd;">${r.rev}</td></tr>
-                        <tr style="background-color: #f8fafc;"><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Website</td><td style="padding: 10px; border: 1px solid #ddd;">${r.web}</td></tr>
-                    </table>
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Executive Summary</h3><p>${r.desc}</p>
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Product & Technology</h3><p><strong>Products:</strong> ${r.products}</p><p><strong>Tech Stack:</strong> ${r.tech}</p>
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Strategic Analysis</h3><p><strong style="color: #dc2626;">Challenges:</strong> ${r.probs}</p><p><strong style="color: #16a34a;">Opportunities:</strong> ${r.opps}</p>
-                    ${customHtml}
-                </body></html>`;
-            saveAs(new Blob([content], {type: 'application/msword'}), `${r.name}_Report.doc`);
-        }
+        function generateToken() { const d = document.getElementById('share-custom-date').value; const c = Math.random().toString(36).substring(7).toUpperCase(); const exp = d?new Date(d).getTime():0; validTokens.push({code:c, exp:exp, by:session.user}); localStorage.setItem('pmo_tokens',JSON.stringify(validTokens)); document.getElementById('token-display').classList.remove('hidden'); document.getElementById('gen-code').innerText=c; document.getElementById('gen-link').value=`${location.href}?key=${c}`; }
+        function copyLink() { const i = document.getElementById('gen-link'); i.select(); document.execCommand('copy'); alert('Copied'); }
+        function clearAllData() { if(confirm("Wipe Everything?")) { localStorage.clear(); location.reload(); } }
+        function backupData() { saveAs(new Blob([JSON.stringify({db,users,validTokens})],{type:"application/json"}), "PMO_Master_Backup.json"); }
 
         function renderChart() {
             const ctx = document.getElementById('chart-valuation').getContext('2d');
-            const data = db.map(r => {
-                let v = 0;
-                if(r.rev) {
-                    const c = r.rev.toUpperCase();
-                    const n = parseFloat(c.replace(/[^0-9.]/g, ''));
-                    if(!isNaN(n)) v = c.includes('B') ? n * 1000 : n;
-                }
-                return v;
-            });
+            const vals = db.map(r=>{ let n = parseFloat((r.rev||"0").replace(/[^0-9.]/g,'')); return r.rev&&r.rev.includes('B')?n*1000:n; });
             if(window.myChart) window.myChart.destroy();
-            window.myChart = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: db.map(r => r.name), datasets: [{ label: 'Valuation (M)', data: data, backgroundColor: '#3b82f6', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+            window.myChart = new Chart(ctx, { type: 'bar', data: { labels: db.map(x=>x.name), datasets: [{label:'Value (Millions)', data:vals, backgroundColor:'#3b82f6'}]}, options: {responsive:true, maintainAspectRatio:false}});
         }
-        
-        function clearAllData() { if(confirm("CRITICAL WARNING: This will delete ALL reports. Continue?")) { localStorage.clear(); location.reload(); } }
-        function backupData() { const blob = new Blob([JSON.stringify({db, users, validTokens}, null, 2)], {type: "application/json"}); saveAs(blob, "PMO_Backup.json"); }
     </script>
 </body>
 </html>
