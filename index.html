@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Master Suite | Enterprise V2</title>
+    <title>PMO Master Suite | Secure Share</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -32,16 +32,14 @@
         .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
         .hide { display: none !important; }
         
-        /* Form Inputs */
-        .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.875rem; outline: none; transition: border 0.2s, box-shadow 0.2s; }
+        /* Inputs & Animations */
+        .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.875rem; outline: none; transition: all 0.2s; }
         .inp-std:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .lbl-std { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; letter-spacing: 0.05em; }
-        
-        /* Custom UI Elements */
         .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
         .modal-enter { animation: slideIn 0.3s ease-out forwards; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
+        
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -56,16 +54,28 @@
             
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Production Ready Intelligence</p>
+                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Secure Intelligence Suite</p>
             </div>
 
             <div id="form-login" class="space-y-4">
                 <div><label class="lbl-std">Username</label><input type="text" id="login-user" class="inp-std" placeholder="analyst"></div>
                 <div><label class="lbl-std">Password</label><input type="password" id="login-pass" class="inp-std" placeholder="••••••••"></div>
                 <button onclick="authLogin()" class="w-full bg-corp-900 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transition">Secure Sign In</button>
+                
                 <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                     <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Create Account</button>
-                    <button onclick="authGuest()" class="text-xs text-gray-400 hover:text-gray-600">Visitor Access</button>
+                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> I have a Guest Pass Key</button>
+                </div>
+            </div>
+
+            <div id="form-guest" class="space-y-4 hide">
+                <div class="bg-blue-50 border border-blue-100 p-3 rounded text-xs text-blue-800 mb-4">
+                    <i class="fas fa-info-circle mr-1"></i> Enter the Access ID provided by an Administrator or Analyst.
+                </div>
+                <div><label class="lbl-std">Guest Pass Key / ID</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest" placeholder="XXXX-XXXX"></div>
+                <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition">Access Dashboard</button>
+                <div class="text-center pt-2">
+                    <button onclick="toggleAuth('login')" class="text-xs text-gray-500 hover:text-corp-900">Back to Login</button>
                 </div>
             </div>
 
@@ -91,9 +101,9 @@
         <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
             <div class="p-6 border-b border-gray-100">
                 <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <div class="flex items-center mt-3 gap-2 bg-green-50 px-2 py-1 rounded border border-green-100 w-fit">
+                <div class="flex items-center mt-3 gap-2 bg-gray-50 px-2 py-1 rounded border border-gray-100 w-fit">
                     <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                    <p class="text-[10px] text-green-700 font-bold tracking-wider uppercase" id="role-badge">GUEST</p>
+                    <p class="text-[10px] text-gray-600 font-bold tracking-wider uppercase" id="role-badge">GUEST</p>
                 </div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 space-y-1">
@@ -151,12 +161,12 @@
                             <div class="text-3xl font-bold text-green-600 mt-2" id="kpi-val">$0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">Analysts Active</div>
+                            <div class="text-xs text-gray-500 font-bold uppercase">Contributors</div>
                             <div class="text-3xl font-bold text-blue-600 mt-2" id="kpi-analysts">1</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-xs text-gray-500 font-bold uppercase">System Status</div>
-                            <div class="text-3xl font-bold text-green-500 mt-2 text-sm pt-2"><i class="fas fa-check-circle"></i> ONLINE</div>
+                            <div class="text-xs text-gray-500 font-bold uppercase">Security Status</div>
+                            <div class="text-3xl font-bold text-green-500 mt-2 text-sm pt-2"><i class="fas fa-lock"></i> SECURE</div>
                         </div>
                     </div>
 
@@ -197,11 +207,9 @@
                                 <i class="fas fa-bolt mr-2"></i>Generate Intel Links
                             </button>
                         </div>
-                        
                         <div id="discovery-panel" class="hidden mt-6 pt-6 border-t border-gray-100 animate-fade">
                             <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">General & Financial</h4>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="links-general"></div>
-                            
                             <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Tech & People</h4>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4" id="links-tech"></div>
                         </div>
@@ -252,9 +260,7 @@
                                     <i class="fas fa-plus mr-1"></i> Add Manual Section
                                 </button>
                             </div>
-                            <div id="custom-fields-container" class="space-y-4">
-                                </div>
-                            <p class="text-[10px] text-gray-400 mt-2">Add flexible headings and content for specific project needs.</p>
+                            <div id="custom-fields-container" class="space-y-4"></div>
                         </div>
 
                         <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
@@ -269,26 +275,62 @@
                     </form>
                 </div>
 
-                <div id="view-settings" class="hide max-w-2xl mx-auto">
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">My Profile</h3>
-                        <p class="text-sm text-gray-500 mb-6">Manage your local session.</p>
+                <div id="view-settings" class="hide max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
-                        <div class="space-y-5">
-                            <div>
-                                <label class="lbl-std">Current Role</label>
-                                <div id="set-role" class="p-2 bg-gray-100 rounded text-gray-600 text-sm font-mono border border-gray-200">Guest</div>
+                        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 h-fit">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">My Profile</h3>
+                            <p class="text-sm text-gray-500 mb-6">Manage your local session.</p>
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="lbl-std">Current Role</label>
+                                    <div id="set-role" class="p-2 bg-gray-100 rounded text-gray-600 text-sm font-mono border border-gray-200">Guest</div>
+                                </div>
+                                <button onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full font-semibold">
+                                    <i class="fas fa-download mr-2"></i> Download Backup
+                                </button>
+                                <div id="admin-zone" class="mt-6 pt-6 border-t border-red-100 hidden">
+                                    <button onclick="clearAllData()" class="w-full text-xs text-red-500 border border-red-200 px-4 py-2 rounded hover:bg-red-50 font-bold">Factory Reset Database</button>
+                                </div>
                             </div>
-                            <button onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full font-semibold">
-                                <i class="fas fa-download mr-2"></i> Download Database Backup
-                            </button>
                         </div>
 
-                        <div id="admin-zone" class="mt-10 pt-6 border-t border-red-100 hidden">
-                            <h4 class="font-bold text-red-600 mb-2 flex items-center"><i class="fas fa-shield-alt mr-2"></i> Admin Zone</h4>
-                            <p class="text-xs text-gray-400 mb-2">Factory Reset wipes all data for all users on this browser.</p>
-                            <button onclick="clearAllData()" class="text-xs text-red-500 border border-red-200 px-4 py-2 rounded hover:bg-red-50 font-bold">Factory Reset Database</button>
+                        <div id="share-center" class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 h-fit hidden">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i class="fas fa-share-alt"></i></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-800">Share Access</h3>
+                                    <p class="text-xs text-gray-500">Generate secure guest links.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 space-y-4">
+                                <div>
+                                    <label class="lbl-std">Token Expiration</label>
+                                    <select id="share-expiry" class="inp-std bg-white">
+                                        <option value="60">1 Hour</option>
+                                        <option value="1440">24 Hours</option>
+                                        <option value="0">Never Expires</option>
+                                    </select>
+                                </div>
+                                <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-2 rounded font-bold hover:bg-blue-700">Generate Guest Pass</button>
+                                
+                                <div id="token-display" class="hidden bg-gray-50 border border-gray-200 p-4 rounded-lg animate-fade">
+                                    <div class="text-center mb-3">
+                                        <div class="text-[10px] text-gray-400 uppercase font-bold">Pass Key</div>
+                                        <div class="text-2xl font-mono font-bold text-gray-800 tracking-widest" id="gen-code"></div>
+                                    </div>
+                                    
+                                    <div class="text-[10px] text-gray-400 uppercase font-bold mb-1">Shareable Link</div>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="gen-link" class="flex-1 text-xs p-2 border rounded bg-white text-gray-500" readonly>
+                                        <button onclick="copyLink()" class="bg-gray-200 px-3 rounded hover:bg-gray-300 text-xs font-bold">Copy</button>
+                                    </div>
+                                    <p class="text-[10px] text-orange-500 mt-2 text-center"><i class="fas fa-exclamation-triangle"></i> Anyone with this link can view the dashboard.</p>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -307,7 +349,6 @@
 
     <div id="view-modal" class="fixed inset-0 z-40 bg-gray-900/50 hidden flex justify-end">
         <div class="w-full max-w-2xl h-full bg-white shadow-2xl overflow-y-auto relative animate-fade">
-            
             <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-start z-10">
                 <div>
                     <h2 id="vm-name" class="text-2xl font-bold text-corp-900">Company Name</h2>
@@ -318,9 +359,7 @@
                 </div>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 p-2"><i class="fas fa-times text-xl"></i></button>
             </div>
-
             <div class="p-8 space-y-8">
-                
                 <div class="bg-green-50 border border-green-100 p-4 rounded-lg flex justify-between items-center">
                     <div>
                         <div class="text-xs font-bold text-green-800 uppercase">Valuation / Revenue</div>
@@ -331,36 +370,16 @@
                         <div id="vm-author" class="text-sm font-semibold text-gray-700">-</div>
                     </div>
                 </div>
-
-                <div>
-                    <h3 class="text-sm font-bold text-corp-900 uppercase border-b pb-2 mb-3">Executive Summary</h3>
-                    <p id="vm-desc" class="text-gray-600 text-sm leading-relaxed whitespace-pre-line"></p>
-                </div>
-
+                <div><h3 class="text-sm font-bold text-corp-900 uppercase border-b pb-2 mb-3">Executive Summary</h3><p id="vm-desc" class="text-gray-600 text-sm leading-relaxed whitespace-pre-line"></p></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-sm font-bold text-blue-600 uppercase border-b pb-2 mb-3">Products</h3>
-                        <p id="vm-products" class="text-gray-600 text-sm whitespace-pre-line"></p>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-bold text-purple-600 uppercase border-b pb-2 mb-3">Tech Stack</h3>
-                        <p id="vm-tech" class="text-gray-600 text-sm whitespace-pre-line"></p>
-                    </div>
+                    <div><h3 class="text-sm font-bold text-blue-600 uppercase border-b pb-2 mb-3">Products</h3><p id="vm-products" class="text-gray-600 text-sm whitespace-pre-line"></p></div>
+                    <div><h3 class="text-sm font-bold text-purple-600 uppercase border-b pb-2 mb-3">Tech Stack</h3><p id="vm-tech" class="text-gray-600 text-sm whitespace-pre-line"></p></div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-red-50 p-4 rounded border border-red-100">
-                        <h3 class="text-xs font-bold text-red-600 uppercase mb-2">Challenges</h3>
-                        <p id="vm-probs" class="text-gray-700 text-sm whitespace-pre-line"></p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded border border-green-100">
-                        <h3 class="text-xs font-bold text-green-600 uppercase mb-2">Opportunities</h3>
-                        <p id="vm-opps" class="text-gray-700 text-sm whitespace-pre-line"></p>
-                    </div>
+                    <div class="bg-red-50 p-4 rounded border border-red-100"><h3 class="text-xs font-bold text-red-600 uppercase mb-2">Challenges</h3><p id="vm-probs" class="text-gray-700 text-sm whitespace-pre-line"></p></div>
+                    <div class="bg-green-50 p-4 rounded border border-green-100"><h3 class="text-xs font-bold text-green-600 uppercase mb-2">Opportunities</h3><p id="vm-opps" class="text-gray-700 text-sm whitespace-pre-line"></p></div>
                 </div>
-
                 <div id="vm-custom-area" class="space-y-6"></div>
-
                 <div class="pt-8 border-t flex justify-end gap-3">
                     <button id="vm-btn-edit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Edit Report</button>
                     <button onclick="closeModal()" class="bg-gray-100 text-gray-600 px-4 py-2 rounded text-sm hover:bg-gray-200">Close</button>
@@ -373,13 +392,24 @@
         // --- 1. DATA & STATE ---
         let db = JSON.parse(localStorage.getItem('pmo_master_db')) || [];
         let users = JSON.parse(localStorage.getItem('pmo_users')) || [{ user: 'admin', pass: 'admin', role: 'admin' }];
+        let validTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || []; // { code, exp, by }
         let session = null;
-        let currentCustomFields = []; // Temp store for UI logic
 
         // --- 2. AUTH SYSTEM ---
+        window.onload = () => {
+            // Check for URL Token
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('key');
+            if(token) {
+                document.getElementById('guest-token').value = token;
+                authGuestToken();
+            }
+        };
+
         function toggleAuth(view) {
             document.getElementById('form-login').classList.add('hide');
             document.getElementById('form-signup').classList.add('hide');
+            document.getElementById('form-guest').classList.add('hide');
             document.getElementById(`form-${view}`).classList.remove('hide');
         }
 
@@ -403,8 +433,21 @@
             startSession(newUser);
         }
 
-        function authGuest() {
-            startSession({ user: 'Visitor', role: 'guest' });
+        function authGuestToken() {
+            const token = document.getElementById('guest-token').value.trim();
+            if(!token) return alert("Please enter a Pass Key");
+
+            // Clean expired tokens first
+            const now = Date.now();
+            validTokens = validTokens.filter(t => t.exp === 0 || t.exp > now);
+            localStorage.setItem('pmo_tokens', JSON.stringify(validTokens));
+
+            const match = validTokens.find(t => t.code === token);
+            if(match) {
+                startSession({ user: 'Guest Visitor', role: 'guest', via: match.by });
+            } else {
+                alert("Invalid or Expired Pass Key.");
+            }
         }
 
         function startSession(userObj) {
@@ -419,9 +462,11 @@
             if(session.role === 'guest') {
                 document.getElementById('nav-analyze').classList.add('hide');
                 document.getElementById('btn-add-new').classList.add('hide');
+                document.getElementById('share-center').classList.add('hidden');
             } else {
                 document.getElementById('nav-analyze').classList.remove('hide');
                 document.getElementById('btn-add-new').classList.remove('hide');
+                document.getElementById('share-center').classList.remove('hidden');
             }
             if(session.role === 'admin') document.getElementById('admin-zone').classList.remove('hidden');
 
@@ -430,9 +475,41 @@
             updateKPIs();
         }
 
-        function logout() { location.reload(); }
+        function logout() { 
+            window.history.replaceState({}, document.title, window.location.pathname); // Clear URL
+            location.reload(); 
+        }
 
-        // --- 3. NAVIGATION & UI ---
+        // --- 3. SHARING LOGIC ---
+        function generateToken() {
+            const expMins = parseInt(document.getElementById('share-expiry').value);
+            const code = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            
+            const newToken = {
+                code: code,
+                exp: expMins === 0 ? 0 : Date.now() + (expMins * 60000),
+                by: session.user,
+                created: new Date().toLocaleTimeString()
+            };
+
+            validTokens.push(newToken);
+            localStorage.setItem('pmo_tokens', JSON.stringify(validTokens));
+
+            document.getElementById('token-display').classList.remove('hidden');
+            document.getElementById('gen-code').innerText = code;
+            
+            const link = `${window.location.protocol}//${window.location.host}${window.location.pathname}?key=${code}`;
+            document.getElementById('gen-link').value = link;
+        }
+
+        function copyLink() {
+            const copyText = document.getElementById("gen-link");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Link copied to clipboard!");
+        }
+
+        // --- 4. NAVIGATION & UI ---
         function nav(viewId) {
             document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hide'));
             document.getElementById(`view-${viewId}`).classList.remove('hide');
@@ -442,48 +519,7 @@
             if(viewId === 'visualize') renderChart();
         }
 
-        function closeModal() { document.getElementById('view-modal').classList.add('hidden'); }
-
-        // --- 4. DATA OPERATIONS ---
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
-            
-            db.forEach(r => {
-                const isMine = r.author === session.user;
-                const isAdmin = session.role === 'admin';
-                const canEdit = isAdmin || isMine;
-
-                const tr = document.createElement('tr');
-                tr.className = "border-b hover:bg-gray-50 transition cursor-pointer";
-                tr.onclick = (e) => {
-                    // Prevent row click if clicking a button
-                    if(e.target.closest('button')) return;
-                    openViewModal(r.id);
-                };
-
-                tr.innerHTML = `
-                    <td class="px-6 py-4">
-                        <div class="font-bold text-corp-900">${r.name}</div>
-                        <div class="text-xs text-blue-500 hover:underline">${r.web || ''}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${r.ceo || '-'}</td>
-                    <td class="px-6 py-4 text-green-700 font-mono text-xs font-bold">${r.rev || '-'}</td>
-                    <td class="px-6 py-4 border-l border-gray-200 bg-gray-50">
-                        <div class="text-xs font-semibold text-gray-700"><i class="fas fa-user mr-1 text-gray-400"></i> ${r.author}</div>
-                        <div class="text-[10px] text-gray-400">${r.updated}</div>
-                    </td>
-                    <td class="px-6 py-4 text-right space-x-1">
-                        <button onclick="exportPPT('${r.id}')" class="text-orange-500 hover:bg-orange-50 p-2 rounded" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
-                        <button onclick="exportWord('${r.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded" title="DOC"><i class="fas fa-file-word"></i></button>
-                        ${canEdit ? `<button onclick="del('${r.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // --- 5. REPORT VIEWER MODAL ---
+        // --- 5. REPORT VIEWER MODAL (FIXED: Shows all data) ---
         function openViewModal(id) {
             const r = db.find(x => x.id === id);
             if(!r) return;
@@ -513,7 +549,7 @@
 
             // Configure Edit Button
             const btnEdit = document.getElementById('vm-btn-edit');
-            const isMine = r.author === session.user;
+            const isMine = session.user === r.author;
             const isAdmin = session.role === 'admin';
             
             if (session.role === 'guest' || (!isMine && !isAdmin)) {
@@ -525,22 +561,59 @@
 
             document.getElementById('view-modal').classList.remove('hidden');
         }
+        function closeModal() { document.getElementById('view-modal').classList.add('hidden'); }
 
-        // --- 6. EDIT & SAVE LOGIC ---
+        // --- 6. DATA OPERATIONS ---
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            db.forEach(r => {
+                const isMine = r.author === session.user;
+                const isAdmin = session.role === 'admin';
+                const canEdit = isAdmin || isMine;
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b hover:bg-gray-50 transition cursor-pointer";
+                tr.onclick = (e) => {
+                    if(e.target.closest('button')) return;
+                    openViewModal(r.id);
+                };
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-corp-900">${r.name}</div>
+                        <div class="text-xs text-blue-500 hover:underline">${r.web || ''}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${r.ceo || '-'}</td>
+                    <td class="px-6 py-4 text-green-700 font-mono text-xs font-bold">${r.rev || '-'}</td>
+                    <td class="px-6 py-4 border-l border-gray-200 bg-gray-50">
+                        <div class="text-xs font-semibold text-gray-700"><i class="fas fa-user mr-1 text-gray-400"></i> ${r.author}</div>
+                        <div class="text-[10px] text-gray-400">${r.updated}</div>
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-1">
+                        <button onclick="exportPPT('${r.id}')" class="text-orange-500 hover:bg-orange-50 p-2 rounded" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
+                        <button onclick="exportWord('${r.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded" title="DOC"><i class="fas fa-file-word"></i></button>
+                        ${canEdit ? `<button onclick="del('${r.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
         function addCustomField(data = null) {
             const container = document.getElementById('custom-fields-container');
             const id = Date.now();
             const div = document.createElement('div');
             div.className = "p-4 bg-gray-50 border border-gray-200 rounded-lg relative";
             div.id = `cf-${id}`;
-            
             div.innerHTML = `
                 <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-400 hover:text-red-600"><i class="fas fa-times"></i></button>
                 <div class="grid grid-cols-2 gap-2 mb-2">
-                    <input type="text" class="cf-title inp-std text-xs font-bold" placeholder="Section Heading (e.g. Key Risks)" value="${data ? data.title : ''}">
-                    <input type="text" class="cf-sub inp-std text-xs" placeholder="Subtitle (Optional)" value="${data ? data.subtitle : ''}">
+                    <input type="text" class="cf-title inp-std text-xs font-bold" placeholder="Section Heading" value="${data ? data.title : ''}">
+                    <input type="text" class="cf-sub inp-std text-xs" placeholder="Subtitle" value="${data ? data.subtitle : ''}">
                 </div>
-                <textarea class="cf-content inp-std text-sm" rows="3" placeholder="Enter detailed content here...">${data ? data.content : ''}</textarea>
+                <textarea class="cf-content inp-std text-sm" rows="3" placeholder="Content...">${data ? data.content : ''}</textarea>
             `;
             container.appendChild(div);
         }
@@ -548,8 +621,6 @@
         document.getElementById('main-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const get = (id) => document.getElementById(id).value;
-            
-            // Collect Custom Fields
             const customData = [];
             document.querySelectorAll('#custom-fields-container > div').forEach(div => {
                 customData.push({
@@ -578,7 +649,6 @@
             } else {
                 db.push(record);
             }
-
             localStorage.setItem('pmo_master_db', JSON.stringify(db));
             resetForm();
             nav('dashboard');
@@ -596,16 +666,13 @@
                 'inp-hist': r.hist, 'inp-jobs': r.jobs, 'inp-probs': r.probs, 'inp-opps': r.opps
             };
             for(let k in map) document.getElementById(k).value = map[k] || '';
-            
-            // Restore Custom Fields
             document.getElementById('custom-fields-container').innerHTML = '';
             if(r.customFields) r.customFields.forEach(cf => addCustomField(cf));
-            
             nav('analyze');
         }
 
         function del(id) {
-            if(confirm("Delete this report permanently?")) {
+            if(confirm("Delete this report?")) {
                 db = db.filter(x => x.id !== id);
                 localStorage.setItem('pmo_master_db', JSON.stringify(db));
                 renderTable();
@@ -613,15 +680,12 @@
             }
         }
 
-        // --- 7. DISCOVERY ENGINE ---
         function runDiscovery() {
             const name = document.getElementById('search-input').value.trim();
             if(!name) return alert("Enter company name");
             document.getElementById('inp-name').value = name;
-            
             const panel = document.getElementById('discovery-panel');
             panel.classList.remove('hidden');
-            
             const makeBtn = (s, containerId) => {
                 const btn = document.createElement('a');
                 btn.href = `https://www.google.com/search?q=${encodeURIComponent(s.q)}`;
@@ -630,32 +694,20 @@
                 btn.innerHTML = `<i class="${s.i} text-lg mb-1 ${s.c}"></i><span class="text-[10px] font-bold text-gray-500 uppercase">${s.t}</span>`;
                 document.getElementById(containerId).appendChild(btn);
             };
-
             document.getElementById('links-general').innerHTML = '';
             document.getElementById('links-tech').innerHTML = '';
-
             const general = [
                 { t: "LinkedIn", i: "fab fa-linkedin", c: "text-blue-700", q: `site:linkedin.com/company "${name}"` },
                 { t: "ZoomInfo", i: "fas fa-address-card", c: "text-blue-500", q: `ZoomInfo "${name}" profile` },
-                { t: "Valuation", i: "fas fa-money-bill-wave", c: "text-green-600", q: `"${name}" annual revenue valuation 2025` },
-                { t: "News", i: "fas fa-newspaper", c: "text-gray-600", q: `"${name}" latest business news` },
-                { t: "Crunchbase", i: "fas fa-database", c: "text-blue-400", q: `Crunchbase "${name}"` },
-                { t: "Investors", i: "fas fa-hand-holding-usd", c: "text-green-800", q: `"${name}" investors funding` },
-                { t: "Annual Rpt", i: "fas fa-file-pdf", c: "text-red-600", q: `"${name}" annual report filetype:pdf` },
-                { t: "Wikipedia", i: "fab fa-wikipedia-w", c: "text-gray-800", q: `Wikipedia "${name}"` }
+                { t: "Valuation", i: "fas fa-money-bill-wave", c: "text-green-600", q: `"${name}" revenue valuation 2025` },
+                { t: "News", i: "fas fa-newspaper", c: "text-gray-600", q: `"${name}" latest business news` }
             ];
-
             const tech = [
-                { t: "Glassdoor", i: "fas fa-door-open", c: "text-green-500", q: `Glassdoor "${name}" reviews` },
                 { t: "Tech Stack", i: "fas fa-layer-group", c: "text-purple-600", q: `"${name}" technology stack` },
-                { t: "GitHub", i: "fab fa-github", c: "text-gray-900", q: `site:github.com "${name}"` },
                 { t: "Competitors", i: "fas fa-chess", c: "text-red-500", q: `top competitors of "${name}"` },
                 { t: "Jobs", i: "fas fa-briefcase", c: "text-blue-400", q: `"${name}" careers jobs` },
-                { t: "Twitter/X", i: "fab fa-twitter", c: "text-blue-400", q: `site:twitter.com "${name}"` },
-                { t: "Patents", i: "fas fa-scroll", c: "text-yellow-600", q: `"${name}" patents google patents` },
-                { t: "Reviews", i: "fas fa-star", c: "text-yellow-400", q: `"${name}" customer reviews` }
+                { t: "Reviews", i: "fas fa-star", c: "text-yellow-400", q: `"${name}" reviews` }
             ];
-
             general.forEach(s => makeBtn(s, 'links-general'));
             tech.forEach(s => makeBtn(s, 'links-tech'));
         }
@@ -681,76 +733,50 @@
             document.getElementById('kpi-val').innerText = total >= 1000 ? `$${(total/1000).toFixed(1)}B` : `$${total}M`;
         }
 
-        // --- 8. EXPORTS (PPT & DOC) ---
         function exportPPT(id) {
             const r = db.find(x => x.id === id);
             let pptx = new PptxGenJS();
             pptx.layout = 'LAYOUT_16x9';
             pptx.defineSlideMaster({ title: 'MASTER', background: { color: 'FFFFFF' }, objects: [
                 { rect: { x: 0, y: 0, w: '100%', h: 0.6, fill: '1E293B' } },
-                { text: { text: 'CONFIDENTIAL INTELLIGENCE REPORT', options: { x: 0.5, y: 0.15, color: 'FFFFFF', bold: true, fontSize: 14 } } }
+                { text: { text: 'CONFIDENTIAL REPORT', options: { x: 0.5, y: 0.15, color: 'FFFFFF', bold: true, fontSize: 14 } } }
             ]});
-            
-            // Slide 1
             let slide = pptx.addSlide({ masterName: 'MASTER' });
             slide.addText(r.name, { x: 0.5, y: 2.5, fontSize: 40, bold: true, color: '1E293B' });
             slide.addText(`CEO: ${r.ceo} | Valuation: ${r.rev}`, { x: 0.5, y: 3.5, fontSize: 18, color: '64748B' });
-            
-            // Slide 2
             let s2 = pptx.addSlide({ masterName: 'MASTER' });
             s2.addText("Executive Summary", { x: 0.5, y: 1, fontSize: 24, bold: true, color: '1E293B' });
             s2.addText(r.desc, { x: 0.5, y: 1.5, w: 9, fontSize: 12, color: '333333' });
-
             pptx.writeFile({ fileName: `${r.name}_Report.pptx` });
         }
 
         function exportWord(id) {
             const r = db.find(x => x.id === id);
-            
-            // Build Custom Fields HTML
             let customHtml = '';
             if(r.customFields && r.customFields.length > 0) {
                 r.customFields.forEach(cf => {
                     customHtml += `<h3 style="background-color: #f1f5f9; padding: 10px;">${cf.title} <span style="font-size:0.8em; color:#666;">${cf.subtitle}</span></h3><p>${cf.content}</p>`;
                 });
             }
-
             const content = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
                 <head><meta charset='utf-8'><title>${r.name}</title></head>
                 <body style="font-family: Arial, sans-serif; line-height: 1.6; padding: 40px;">
                     <h1 style="color: #1e293b; border-bottom: 4px solid #3b82f6; padding-bottom: 10px;">${r.name}</h1>
                     <p style="color: #64748b;"><strong>Analyst:</strong> ${r.author} | <strong>Date:</strong> ${r.updated}</p>
-                    
                     <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                         <tr style="background-color: #f8fafc;"><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">CEO</td><td style="padding: 10px; border: 1px solid #ddd;">${r.ceo}</td></tr>
                         <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Valuation</td><td style="padding: 10px; border: 1px solid #ddd;">${r.rev}</td></tr>
                         <tr style="background-color: #f8fafc;"><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Website</td><td style="padding: 10px; border: 1px solid #ddd;">${r.web}</td></tr>
                     </table>
-
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Executive Summary</h3>
-                    <p>${r.desc}</p>
-
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Product & Technology</h3>
-                    <p><strong>Products:</strong> ${r.products}</p>
-                    <p><strong>Tech Stack:</strong> ${r.tech}</p>
-
-                    <h3 style="background-color: #f1f5f9; padding: 10px;">Strategic Analysis</h3>
-                    <p><strong style="color: #dc2626;">Challenges:</strong> ${r.probs}</p>
-                    <p><strong style="color: #16a34a;">Opportunities:</strong> ${r.opps}</p>
-                    <p><strong>Competitors:</strong> ${r.comp}</p>
-
+                    <h3 style="background-color: #f1f5f9; padding: 10px;">Executive Summary</h3><p>${r.desc}</p>
+                    <h3 style="background-color: #f1f5f9; padding: 10px;">Product & Technology</h3><p><strong>Products:</strong> ${r.products}</p><p><strong>Tech Stack:</strong> ${r.tech}</p>
+                    <h3 style="background-color: #f1f5f9; padding: 10px;">Strategic Analysis</h3><p><strong style="color: #dc2626;">Challenges:</strong> ${r.probs}</p><p><strong style="color: #16a34a;">Opportunities:</strong> ${r.opps}</p>
                     ${customHtml}
-                    
-                    <hr style="margin-top: 30px;">
-                    <p style="text-align: center; color: #94a3b8; font-size: 0.8em;">Generated by PMO Master Suite</p>
-                </body>
-                </html>
-            `;
+                </body></html>`;
             saveAs(new Blob([content], {type: 'application/msword'}), `${r.name}_Report.doc`);
         }
 
-        // --- 9. CHARTS ---
         function renderChart() {
             const ctx = document.getElementById('chart-valuation').getContext('2d');
             const data = db.map(r => {
@@ -762,29 +788,16 @@
                 }
                 return v;
             });
-
             if(window.myChart) window.myChart.destroy();
             window.myChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: db.map(r => r.name),
-                    datasets: [{ label: 'Valuation (M)', data: data, backgroundColor: '#3b82f6', borderRadius: 4 }]
-                },
+                data: { labels: db.map(r => r.name), datasets: [{ label: 'Valuation (M)', data: data, backgroundColor: '#3b82f6', borderRadius: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
         
-        function clearAllData() {
-            if(confirm("CRITICAL WARNING: This will delete ALL reports and users. Continue?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-        
-        function backupData() {
-            const blob = new Blob([JSON.stringify({db, users}, null, 2)], {type: "application/json"});
-            saveAs(blob, "PMO_Backup.json");
-        }
+        function clearAllData() { if(confirm("CRITICAL WARNING: This will delete ALL reports. Continue?")) { localStorage.clear(); location.reload(); } }
+        function backupData() { const blob = new Blob([JSON.stringify({db, users, validTokens}, null, 2)], {type: "application/json"}); saveAs(blob, "PMO_Backup.json"); }
     </script>
 </body>
 </html>
