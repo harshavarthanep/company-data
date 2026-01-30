@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PMO Master Suite | Enterprise V4</title>
+    <title>PMO Master Suite | V5 Final Production</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,8 +18,8 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        corp: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' },
-                        brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                        corp: { 50: '#f8fafc', 800: '#1e293b', 900: '#0f172a' },
+                        brand: { 500: '#3b82f6', 600: '#2563eb' }
                     }
                 }
             }
@@ -27,59 +27,60 @@
     </script>
 
     <style>
-        body { background-color: #f8fafc; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
+        body { background-color: #f8fafc; color: #1e293b; -webkit-tap-highlight-color: transparent; font-family: 'Inter', sans-serif; }
         .hide { display: none !important; }
         .inp-std { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; font-size: 0.825rem; outline: none; transition: all 0.2s; background: white; }
         .inp-std:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .lbl-std { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem; display: block; letter-spacing: 0.05em; }
-        .card-header { border-bottom: 1px solid #f1f5f9; padding-bottom: 0.75rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #334155; }
+        .nav-item.active { background-color: #eff6ff; color: #2563eb; border-left: 4px solid #2563eb; }
         .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
+        .glass-modal { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="h-screen overflow-hidden bg-slate-50 flex flex-col">
+<body class="h-screen overflow-hidden flex flex-col">
 
     <div id="auth-layer" class="fixed inset-0 z-50 bg-white flex items-center justify-center auth-bg">
         <div class="w-full max-w-md p-8 bg-white shadow-2xl rounded-2xl border border-gray-100 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+            <div class="absolute top-0 left-0 w-full h-1 bg-brand-600"></div>
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <p class="text-[10px] text-gray-500 mt-2 font-bold tracking-widest uppercase">Intelligenze V4 Production</p>
+                <p class="text-[10px] text-gray-400 mt-2 font-bold tracking-widest uppercase">Enterprise Command Center</p>
             </div>
+
             <div id="form-login" class="space-y-4">
                 <div><label class="lbl-std">Username</label><input type="text" id="login-user" class="inp-std" placeholder="admin / analyst"></div>
                 <div><label class="lbl-std">Password</label><input type="password" id="login-pass" class="inp-std" placeholder="••••••••"></div>
                 <button onclick="authLogin()" class="w-full bg-corp-900 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-gray-800 transition">Secure Sign In</button>
                 <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold hover:underline">Register</button>
-                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 hover:text-gray-600 font-medium"><i class="fas fa-key mr-1"></i> Use Guest Pass</button>
+                    <button onclick="toggleAuth('signup')" class="text-xs text-brand-600 font-bold">Register</button>
+                    <button onclick="toggleAuth('guest')" class="text-xs text-gray-400 font-medium">Have a Pass Key?</button>
                 </div>
             </div>
+
             <div id="form-guest" class="space-y-4 hide">
-                <div><label class="lbl-std">Guest Pass Key</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest" placeholder="XXXX-XXXX"></div>
-                <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">Access Dashboard</button>
+                <div><label class="lbl-std">Enter Guest Pass Key</label><input type="text" id="guest-token" class="inp-std font-mono text-center tracking-widest" placeholder="XXXX-XXXX"></div>
+                <button onclick="authGuestToken()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">Access Intel</button>
                 <div class="text-center pt-2"><button onclick="toggleAuth('login')" class="text-xs text-gray-500">Back to Login</button></div>
             </div>
+
             <div id="form-signup" class="space-y-4 hide">
-                <div><label class="lbl-std">Username</label><input type="text" id="sign-user" class="inp-std"></div>
+                <div><label class="lbl-std">New Username</label><input type="text" id="sign-user" class="inp-std"></div>
                 <div><label class="lbl-std">Role</label><select id="sign-role" class="inp-std bg-white"><option value="analyst">Analyst</option><option value="admin">Admin</option></select></div>
-                <div><label class="lbl-std">Password</label><input type="password" id="sign-pass" class="inp-std"></div>
-                <button onclick="authSignup()" class="w-full bg-brand-600 text-white py-3 rounded-lg font-bold">Register User</button>
+                <div><label class="lbl-std">Password (Letter + Number)</label><input type="password" id="sign-pass" class="inp-std"></div>
+                <button onclick="authSignup()" class="w-full bg-brand-600 text-white py-3 rounded-lg font-bold">Create Account</button>
                 <div class="text-center pt-2"><button onclick="toggleAuth('login')" class="text-xs text-gray-500">Back</button></div>
             </div>
         </div>
     </div>
 
     <div id="app-layer" class="flex-1 flex flex-col md:flex-row h-full overflow-hidden opacity-0 transition-opacity duration-500">
+        
         <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-20 shadow-lg">
             <div class="p-6 border-b border-gray-100">
                 <h1 class="text-xl font-bold tracking-tight text-corp-900">PMO<span class="text-brand-600">Master</span></h1>
-                <div class="flex items-center mt-3 gap-2 bg-gray-50 px-2 py-1 rounded border border-gray-100 w-fit">
-                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                    <p class="text-[10px] text-gray-600 font-bold tracking-wider uppercase" id="role-badge">GUEST</p>
-                </div>
+                <div id="session-badge" class="mt-3 px-2 py-1 rounded text-[10px] font-bold w-fit border">GUEST</div>
             </div>
             <nav class="flex-1 overflow-y-auto py-4 space-y-1">
                 <a onclick="nav('dashboard')" id="nav-dashboard" class="nav-item active flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-th-large w-6"></i> Dashboard</a>
@@ -87,20 +88,17 @@
                 <a onclick="nav('visualize')" id="nav-visualize" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-chart-pie w-6"></i> Analytics</a>
                 <a onclick="nav('settings')" id="nav-settings" class="nav-item flex items-center px-6 py-3 text-sm font-medium cursor-pointer text-gray-600 hover:bg-gray-50 transition"><i class="fas fa-cog w-6"></i> Settings</a>
             </nav>
-            <div class="p-4 border-t border-gray-200">
-                 <button onclick="logout()" class="w-full text-xs text-red-500 border border-red-100 bg-red-50 py-2.5 rounded hover:bg-red-100 font-semibold flex items-center justify-center gap-2"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+            <div class="p-4 border-t">
+                 <button onclick="logout()" class="w-full text-xs text-red-500 border border-red-50 bg-red-50 py-2 rounded font-bold hover:bg-red-100"><i class="fas fa-sign-out-alt mr-1"></i> Sign Out</button>
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col h-full overflow-hidden relative w-full bg-slate-50">
-            <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0 shadow-sm z-10">
-                <h2 id="page-title" class="text-lg font-bold text-gray-800">Dashboard</h2>
-                <div class="flex items-center space-x-3 text-sm">
-                    <div class="text-right leading-tight">
-                        <div class="font-semibold text-gray-800" id="display-user">Guest</div>
-                        <div class="text-[10px] text-gray-400">Authenticated</div>
-                    </div>
-                    <i class="fas fa-user-circle text-3xl text-gray-300"></i>
+        <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-50">
+            <header class="hidden md:flex h-16 bg-white border-b border-gray-200 items-center justify-between px-8 shrink-0">
+                <h2 id="page-title" class="text-lg font-bold text-gray-800 uppercase tracking-wide">Dashboard</h2>
+                <div class="flex items-center space-x-3 text-sm font-medium text-gray-500">
+                    <span id="display-user">User</span>
+                    <i class="fas fa-user-circle text-2xl text-gray-300"></i>
                 </div>
             </header>
 
@@ -109,38 +107,37 @@
                 <div id="view-dashboard" class="space-y-6 max-w-7xl mx-auto">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-bold uppercase">Total Companies</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Companies</div>
                             <div class="text-3xl font-bold text-corp-900 mt-1" id="kpi-count">0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-bold uppercase">Total Valuation</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Valuation</div>
                             <div class="text-3xl font-bold text-green-600 mt-1" id="kpi-val">$0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-bold uppercase">Data Points</div>
-                            <div class="text-3xl font-bold text-blue-600 mt-1" id="kpi-points">0</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Active Share Keys</div>
+                            <div class="text-3xl font-bold text-blue-600 mt-1" id="kpi-keys">0</div>
                         </div>
                         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-                            <div class="text-[10px] text-gray-400 font-bold uppercase">System</div>
-                            <div class="text-3xl font-bold text-emerald-500 mt-1 text-sm pt-1"><i class="fas fa-shield-check mr-1"></i> ACTIVE</div>
+                            <div class="text-[10px] text-gray-400 font-bold uppercase">Last Sync</div>
+                            <div class="text-3xl font-bold text-slate-400 mt-1 text-sm pt-1" id="kpi-sync">Now</div>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50/50">
                             <h3 class="font-bold text-gray-800">Intelligence Directory</h3>
-                            <button id="btn-add-new" onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded font-bold shadow-sm hover:bg-brand-700 transition"><i class="fas fa-plus mr-1"></i> New Entry</button>
+                            <button id="btn-add-new" onclick="nav('analyze')" class="text-xs bg-brand-600 text-white px-4 py-2 rounded font-bold hover:bg-brand-700 transition"><i class="fas fa-plus mr-1"></i> New Entry</button>
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left">
-                                <thead class="bg-gray-50 text-gray-500 border-b">
+                                <thead class="bg-gray-50 text-gray-400 border-b">
                                     <tr>
-                                        <th class="px-6 py-3 font-semibold">Company Name & Web</th>
-                                        <th class="px-6 py-3 font-semibold">CEO / Leadership</th>
-                                        <th class="px-6 py-3 font-semibold">HQ / Parent</th>
-                                        <th class="px-6 py-3 font-semibold">Valuation</th>
-                                        <th class="px-6 py-3 font-semibold">Analyst</th>
-                                        <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                                        <th class="px-6 py-3 font-bold uppercase tracking-widest text-[10px]">Company Name</th>
+                                        <th class="px-6 py-3 font-bold uppercase tracking-widest text-[10px]">Leadership</th>
+                                        <th class="px-6 py-3 font-bold uppercase tracking-widest text-[10px]">Parent / HQ</th>
+                                        <th class="px-6 py-3 font-bold uppercase tracking-widest text-[10px]">Valuation</th>
+                                        <th class="px-6 py-3 font-bold uppercase tracking-widest text-[10px] text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body"></tbody>
@@ -149,118 +146,110 @@
                     </div>
                 </div>
 
-                <div id="view-analyze" class="hide max-w-6xl mx-auto pb-24">
+                <div id="view-analyze" class="hide max-w-5xl mx-auto space-y-6 pb-20">
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6">
-                            <div class="card-header"><i class="fas fa-bolt text-yellow-500"></i> Smart Intelligence Extract</div>
-                            <textarea id="paste-area" class="w-full h-32 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500" placeholder="Paste news article, LinkedIn bio, or raw text here..."></textarea>
-                            <div class="mt-3 flex gap-2">
-                                <button onclick="smartParse()" class="bg-brand-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-brand-700">Auto-Extract Data</button>
-                                <button onclick="resetForm()" class="text-gray-500 px-4 py-2 text-xs font-bold border border-gray-200 rounded">Clear Form</button>
-                            </div>
+                    <div class="bg-white rounded-xl border border-gray-200 p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="lbl-std">Smart Paste & Extract</label>
+                            <textarea id="paste-area" class="w-full h-24 p-3 bg-slate-50 border rounded text-[10px] outline-none" placeholder="Paste article text or raw data here to auto-fill the form..."></textarea>
+                            <button onclick="smartParse()" class="mt-2 bg-brand-600 text-white px-4 py-2 rounded text-[10px] font-bold">AUTO-EXTRACT</button>
                         </div>
-                        <div class="bg-white rounded-xl border border-gray-200 p-6">
-                            <div class="card-header"><i class="fas fa-search-plus text-blue-500"></i> OSINT Discovery</div>
-                            <input type="text" id="search-input" class="inp-std mb-3" placeholder="Target Company Name">
-                            <button onclick="runDiscovery()" class="w-full bg-slate-900 text-white py-2 rounded text-xs font-bold hover:bg-slate-800">Generate Research Links</button>
-                            <div id="discovery-panel" class="mt-4 grid grid-cols-2 gap-2 hidden"></div>
+                        <div>
+                            <label class="lbl-std">OSINT Discovery Engine</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="search-input" class="inp-std" placeholder="Company Name">
+                                <button onclick="runDiscovery()" class="bg-slate-900 text-white px-4 py-2 rounded text-[10px] font-bold">GENERATE LINKS</button>
+                            </div>
+                            <div id="discovery-panel" class="mt-3 grid grid-cols-3 gap-2 hidden"></div>
                         </div>
                     </div>
 
                     <form id="main-form" class="space-y-6">
                         <input type="hidden" id="entry-id">
                         
-                        <div class="bg-white rounded-xl border border-gray-200 p-6 relative">
-                            <div class="card-header text-brand-600"><i class="fas fa-id-badge"></i> 1. Corporate Identity</div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+                            <h4 class="font-bold border-b pb-2 text-brand-600"><i class="fas fa-building mr-2"></i> Corporate Identity</h4>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div><label class="lbl-std">Company Name</label><input type="text" id="inp-name" required class="inp-std"></div>
                                 <div><label class="lbl-std">Website</label><input type="text" id="inp-web" class="inp-std"></div>
                                 <div><label class="lbl-std">Parent Company</label><input type="text" id="inp-parent" class="inp-std"></div>
+                                <div><label class="lbl-std">CEO / Founder</label><input type="text" id="inp-ceo" class="inp-std"></div>
+                                <div><label class="lbl-std">Launch Date</label><input type="text" id="inp-launch" class="inp-std"></div>
+                                <div><label class="lbl-std">Valuation</label><input type="text" id="inp-rev" class="inp-std font-bold text-green-700"></div>
                                 <div><label class="lbl-std">HQ Location</label><input type="text" id="inp-hq" class="inp-std"></div>
-                                <div><label class="lbl-std">Launch Date / Year</label><input type="text" id="inp-launch" class="inp-std"></div>
-                                <div><label class="lbl-std">Valuation / Revenue</label><input type="text" id="inp-rev" class="inp-std font-bold text-green-700"></div>
+                                <div><label class="lbl-std">Subsidiaries</label><input type="text" id="inp-sub" class="inp-std"></div>
+                                <div><label class="lbl-std">Market Coverage</label><input type="text" id="inp-market" class="inp-std"></div>
                             </div>
-                            <div class="mt-4"><label class="lbl-std">Founder & Current CEO</label><input type="text" id="inp-ceo" class="inp-std"></div>
-                            <div class="mt-4"><label class="lbl-std">About (Mission/Vision)</label><textarea id="inp-desc" rows="2" class="inp-std"></textarea></div>
+                            <div><label class="lbl-std">Strategic Summary (What they do / Market Play)</label><textarea id="inp-desc" rows="3" class="inp-std"></textarea></div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white rounded-xl border border-gray-200 p-6">
-                                <div class="card-header text-emerald-600"><i class="fas fa-cubes"></i> 2. Portfolio & Market</div>
-                                <div class="space-y-4">
-                                    <div><label class="lbl-std">Key Products / Services</label><textarea id="inp-products" rows="3" class="inp-std"></textarea></div>
-                                    <div><label class="lbl-std">What makes it a Player? (USP)</label><textarea id="inp-usp" rows="2" class="inp-std"></textarea></div>
-                                    <div><label class="lbl-std">Market Coverage (Countries)</label><input type="text" id="inp-market" class="inp-std"></div>
-                                </div>
+                            <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+                                <h4 class="font-bold border-b pb-2 text-emerald-600"><i class="fas fa-box mr-2"></i> Products & Tech</h4>
+                                <div><label class="lbl-std">Key Products</label><textarea id="inp-products" rows="2" class="inp-std"></textarea></div>
+                                <div><label class="lbl-std">Partnerships & Tech Stack</label><textarea id="inp-tech" rows="2" class="inp-std"></textarea></div>
+                                <div><label class="lbl-std">Competitive Landscape (vs iOPEX)</label><textarea id="inp-comp" rows="2" class="inp-std"></textarea></div>
                             </div>
-                            <div class="bg-white rounded-xl border border-gray-200 p-6">
-                                <div class="card-header text-purple-600"><i class="fas fa-sitemap"></i> 3. Structure & Tech</div>
-                                <div class="space-y-4">
-                                    <div><label class="lbl-std">Subsidiaries / Acquisitions</label><textarea id="inp-sub" rows="3" class="inp-std"></textarea></div>
-                                    <div><label class="lbl-std">Partnerships & Tech Stack</label><textarea id="inp-tech" rows="3" class="inp-std"></textarea></div>
-                                </div>
+                            <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+                                <h4 class="font-bold border-b pb-2 text-orange-600"><i class="fas fa-users mr-2"></i> Org Chart & Hiring</h4>
+                                <div><label class="lbl-std">Org Chart & Key Contacts</label><textarea id="inp-orgchart" rows="4" class="inp-std font-mono text-[10px]" placeholder="Name | Designation | Recent Activity"></textarea></div>
+                                <div><label class="lbl-std">Event Calendar & Openings</label><textarea id="inp-hiring" rows="2" class="inp-std"></textarea></div>
                             </div>
                         </div>
 
                         <div class="bg-white rounded-xl border border-gray-200 p-6">
-                            <div class="card-header text-orange-600"><i class="fas fa-users-cog"></i> 4. Org Chart & Strategic Contacts</div>
-                            <div class="bg-slate-50 p-2 rounded text-[10px] text-gray-500 mb-3"><i class="fas fa-info-circle"></i> Format: [Name | Designation | Persona (Decision Maker?) | Recent Activity]</div>
-                            <textarea id="inp-orgchart" rows="6" class="inp-std font-mono" placeholder="Ex: Harsha | CEO | Decision Maker | Recently launched AI initiative"></textarea>
+                            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                                <h4 class="font-bold text-purple-600"><i class="fas fa-folder-plus mr-2"></i> Custom Intelligence Sections</h4>
+                                <button type="button" onclick="addCustomBlock()" class="text-xs bg-purple-50 text-purple-600 px-3 py-1 rounded border border-purple-100 font-bold">+ ADD SECTION</button>
+                            </div>
+                            <div id="custom-blocks-container" class="space-y-4"></div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white rounded-xl border border-gray-200 p-6">
-                                <div class="card-header text-red-600"><i class="fas fa-swords"></i> 5. Competitive Landscape</div>
-                                <div class="space-y-4">
-                                    <div><label class="lbl-std">Client Competitors</label><textarea id="inp-comp-client" rows="2" class="inp-std"></textarea></div>
-                                    <div><label class="lbl-std">iOPEX vs Client Advantage</label><textarea id="inp-comp-iopex" rows="2" class="inp-std"></textarea></div>
-                                </div>
-                            </div>
-                            <div class="bg-white rounded-xl border border-gray-200 p-6">
-                                <div class="card-header text-blue-600"><i class="fas fa-calendar-alt"></i> 6. Events & Hiring</div>
-                                <div class="space-y-4">
-                                    <div><label class="lbl-std">Event Calendar (Conferences/PR)</label><textarea id="inp-events" rows="2" class="inp-std"></textarea></div>
-                                    <div><label class="lbl-std">Recent Openings / Talent Gaps</label><textarea id="inp-hiring" rows="2" class="inp-std"></textarea></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border border-gray-200 z-20">
-                            <button type="button" onclick="nav('dashboard')" class="text-sm text-gray-400 font-bold hover:text-gray-800">DISCARD</button>
-                            <button type="submit" class="bg-corp-900 text-white px-12 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transform transition">
-                                <i class="fas fa-cloud-upload mr-2"></i> SYNC INTELLIGENCE
-                            </button>
+                        <div class="sticky bottom-4 bg-white p-4 rounded-xl shadow-2xl border flex justify-between items-center">
+                            <button type="button" onclick="nav('dashboard')" class="text-gray-400 font-bold text-xs uppercase">Discard</button>
+                            <button type="submit" class="bg-brand-600 text-white px-10 py-3 rounded-lg font-bold shadow-lg hover:bg-brand-700 transform active:scale-95 transition">SYNC INTELLIGENCE</button>
                         </div>
                     </form>
                 </div>
 
-                <div id="view-settings" class="hide max-w-2xl mx-auto space-y-6">
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">Share Control</h3>
+                <div id="view-settings" class="hide max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit">
+                        <h4 class="font-bold mb-4 border-b pb-2"><i class="fas fa-user-shield mr-2"></i> Account Security</h4>
                         <div class="space-y-4">
-                            <div><label class="lbl-std">Token Expiration</label><input type="datetime-local" id="share-custom-date" class="inp-std"></div>
-                            <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-3 rounded font-bold">Generate New Guest Pass</button>
-                            <div id="token-display" class="hidden bg-slate-50 p-4 rounded-lg border border-dashed border-slate-300 animate-fade">
-                                <div class="text-center font-mono text-xl font-bold tracking-widest mb-2" id="gen-code"></div>
-                                <div class="flex gap-2">
+                            <div><label class="lbl-std">Update Username</label><input type="text" id="set-username" class="inp-std"></div>
+                            <div><label class="lbl-std">Update Password (Min 6 chars + Number)</label><input type="password" id="set-password" class="inp-std"></div>
+                            <button onclick="updateAccount()" class="w-full bg-slate-900 text-white py-2 rounded text-xs font-bold">Update Account Info</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit">
+                        <h4 class="font-bold mb-4 border-b pb-2 text-blue-600"><i class="fas fa-share-nodes mr-2"></i> Share Access</h4>
+                        <div class="space-y-4">
+                            <div><label class="lbl-std">Set Expiration Date & Time</label><input type="datetime-local" id="share-expiry-dt" class="inp-std"></div>
+                            <button onclick="generateToken()" class="w-full bg-blue-600 text-white py-2 rounded text-xs font-bold">Generate Pass Key</button>
+                            <div id="token-box" class="hidden mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg animate-fade">
+                                <div class="text-center font-mono text-xl font-bold tracking-widest text-blue-800" id="gen-code"></div>
+                                <div class="text-[10px] text-blue-400 text-center mb-2" id="gen-exp-text"></div>
+                                <div class="flex gap-1">
                                     <input type="text" id="gen-link" class="flex-1 text-[10px] p-2 bg-white border" readonly>
-                                    <button onclick="copyLink()" class="bg-gray-200 px-3 text-xs font-bold">Copy</button>
+                                    <button onclick="copyLink()" class="bg-blue-100 px-3 text-[10px] font-bold">Copy</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="admin-zone" class="bg-white p-8 rounded-xl shadow-sm border border-red-100 hidden">
-                        <h4 class="font-bold text-red-600 mb-2 uppercase text-xs">Admin Force Control</h4>
-                        <button onclick="clearAllData()" class="w-full text-xs text-red-500 border border-red-200 py-3 rounded hover:bg-red-50 font-bold">WIPE ENTIRE DATABASE</button>
+
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit md:col-span-2">
+                        <h4 class="font-bold mb-4 border-b pb-2"><i class="fas fa-database mr-2"></i> Intelligence Data Tools</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="backupData()" class="bg-emerald-600 text-white px-6 py-2 rounded text-xs font-bold"><i class="fas fa-download mr-1"></i> Download All Data (Full Backup)</button>
+                            <button onclick="clearAllData()" id="admin-reset-btn" class="hidden bg-red-50 text-red-600 border border-red-200 px-6 py-2 rounded text-xs font-bold">WIPE ENTIRE DATABASE</button>
+                        </div>
                     </div>
                 </div>
 
-                <div id="view-visualize" class="hide max-w-6xl mx-auto">
-                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 class="font-bold text-gray-800 mb-6">Valuation Trends</h3>
-                        <div class="h-96 w-full"><canvas id="chart-valuation"></canvas></div>
-                    </div>
+                <div id="view-visualize" class="hide max-w-6xl mx-auto h-[500px] bg-white p-6 rounded-xl border">
+                    <canvas id="chart-valuation"></canvas>
                 </div>
 
             </div>
@@ -268,103 +257,210 @@
     </div>
 
     <div id="view-modal" class="fixed inset-0 z-50 bg-slate-900/60 hidden flex justify-end">
-        <div class="w-full max-w-3xl h-full bg-white shadow-2xl overflow-y-auto relative p-0">
-            <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-center z-10 shadow-sm">
+        <div class="w-full max-w-3xl h-full bg-white shadow-2xl overflow-y-auto relative p-0 glass-modal">
+            <div class="sticky top-0 bg-white/95 border-b p-6 flex justify-between items-center z-10 shadow-sm">
                 <div>
                     <h2 id="vm-name" class="text-2xl font-black text-corp-900">Company Name</h2>
-                    <div class="flex gap-4 text-[10px] mt-1 font-bold text-gray-400 uppercase tracking-widest">
+                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
                         <span id="vm-parent">Parent</span> | <span id="vm-hq">Location</span>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button id="vm-btn-edit" class="bg-brand-600 text-white px-4 py-2 rounded text-xs font-bold hover:bg-brand-700">EDIT INTEL</button>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 px-2 text-2xl">&times;</button>
+                <div class="flex gap-3">
+                    <button id="vm-btn-edit" class="bg-brand-600 text-white px-4 py-2 rounded text-xs font-bold">EDIT INTELLIGENCE</button>
+                    <button onclick="closeModal()" class="text-slate-400 hover:text-slate-900 px-3 text-2xl">&times;</button>
                 </div>
             </div>
             
             <div class="p-8 space-y-10">
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="bg-slate-50 p-4 rounded-lg">
-                        <div class="text-[10px] font-black text-gray-400 uppercase mb-1">CEO</div>
-                        <div id="vm-ceo" class="text-sm font-bold text-slate-800">-</div>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <div class="text-[10px] font-black text-green-600 uppercase mb-1">Valuation</div>
-                        <div id="vm-rev" class="text-sm font-bold text-green-700">-</div>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded-lg">
-                        <div class="text-[10px] font-black text-gray-400 uppercase mb-1">Launched</div>
-                        <div id="vm-launch" class="text-sm font-bold text-slate-800">-</div>
-                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl"><div class="text-[9px] font-black text-slate-400 uppercase mb-1">CEO / Leadership</div><div id="vm-ceo" class="text-sm font-bold">-</div></div>
+                    <div class="bg-emerald-50 p-4 rounded-xl"><div class="text-[9px] font-black text-emerald-400 uppercase mb-1">Valuation</div><div id="vm-rev" class="text-sm font-bold text-emerald-700">-</div></div>
+                    <div class="bg-slate-50 p-4 rounded-xl"><div class="text-[9px] font-black text-slate-400 uppercase mb-1">Market Launch</div><div id="vm-launch" class="text-sm font-bold">-</div></div>
                 </div>
+
+                <section>
+                    <h4 class="text-xs font-black text-brand-600 uppercase border-b border-brand-100 pb-2 mb-4">Master Overview</h4>
+                    <p id="vm-desc" class="text-xs text-slate-600 leading-relaxed whitespace-pre-line"></p>
+                </section>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <section>
-                        <h4 class="text-xs font-black text-brand-600 uppercase border-b border-brand-100 pb-2 mb-4">Strategic Overview</h4>
-                        <div id="vm-desc" class="text-xs text-slate-600 leading-relaxed mb-4"></div>
-                        <div class="space-y-3">
-                            <div><span class="text-[10px] font-bold text-slate-400 block uppercase">USP</span><p id="vm-usp" class="text-xs text-slate-800 font-medium"></p></div>
-                            <div><span class="text-[10px] font-bold text-slate-400 block uppercase">Market Coverage</span><p id="vm-market" class="text-xs text-slate-800 font-medium"></p></div>
-                        </div>
+                    <section class="space-y-4">
+                        <h4 class="text-xs font-black text-emerald-600 uppercase border-b border-emerald-100 pb-2">Portfolio & Tech</h4>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Products</label><div id="vm-products" class="text-xs text-slate-700 whitespace-pre-line"></div></div>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Stack & Partners</label><div id="vm-tech" class="text-xs text-slate-700 whitespace-pre-line"></div></div>
                     </section>
-                    <section>
-                        <h4 class="text-xs font-black text-emerald-600 uppercase border-b border-emerald-100 pb-2 mb-4">Portfolio & Ecosystem</h4>
-                        <div class="space-y-3">
-                            <div><span class="text-[10px] font-bold text-emerald-500 block uppercase">Key Products</span><p id="vm-products" class="text-xs text-slate-800 whitespace-pre-line"></p></div>
-                            <div><span class="text-[10px] font-bold text-emerald-500 block uppercase">Subsidiaries</span><p id="vm-sub" class="text-xs text-slate-800 whitespace-pre-line"></p></div>
-                        </div>
+                    <section class="space-y-4">
+                        <h4 class="text-xs font-black text-orange-600 uppercase border-b border-orange-100 pb-2">Market Dynamics</h4>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Coverage</label><div id="vm-market" class="text-xs text-slate-700"></div></div>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Subsidiaries</label><div id="vm-sub" class="text-xs text-slate-700"></div></div>
                     </section>
                 </div>
 
-                <section class="bg-slate-900 rounded-xl p-6 text-slate-100">
-                    <h4 class="text-xs font-black text-blue-400 uppercase mb-4 tracking-widest"><i class="fas fa-microchip mr-2"></i> Tech & Partnerships</h4>
-                    <p id="vm-tech" class="text-xs text-slate-300 whitespace-pre-line leading-relaxed"></p>
+                <section class="bg-slate-900 rounded-2xl p-6 text-slate-100">
+                    <h4 class="text-xs font-black text-blue-400 uppercase mb-4 tracking-widest"><i class="fas fa-sitemap mr-2"></i> Org Chart & Contacts</h4>
+                    <div id="vm-orgchart" class="font-mono text-[11px] whitespace-pre-line leading-relaxed text-slate-300"></div>
                 </section>
 
                 <section>
-                    <h4 class="text-xs font-black text-orange-600 uppercase border-b border-orange-100 pb-2 mb-4">Org Chart / Contacts</h4>
-                    <div id="vm-orgchart" class="bg-slate-50 p-4 rounded-lg font-mono text-xs text-slate-700 whitespace-pre-line"></div>
+                    <h4 class="text-xs font-black text-red-600 uppercase border-b border-red-100 pb-2 mb-4">Competitive & Hiring</h4>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Competition</label><div id="vm-comp" class="text-xs text-slate-700"></div></div>
+                        <div><label class="text-[9px] font-bold text-slate-400 uppercase block mb-1">Events & Pipeline</label><div id="vm-hiring" class="text-xs text-slate-700"></div></div>
+                    </div>
                 </section>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <section>
-                        <h4 class="text-xs font-black text-red-600 uppercase border-b border-red-100 pb-2 mb-4">Competitors</h4>
-                        <div class="space-y-3">
-                            <div><span class="text-[10px] font-bold text-red-400 block uppercase">Client Side</span><p id="vm-comp-client" class="text-xs text-slate-800"></p></div>
-                            <div><span class="text-[10px] font-bold text-red-400 block uppercase">iOPEX Edge</span><p id="vm-comp-iopex" class="text-xs text-slate-800"></p></div>
-                        </div>
-                    </section>
-                    <section>
-                        <h4 class="text-xs font-black text-blue-600 uppercase border-b border-blue-100 pb-2 mb-4">Intel Pipeline</h4>
-                        <div class="space-y-3">
-                            <div><span class="text-[10px] font-bold text-blue-400 block uppercase">Event Calendar</span><p id="vm-events" class="text-xs text-slate-800"></p></div>
-                            <div><span class="text-[10px] font-bold text-blue-400 block uppercase">Recent Openings</span><p id="vm-hiring" class="text-xs text-slate-800"></p></div>
-                        </div>
-                    </section>
-                </div>
+                <div id="vm-custom-area" class="space-y-8"></div>
             </div>
         </div>
     </div>
 
     <script>
+        // DATA STATE
         let db = JSON.parse(localStorage.getItem('pmo_master_db')) || [];
-        let users = JSON.parse(localStorage.getItem('pmo_users')) || [{ user: 'admin', pass: 'admin', role: 'admin' }];
-        let validTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || [];
+        let users = JSON.parse(localStorage.getItem('pmo_users')) || [{ user: 'admin', pass: 'admin123', role: 'admin' }];
+        let activeTokens = JSON.parse(localStorage.getItem('pmo_tokens')) || [];
         let session = null;
 
-        // AUTH
-        function toggleAuth(v) { document.getElementById('form-login').classList.add('hide'); document.getElementById('form-guest').classList.add('hide'); document.getElementById('form-signup').classList.add('hide'); document.getElementById(`form-${v}`).classList.remove('hide'); }
-        function authLogin() { const u = document.getElementById('login-user').value, p = document.getElementById('login-pass').value; const v = users.find(x=>x.user===u&&x.pass===p); if(v) startSession(v); else alert("Try admin/admin"); }
-        function authSignup() { const u = document.getElementById('sign-user').value, p = document.getElementById('sign-pass').value, r = document.getElementById('sign-role').value; if(users.find(x=>x.user===u)) return alert("Exists"); const n = {user:u,pass:p,role:r}; users.push(n); localStorage.setItem('pmo_users',JSON.stringify(users)); startSession(n); }
-        function authGuestToken() { const t = document.getElementById('guest-token').value; const m = validTokens.find(x=>x.code===t&&(x.exp===0||x.exp>Date.now())); if(m) startSession({user:'Guest',role:'guest'}); else alert("Invalid Token"); }
-        function startSession(u) { session = u; document.getElementById('auth-layer').classList.add('hide'); document.getElementById('app-layer').classList.remove('opacity-0'); document.getElementById('display-user').innerText = session.user; document.getElementById('role-badge').innerText = session.role.toUpperCase(); if(session.role==='admin') document.getElementById('admin-zone').classList.remove('hidden'); if(session.role==='guest') { document.getElementById('nav-analyze').classList.add('hide'); document.getElementById('btn-add-new').classList.add('hide'); } renderTable(); updateKPIs(); nav('dashboard'); }
+        // AUTH CORE
+        function toggleAuth(v) { document.querySelectorAll('[id^="form-"]').forEach(e=>e.classList.add('hide')); document.getElementById(`form-${v}`).classList.remove('hide'); }
+        
+        function authLogin() {
+            const u = document.getElementById('login-user').value, p = document.getElementById('login-pass').value;
+            const valid = users.find(x => x.user === u && x.pass === p);
+            if (valid) startSession(valid);
+            else alert("Invalid Credentials.");
+        }
+
+        function authSignup() {
+            const u = document.getElementById('sign-user').value, p = document.getElementById('sign-pass').value, r = document.getElementById('sign-role').value;
+            if(!/[a-zA-Z]/.test(p) || !/[0-9]/.test(p) || p.length < 6) return alert("Password must be 6+ chars and have a number.");
+            if(users.find(x=>x.user===u)) return alert("User exists.");
+            const n = { user: u, pass: p, role: r };
+            users.push(n); localStorage.setItem('pmo_users', JSON.stringify(users));
+            startSession(n);
+        }
+
+        function authGuestToken() {
+            const t = document.getElementById('guest-token').value;
+            const now = Date.now();
+            const match = activeTokens.find(x => x.code === t && (x.exp === 0 || x.exp > now));
+            if(match) startSession({ user: 'Guest', role: 'guest', via: match.by });
+            else alert("Token Invalid or Expired.");
+        }
+
+        function startSession(u) {
+            session = u;
+            document.getElementById('auth-layer').classList.add('hide');
+            document.getElementById('app-layer').classList.remove('opacity-0');
+            document.getElementById('display-user').innerText = session.user;
+            document.getElementById('set-username').value = session.user;
+            
+            const badge = document.getElementById('session-badge');
+            badge.innerText = session.role.toUpperCase();
+            badge.className = `mt-3 px-2 py-1 rounded text-[10px] font-bold w-fit border ${session.role === 'admin' ? 'bg-red-50 text-red-600 border-red-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`;
+            
+            if(session.role === 'admin') document.getElementById('admin-reset-btn').classList.remove('hidden');
+            if(session.role === 'guest') {
+                document.getElementById('nav-analyze').classList.add('hide');
+                document.getElementById('btn-add-new').classList.add('hide');
+            }
+            
+            renderTable(); updateKPIs(); nav('dashboard');
+        }
+
         function logout() { location.reload(); }
 
         // NAVIGATION
-        function nav(id) { document.querySelectorAll('[id^="view-"]').forEach(e=>e.classList.add('hide')); document.getElementById(`view-${id}`).classList.remove('hide'); document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active')); const l = document.getElementById(`nav-${id}`); if(l) l.classList.add('active'); if(id==='visualize') renderChart(); }
-        function closeModal() { document.getElementById('view-modal').classList.add('hidden'); }
+        function nav(id) {
+            document.querySelectorAll('[id^="view-"]').forEach(e=>e.classList.add('hide'));
+            document.getElementById(`view-${id}`).classList.remove('hide');
+            document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+            const l = document.getElementById(`nav-${id}`); if(l) l.classList.add('active');
+            if(id === 'visualize') renderChart();
+        }
 
-        // DATA OPS
+        // SMART PARSE (IMPROVED)
+        function smartParse() {
+            const t = document.getElementById('paste-area').value;
+            const map = {
+                'inp-name': [/Company:\s*(.*)/i, /Name:\s*(.*)/i, /Intel on\s*(.*)/i],
+                'inp-ceo': [/CEO:\s*(.*)/i, /CEO is\s*(.*)/i, /Founder:\s*(.*)/i],
+                'inp-hq': [/HQ:\s*(.*)/i, /located in\s*(.*)/i, /Headquarters:\s*(.*)/i],
+                'inp-rev': [/Valuation:\s*(.*)/i, /worth\s*(.*)/i, /Revenue:\s*(.*)/i]
+            };
+            for (let id in map) {
+                for (let r of map[id]) {
+                    let m = t.match(r);
+                    if(m && m[1]) { document.getElementById(id).value = m[1].split('.')[0].trim(); break; }
+                }
+            }
+        }
+
+        function runDiscovery() {
+            const n = document.getElementById('search-input').value; if(!n) return;
+            const p = document.getElementById('discovery-panel'); p.classList.remove('hidden'); p.innerHTML = '';
+            const links = [
+                {t:"LinkedIn", q:`site:linkedin.com/company "${n}"`},
+                {t:"Org Chart", q:`site:theorg.com "${n}"`},
+                {t:"Tech Stack", q:`site:builtwith.com "${n}"`},
+                {t:"News", q:`"${n}" business news 2026`},
+                {t:"Financials", q:`"${n}" annual report valuation`}
+            ];
+            links.forEach(l => {
+                const a = document.createElement('a'); a.href=`https://www.google.com/search?q=${encodeURIComponent(l.q)}`; a.target="_blank";
+                a.className = "p-2 bg-slate-50 border rounded text-[9px] font-bold text-center hover:bg-white transition";
+                a.innerText = l.t; p.appendChild(a);
+            });
+        }
+
+        // CUSTOM BLOCKS
+        function addCustomBlock(data = null) {
+            const container = document.getElementById('custom-blocks-container');
+            const id = Date.now() + Math.random();
+            const div = document.createElement('div');
+            div.className = "p-4 bg-slate-50 border rounded-xl relative animate-fade";
+            div.innerHTML = `
+                <button type="button" onclick="this.parentElement.remove()" class="absolute top-2 right-2 text-red-400 hover:text-red-600"><i class="fas fa-times"></i></button>
+                <div class="grid grid-cols-2 gap-2 mb-2">
+                    <input type="text" class="block-title inp-std font-bold" placeholder="Section Heading" value="${data?data.title:''}">
+                    <input type="text" class="block-sub inp-std" placeholder="Optional Sub-heading" value="${data?data.subtitle:''}">
+                </div>
+                <textarea class="block-content inp-std" rows="3" placeholder="Content...">${data?data.content:''}</textarea>
+            `;
+            container.appendChild(div);
+        }
+
+        // CRUD
+        document.getElementById('main-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const get = (id) => document.getElementById(id).value;
+            const customs = [];
+            document.querySelectorAll('#custom-blocks-container > div').forEach(d => {
+                customs.push({
+                    title: d.querySelector('.block-title').value,
+                    subtitle: d.querySelector('.block-sub').value,
+                    content: d.querySelector('.block-content').value
+                });
+            });
+
+            const rec = {
+                id: document.getElementById('entry-id').value || Date.now().toString(),
+                author: session.user, updated: new Date().toLocaleString(),
+                name: get('inp-name'), web: get('inp-web'), parent: get('inp-parent'), hq: get('inp-hq'), launch: get('inp-launch'), rev: get('inp-rev'), ceo: get('inp-ceo'), sub: get('inp-sub'), market: get('inp-market'), desc: get('inp-desc'),
+                products: get('inp-products'), tech: get('inp-tech'), comp: get('inp-comp'), orgchart: get('inp-orgchart'), hiring: get('inp-hiring'),
+                customs: customs
+            };
+
+            const idx = db.findIndex(x=>x.id === rec.id);
+            if(idx > -1) {
+                if(session.role !== 'admin' && db[idx].author !== session.user) return alert("Denied.");
+                db[idx] = rec;
+            } else db.push(rec);
+
+            localStorage.setItem('pmo_master_db', JSON.stringify(db));
+            resetForm(); renderTable(); updateKPIs(); nav('dashboard');
+        });
+
         function renderTable() {
             const b = document.getElementById('table-body'); b.innerHTML = '';
             db.forEach(r => {
@@ -373,104 +469,108 @@
                 tr.className = "border-b hover:bg-slate-50 transition cursor-pointer";
                 tr.onclick = (e) => { if(!e.target.closest('button')) openViewModal(r.id); };
                 tr.innerHTML = `
-                    <td class="px-6 py-4"><div class="font-bold text-slate-900">${r.name}</div><div class="text-[10px] text-blue-500 font-bold">${r.web || '-'}</div></td>
-                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">${r.ceo || '-'}</td>
-                    <td class="px-6 py-4 text-[10px]"><div class="font-bold text-slate-800">${r.hq || '-'}</div><div class="text-slate-400">${r.parent || '-'}</div></td>
-                    <td class="px-6 py-4 text-xs font-bold text-emerald-600">${r.rev || '-'}</td>
-                    <td class="px-6 py-4 text-[10px] font-bold text-slate-400">${r.author}</td>
+                    <td class="px-6 py-4"><div class="font-bold text-slate-900">${r.name}</div><div class="text-[10px] text-blue-500">${r.web||'-'}</div></td>
+                    <td class="px-6 py-4 text-xs text-slate-600 font-medium">${r.ceo||'-'}</td>
+                    <td class="px-6 py-4 text-[10px]"><div class="font-bold">${r.parent||'-'}</div><div class="text-slate-400">${r.hq||'-'}</div></td>
+                    <td class="px-6 py-4 text-xs font-bold text-emerald-600">${r.rev||'-'}</td>
                     <td class="px-6 py-4 text-right">
-                        <div class="flex justify-end gap-1">
-                            ${canEdit ? `<button onclick="edit('${r.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded"><i class="fas fa-edit"></i></button>` : ''}
-                            <button onclick="exportPPT('${r.id}')" class="p-2 text-orange-500 hover:bg-orange-50 rounded"><i class="fas fa-file-powerpoint"></i></button>
-                            ${canEdit ? `<button onclick="del('${r.id}')" class="p-2 text-red-400 hover:bg-red-50 rounded"><i class="fas fa-trash"></i></button>` : ''}
-                        </div>
+                        ${canEdit ? `<button onclick="edit('${r.id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded"><i class="fas fa-edit"></i></button>` : ''}
+                        <button onclick="exportPPT('${r.id}')" class="p-2 text-orange-500 hover:bg-orange-50 rounded"><i class="fas fa-file-powerpoint"></i></button>
                     </td>`;
                 b.appendChild(tr);
             });
         }
 
-        // SMART PARSE (Regex AI-Lite)
-        function smartParse() {
-            const text = document.getElementById('paste-area').value;
-            const patterns = {
-                'inp-name': [/Company:\s*(.*)/i, /Name:\s*(.*)/i],
-                'inp-ceo': [/CEO:\s*(.*)/i, /CEO is\s*(.*)/i, /founder\s*(.*)/i],
-                'inp-hq': [/Headquarters:\s*(.*)/i, /HQ:\s*(.*)/i, /located in\s*(.*)/i],
-                'inp-launch': [/launched in\s*(\d{4})/i, /founded in\s*(\d{4})/i, /Date:\s*(.*)/i],
-                'inp-rev': [/valuation of\s*(.*)/i, /Revenue:\s*(.*)/i, /worth\s*(.*)/i]
-            };
-            for (let id in patterns) {
-                for (let reg of patterns[id]) {
-                    let m = text.match(reg);
-                    if (m && m[1]) { document.getElementById(id).value = m[1].split('.')[0].trim(); break; }
-                }
-            }
-        }
-
-        // DISCOVERY
-        function runDiscovery() {
-            const n = document.getElementById('search-input').value; if(!n) return;
-            const p = document.getElementById('discovery-panel'); p.classList.remove('hidden'); p.innerHTML = '';
-            const links = [
-                {t:"LinkedIn", q:`site:linkedin.com/company "${n}"`},
-                {t:"Org Chart", q:`site:theorg.com "${n}"`},
-                {t:"Tech Stack", q:`site:builtwith.com "${n}"`},
-                {t:"Financials", q:`"${n}" annual revenue 2026 valuation`},
-                {t:"Competitors", q:`top competitors for "${n}" digital marketing`},
-                {t:"Hiring", q:`site:glassdoor.com "${n}" careers`}
-            ];
-            links.forEach(l => {
-                const a = document.createElement('a'); a.href=`https://www.google.com/search?q=${encodeURIComponent(l.q)}`; a.target="_blank";
-                a.className = "p-2 bg-slate-50 border rounded text-[10px] font-bold text-center hover:bg-white transition";
-                a.innerText = l.t; p.appendChild(a);
+        function openViewModal(id) {
+            const r = db.find(x=>x.id===id); if(!r) return;
+            for(let k in r) { const el = document.getElementById(`vm-${k}`); if(el) el.innerText = r[k] || '-'; }
+            
+            const area = document.getElementById('vm-custom-area'); area.innerHTML = '';
+            if(r.customs) r.customs.forEach(c => {
+                const d = document.createElement('div');
+                d.innerHTML = `<h4 class="text-xs font-black text-purple-600 uppercase border-b border-purple-100 pb-2 mb-2">${c.title} <span class="text-[10px] text-gray-400 font-normal ml-2">${c.subtitle}</span></h4><p class="text-xs text-slate-600 leading-relaxed whitespace-pre-line">${c.content}</p>`;
+                area.appendChild(d);
             });
+
+            const b = document.getElementById('vm-btn-edit');
+            if(session.role === 'admin' || r.author === session.user) { b.classList.remove('hide'); b.onclick=()=> { closeModal(); edit(r.id); }; }
+            else b.classList.add('hide');
+
+            document.getElementById('view-modal').classList.remove('hidden');
         }
 
-        // FORM SUBMIT
-        document.getElementById('main-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const get = (i) => document.getElementById(i).value;
-            const rec = {
-                id: document.getElementById('entry-id').value || Date.now().toString(),
-                author: session.user, updated: new Date().toLocaleDateString(),
-                name: get('inp-name'), web: get('inp-web'), parent: get('inp-parent'), hq: get('inp-hq'), launch: get('inp-launch'), rev: get('inp-rev'), ceo: get('inp-ceo'), desc: get('inp-desc'),
-                products: get('inp-products'), usp: get('inp-usp'), market: get('inp-market'), sub: get('inp-sub'), tech: get('inp-tech'),
-                orgchart: get('inp-orgchart'), comp_client: get('inp-comp-client'), comp_iopex: get('inp-comp-iopex'), events: get('inp-events'), hiring: get('inp-hiring')
-            };
-            const idx = db.findIndex(x=>x.id===rec.id);
-            if(idx>-1) db[idx] = rec; else db.push(rec);
-            localStorage.setItem('pmo_master_db', JSON.stringify(db));
-            resetForm(); nav('dashboard'); renderTable(); updateKPIs();
-        });
+        function closeModal() { document.getElementById('view-modal').classList.add('hidden'); }
 
-        function edit(id) { const r = db.find(x=>x.id===id); document.getElementById('entry-id').value = r.id; for(let k in r) { const el = document.getElementById(`inp-${k}`); if(el) el.value = r[k] || ''; } nav('analyze'); }
-        function del(id) { if(confirm("Delete?")) { db = db.filter(x=>x.id!==id); localStorage.setItem('pmo_master_db', JSON.stringify(db)); renderTable(); updateKPIs(); } }
-        function resetForm() { document.getElementById('main-form').reset(); document.getElementById('entry-id').value=''; }
-        function openViewModal(id) { 
-            const r = db.find(x=>x.id===id); 
-            for(let k in r) { const el = document.getElementById(`vm-${k}`); if(el) el.innerText = r[k] || '-'; } 
-            const b = document.getElementById('vm-btn-edit'); 
-            if(session.role==='admin'||r.author===session.user) { b.classList.remove('hide'); b.onclick=()=>{closeModal(); edit(r.id);}; } else b.classList.add('hide');
-            document.getElementById('view-modal').classList.remove('hidden'); 
+        function edit(id) {
+            const r = db.find(x=>x.id===id); if(!r) return;
+            document.getElementById('entry-id').value = r.id;
+            for(let k in r) { const el = document.getElementById(`inp-${k}`); if(el) el.value = r[k] || ''; }
+            document.getElementById('custom-blocks-container').innerHTML = '';
+            if(r.customs) r.customs.forEach(c => addCustomBlock(c));
+            nav('analyze');
         }
 
-        function updateKPIs() { 
-            document.getElementById('kpi-count').innerText = db.length; 
-            document.getElementById('kpi-points').innerText = db.length * 18; 
-            let t = 0; db.forEach(r=>{if(r.rev){ let n = parseFloat(r.rev.replace(/[^0-9.]/g,'')); if(!isNaN(n)) t+= r.rev.includes('B')?n*1000:n; }});
+        function resetForm() { document.getElementById('main-form').reset(); document.getElementById('entry-id').value=''; document.getElementById('custom-blocks-container').innerHTML=''; }
+
+        // SECURITY TOOLS
+        function updateAccount() {
+            const nu = document.getElementById('set-username').value;
+            const np = document.getElementById('set-password').value;
+            if(np && (!/[a-zA-Z]/.test(np) || !/[0-9]/.test(np))) return alert("Password must have letter and number.");
+            
+            const idx = users.findIndex(x=>x.user === session.user);
+            users[idx].user = nu;
+            if(np) users[idx].pass = np;
+            localStorage.setItem('pmo_users', JSON.stringify(users));
+            session.user = nu;
+            alert("Account Updated.");
+        }
+
+        // SHARE TOOLS (FIXED)
+        function generateToken() {
+            const dt = document.getElementById('share-expiry-dt').value;
+            if(!dt) return alert("Select Expiration Date/Time first.");
+            
+            const exp = new Date(dt).getTime();
+            if(exp < Date.now()) return alert("Expiration must be in the future.");
+
+            const code = Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            activeTokens.push({ code, exp, by: session.user });
+            localStorage.setItem('pmo_tokens', JSON.stringify(activeTokens));
+
+            document.getElementById('token-box').classList.remove('hide');
+            document.getElementById('gen-code').innerText = code;
+            document.getElementById('gen-exp-text').innerText = "Expires: " + new Date(dt).toLocaleString();
+            document.getElementById('gen-link').value = `${location.href}?key=${code}`;
+            updateKPIs();
+        }
+
+        function copyLink() { const i = document.getElementById('gen-link'); i.select(); document.execCommand('copy'); alert('Copied'); }
+
+        function updateKPIs() {
+            document.getElementById('kpi-count').innerText = db.length;
+            document.getElementById('kpi-keys').innerText = activeTokens.filter(x=>x.exp === 0 || x.exp > Date.now()).length;
+            let t = 0; db.forEach(r=>{if(r.rev){ let n = parseFloat(r.rev.replace(/[^0-9.]/g,'')); if(!isNaN(n)) t += r.rev.includes('B')?n*1000:n; }});
             document.getElementById('kpi-val').innerText = t>=1000?`$${(t/1000).toFixed(1)}B`:`$${t}M`;
         }
 
-        function generateToken() { const d = document.getElementById('share-custom-date').value; const c = Math.random().toString(36).substring(7).toUpperCase(); const exp = d?new Date(d).getTime():0; validTokens.push({code:c, exp:exp, by:session.user}); localStorage.setItem('pmo_tokens',JSON.stringify(validTokens)); document.getElementById('token-display').classList.remove('hidden'); document.getElementById('gen-code').innerText=c; document.getElementById('gen-link').value=`${location.href}?key=${c}`; }
-        function copyLink() { const i = document.getElementById('gen-link'); i.select(); document.execCommand('copy'); alert('Copied'); }
-        function clearAllData() { if(confirm("Wipe Everything?")) { localStorage.clear(); location.reload(); } }
-        function backupData() { saveAs(new Blob([JSON.stringify({db,users,validTokens})],{type:"application/json"}), "PMO_Master_Backup.json"); }
+        function backupData() { saveAs(new Blob([JSON.stringify({db, users, activeTokens}, null, 2)], {type:"application/json"}), "PMO_Full_Backup.json"); }
+        function clearAllData() { if(confirm("WIPE EVERYTHING?")) { localStorage.clear(); location.reload(); } }
 
         function renderChart() {
             const ctx = document.getElementById('chart-valuation').getContext('2d');
             const vals = db.map(r=>{ let n = parseFloat((r.rev||"0").replace(/[^0-9.]/g,'')); return r.rev&&r.rev.includes('B')?n*1000:n; });
             if(window.myChart) window.myChart.destroy();
-            window.myChart = new Chart(ctx, { type: 'bar', data: { labels: db.map(x=>x.name), datasets: [{label:'Value (Millions)', data:vals, backgroundColor:'#3b82f6'}]}, options: {responsive:true, maintainAspectRatio:false}});
+            window.myChart = new Chart(ctx, { type: 'bar', data: { labels: db.map(x=>x.name), datasets: [{label:'Valuation ($M)', data:vals, backgroundColor:'#3b82f6', borderRadius: 8}]}, options: {responsive:true, maintainAspectRatio:false}});
+        }
+
+        function exportPPT(id) {
+            const r = db.find(x=>x.id===id); let pptx = new PptxGenJS();
+            let slide = pptx.addSlide();
+            slide.addText(r.name, { x: 0.5, y: 1, fontSize: 44, bold: true, color: '3b82f6' });
+            slide.addText(`CEO: ${r.ceo} | Valuation: ${r.rev}`, { x: 0.5, y: 2.2, fontSize: 18 });
+            slide.addText(r.desc, { x: 0.5, y: 3.2, w: 9, fontSize: 12 });
+            pptx.writeFile({ fileName: `${r.name}_Report.pptx` });
         }
     </script>
 </body>
