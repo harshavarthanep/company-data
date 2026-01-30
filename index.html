@@ -560,7 +560,8 @@
 
         // --- 5. UNIVERSAL REPORT VIEWER (ALL USERS) ---
         function openViewModal(id) {
-            const r = db.find(x => x.id === id);
+            // Force ID to string for comparison to avoid mismatches
+            const r = db.find(x => String(x.id) === String(id));
             if(!r) return;
 
             // Basic Fields
@@ -586,13 +587,14 @@
                 });
             }
 
-            // Edit Button Logic
+            // Logic for Edit Button INSIDE Modal
             const btnEdit = document.getElementById('vm-btn-edit');
-            const isMine = session.user === r.author;
+            const isMine = r.author === session.user;
             const isAdmin = session.role === 'admin';
             
+            // Allow if Admin OR if it's their own data (and not a guest)
             if (session.role === 'guest' || (!isMine && !isAdmin)) {
-                btnEdit.classList.add('hidden'); // Guests view only
+                btnEdit.classList.add('hidden'); 
             } else {
                 btnEdit.classList.remove('hidden');
                 btnEdit.onclick = () => { closeModal(); edit(r.id); };
@@ -608,6 +610,7 @@
             tbody.innerHTML = '';
             
             db.forEach(r => {
+                const isGuest = session.role === 'guest';
                 const isMine = r.author === session.user;
                 const isAdmin = session.role === 'admin';
                 const canEdit = isAdmin || isMine;
@@ -619,6 +622,18 @@
                     if(e.target.closest('button')) return;
                     openViewModal(r.id);
                 };
+
+                // Logic to hide download buttons for guests
+                const downloadBtns = isGuest ? '' : `
+                    <button onclick="exportPPT('${r.id}')" class="text-orange-500 hover:bg-orange-50 p-2 rounded" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
+                    <button onclick="exportWord('${r.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded" title="DOC"><i class="fas fa-file-word"></i></button>
+                `;
+
+                // Logic to show edit button based on permissions
+                const actionBtns = canEdit ? `
+                     <button onclick="edit('${r.id}')" class="text-brand-600 hover:bg-blue-50 p-2 rounded" title="Edit"><i class="fas fa-edit"></i></button>
+                     <button onclick="del('${r.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded" title="Delete"><i class="fas fa-trash"></i></button>
+                ` : '';
 
                 tr.innerHTML = `
                     <td class="px-6 py-4">
@@ -632,9 +647,8 @@
                         <div class="text-[10px] text-gray-400">${r.updated}</div>
                     </td>
                     <td class="px-6 py-4 text-right space-x-1">
-                        <button onclick="exportPPT('${r.id}')" class="text-orange-500 hover:bg-orange-50 p-2 rounded" title="PPT"><i class="fas fa-file-powerpoint"></i></button>
-                        <button onclick="exportWord('${r.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded" title="DOC"><i class="fas fa-file-word"></i></button>
-                        ${canEdit ? `<button onclick="del('${r.id}')" class="text-red-400 hover:bg-red-50 p-2 rounded" title="Delete"><i class="fas fa-trash"></i></button>` : ''}
+                        ${downloadBtns}
+                        ${actionBtns}
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -684,7 +698,12 @@
 
             const idx = db.findIndex(x => x.id === record.id);
             if(idx > -1) {
-                if(session.role !== 'admin' && db[idx].author !== session.user) return alert("Permission Denied.");
+                // Ensure correct author persists if Admin edits another user's post
+                if(session.role === 'admin') {
+                     record.author = db[idx].author; 
+                } else if (db[idx].author !== session.user) {
+                     return alert("Permission Denied.");
+                }
                 db[idx] = record;
             } else {
                 db.push(record);
@@ -697,7 +716,10 @@
         });
 
         function edit(id) {
-            const r = db.find(x => x.id === id);
+            // Convert to string to ensure matching
+            const r = db.find(x => String(x.id) === String(id));
+            if (!r) return; 
+
             document.getElementById('entry-id').value = r.id;
             const map = {
                 'inp-name': r.name, 'inp-web': r.web, 'inp-ceo': r.ceo, 'inp-rev': r.rev,
@@ -713,7 +735,7 @@
 
         function del(id) {
             if(confirm("Delete this report?")) {
-                db = db.filter(x => x.id !== id);
+                db = db.filter(x => String(x.id) !== String(id));
                 localStorage.setItem('pmo_master_db', JSON.stringify(db));
                 renderTable();
                 updateKPIs();
@@ -774,7 +796,7 @@
         }
 
         function exportPPT(id) {
-            const r = db.find(x => x.id === id);
+            const r = db.find(x => String(x.id) === String(id));
             let pptx = new PptxGenJS();
             pptx.layout = 'LAYOUT_16x9';
             pptx.defineSlideMaster({ title: 'MASTER', background: { color: 'FFFFFF' }, objects: [
@@ -791,7 +813,7 @@
         }
 
         function exportWord(id) {
-            const r = db.find(x => x.id === id);
+            const r = db.find(x => String(x.id) === String(id));
             let customHtml = '';
             if(r.customFields && r.customFields.length > 0) {
                 r.customFields.forEach(cf => {
