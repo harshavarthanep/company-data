@@ -41,6 +41,8 @@
         .auth-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; }
         .modal-enter { animation: slideIn 0.3s ease-out forwards; }
         @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -288,7 +290,7 @@
                                     <label class="lbl-std">Current Role</label>
                                     <div id="set-role" class="p-2 bg-gray-100 rounded text-gray-600 text-sm font-mono border border-gray-200">Guest</div>
                                 </div>
-                                <button onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full font-semibold">
+                                <button id="btn-backup" onclick="backupData()" class="bg-corp-900 text-white px-6 py-2 rounded shadow hover:bg-gray-700 w-full font-semibold">
                                     <i class="fas fa-download mr-2"></i> Download Backup
                                 </button>
                                 <div id="admin-zone" class="mt-6 pt-6 border-t border-red-100 hidden">
@@ -362,7 +364,7 @@
     </div>
 
     <div id="view-modal" class="fixed inset-0 z-50 bg-gray-900/50 hidden flex justify-end">
-        <div class="w-full max-w-2xl h-full bg-white shadow-2xl overflow-y-auto relative animate-fade">
+        <div class="w-full max-w-2xl h-full bg-white shadow-2xl overflow-y-auto relative fade-in">
             <div class="sticky top-0 bg-white/95 backdrop-blur border-b p-6 flex justify-between items-start z-10">
                 <div>
                     <h2 id="vm-name" class="text-2xl font-bold text-corp-900">Company Name</h2>
@@ -483,10 +485,12 @@
                 document.getElementById('nav-analyze').classList.add('hide');
                 document.getElementById('btn-add-new').classList.add('hide');
                 document.getElementById('share-center').classList.add('hidden');
+                document.getElementById('btn-backup').classList.add('hide'); // Hide Backup for Guest
             } else {
                 document.getElementById('nav-analyze').classList.remove('hide');
                 document.getElementById('btn-add-new').classList.remove('hide');
                 document.getElementById('share-center').classList.remove('hidden');
+                document.getElementById('btn-backup').classList.remove('hide');
             }
             if(session.role === 'admin') document.getElementById('admin-zone').classList.remove('hidden');
 
@@ -619,7 +623,8 @@
                 tr.className = "border-b hover:bg-gray-50 transition cursor-pointer";
                 tr.onclick = (e) => {
                     // Clicking ANYWHERE opens the modal (Universal View)
-                    if(e.target.closest('button')) return;
+                    // We specifically check if the click target is NOT a button or an anchor (link)
+                    if(e.target.closest('button') || e.target.closest('a')) return;
                     openViewModal(r.id);
                 };
 
